@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en" class="annap-correspond-ui annap-seated-guest">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Menu - Kits Coffee Atelier</title>
+    <script>
+window.__ANNAP_DEV_MODE = true;
+window.__annapRuntime = {"publicBaseUrl":"http://192.168.1.7:8080"};
+if (typeof window.__annapRuntime !== "object" || window.__annapRuntime === null) { window.__annapRuntime = {}; }
+</script>
+<script src="/js/annap-runtime-api.js?v=4QWUajjE5CeLMj4OXcrCSTaB_Q-deC2fk5KEkBf_qoE"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+        <script src="/js/annap-forensics.js?v=_6gAlrhOeHjXz7lTToAT-A5lOLZdODVMEpDL0j8owrA"></script>
+    <link rel="stylesheet" href="/css/site.css?v=yX8Nw-dHWlnrt1Z6RW_aauAf4t_NKIVcPn9ftdjW8RA" />
+    <link rel="stylesheet" href="/css/correspondence.css?v=3sjQyNwxRfBcpiPBcfBB0Gl3xu4P4uac3YaGUdA5Azg" />
+    <link rel="stylesheet" href="/css/menu-browse.css?v=xtvztkw1w3qQSSfSmVDsV5sv4HyprGNbNAJtg0ZopqU" />
+    <link rel="stylesheet" href="/css/drink-detail.css?v=OJEYpow9D7iuqcpZXvh0CgHw-ufZSjB2I7bC6OGXjkU" />
+    <link rel="stylesheet" href="/Annap.CoffeeQrOrdering.Web.styles.css?v=8X8m5pZYVUVonc7Y4ggbVX2pVb68554rNej74YUBiZQ" />
+    <link rel="stylesheet" href="/css/typography-brand.css?v=iyAwe8n-xaeqUqZujaGyJ9TPakaEE01TE5lw7KvV9rI" />
+    <link rel="stylesheet" href="/css/interaction-feedback.css?v=bP-mB9rsvEX1EB27kJ9Mdm85rnNvGFtTbgPwcrQtZqY" />
+    <link rel="stylesheet" href="/css/kits-identity.css?v=zBvROBG4KpmE6jLDMzN0uQVASbkbVOcaNMAATFtRGUE" />
+    <script src="/js/annap-viewport.js?v=hu4DZ5Jy0_JB4G0hqGA0zwpfha8idZif1PwJDaZ5Csw"></script>
+    <style>
+        html.annap-guest-no-motion .mood-results,
+        html.annap-guest-no-motion .mood-grid--enter .mood-drink-card,
+        html.annap-guest-no-motion .mood-tasting-card,
+        html.annap-guest-no-motion .order-tray-sheet,
+        html.annap-guest-no-motion #drink-detail-panel,
+        html.annap-guest-no-motion #drink-detail-modal {
+            animation: none !important;
+            transition: none !important;
+        }
+        #annap-boot-overlay .annap-boot-spinbar {
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,.12);
+            overflow: hidden;
+        }
+        #annap-boot-overlay .annap-boot-spinbar > i {
+            display: block;
+            height: 100%;
+            width: 25%;
+            background: rgba(199,168,122,.85);
+            animation: annapBootIndet 1.1s ease-in-out infinite alternate;
+        }
+        @keyframes annapBootIndet {
+            0% { transform: translateX(0); opacity: .7; }
+            100% { transform: translateX(300%); opacity: 1; }
+        }
+        html.annap-guest-no-motion #annap-boot-overlay .annap-boot-spinbar > i { animation: none; }
+    </style>
+</head>
+<body class="guest-app min-h-dvh overflow-x-hidden antialiased font-normal text-[rgb(var(--fg))]">
+    <div b-a9s0fj8hxd id="annap-root" class="annap-root">
+        <div b-a9s0fj8hxd class="annap-root-surface">
+
+    <main b-a9s0fj8hxd role="main" class="guest-main mx-auto max-w-5xl px-4 pb-[max(2.5rem,env(safe-area-inset-bottom))] lg:px-4 guest-main--seated pt-[max(0.5rem,env(safe-area-inset-top))]">
+            
+<div class="menu-browse menu-browse--catalogue -mx-4 px-4 sm:mx-0 sm:px-0">
+
+    <noscript>
+        <div class="mb-6 rounded-2xl border border-[rgba(212,184,150,0.55)] bg-[rgba(253,249,244,0.92)] px-4 py-3 text-sm leading-relaxed text-[rgb(var(--muted))]">
+            Vui lòng bật JavaScript để trải nghiệm thực đơn Kits. Hỏi quầy bar nếu bạn cần thực đơn giấy, hoặc bật JavaScript và
+            <a class="underline underline-offset-4 text-[rgb(var(--accent))]" href="/Menu/Index">tải lại trang</a>.
+        </div>
+    </noscript>
+
+        <div class="menu-no-table-banner" role="status" data-i18n="order.needTableScan">
+            Vui lòng quét mã QR tại bàn để gọi món.
+        </div>
+
+    <header class="max-w-3xl pb-[max(0.5rem,1vh)]">
+        <div class="menu-seated-toolbar mb-[max(0.5rem,1.5vh)] flex flex-wrap items-center justify-between gap-3">
+            <nav data-i18n-aria="menu.backHomeAria"
+                 aria-label="Quay lại màn hình chọn một trong ba lối">
+                <a data-guest-vt-link="1" class="guest-hit inline-flex min-h-11 items-center text-xs font-medium tracking-[0.28em] uppercase text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:opacity-80" data-i18n="menu.backHome" href="/">
+                    ← Chọn lại
+                </a>
+            </nav>
+            <div class="flex min-h-11 items-center gap-1">
+                <div class="guest-lang-register menu-seated-lang flex min-h-11 items-center gap-0 border border-[rgba(190,165,130,0.42)] bg-[rgba(253,249,244,0.4)] p-px" role="group" data-i18n-aria="langSwitcher.label">
+                    <button type="button" data-lang-set="en" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))]" data-i18n="langSwitcher.en">EN</button>
+                    <button type="button" data-lang-set="vi" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))]" data-i18n="langSwitcher.vi">VI</button>
+                </div>
+                <div class="annap-if-prefs" role="group" data-i18n-aria="feedback.prefsLabel" aria-label="Sound and haptics">
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="sound"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.soundToggle"
+            title="Sound"
+            aria-label="Sound">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 10v4h3l5 4V6L7 10H4z" />
+            <path d="M16 9.5a3.5 3.5 0 0 1 0 5" />
+            <path d="M18.2 7.2a6.2 6.2 0 0 1 0 9.6" />
+        </svg>
+    </button>
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="haptic"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.hapticToggle"
+            title="Haptics"
+            aria-label="Haptics">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="3" width="8" height="18" rx="2" />
+            <path d="M4 9v6M20 9v6" />
+        </svg>
+    </button>
+</div>
+
+            </div>
+        </div>
+        <p class="font-display text-sm tracking-[0.35em] uppercase text-[rgb(var(--muted-2))]" data-i18n="menu.browseEyebrow">ANNAP</p>
+        <h1 class="font-display mt-[max(1rem,2.8vh)] text-[2.35rem] leading-[1.05] font-medium tracking-tight text-[rgb(var(--fg))] sm:text-5xl" data-i18n="menu.browseTitle">
+            Lựa chọn của quán
+        </h1>
+        <p class="mt-[max(1.25rem,3.5vh)] max-w-xl text-base leading-[1.7] text-[rgb(var(--muted))] sm:text-lg" data-i18n="menu.browseIntro"></p>
+    </header>
+
+    <div class="menu-cat-rail-wrapper">
+        <nav class="menu-cat-editorial-bar -mx-4 mt-[max(2.5rem,6vh)] sm:mx-0"
+             data-i18n-aria="menu.categoriesNavAria"
+             aria-label="Danh mục thực đơn">
+            <div class="menu-cat-editorial-rail" id="menu-cat-rail-inner">
+                    <button type="button"
+                            data-cat-nav="47cdbfd6-da61-4bbf-94a5-d4ff7ab3d167"
+                            class="menu-editorial-chip">
+                        CAFE
+                    </button>
+                    <button type="button"
+                            data-cat-nav="f88b70cf-ba7b-4b76-9e04-ae7521f4e42b"
+                            class="menu-editorial-chip">
+                        TR&#xC0;
+                    </button>
+                    <button type="button"
+                            data-cat-nav="0915537f-cbe5-4095-a1b9-09bdd3169f64"
+                            class="menu-editorial-chip">
+                        B&#xC1;NH
+                    </button>
+                    <button type="button"
+                            data-cat-nav="20c0eae6-d052-4a94-a60c-e8e881586eba"
+                            class="menu-editorial-chip">
+                        COMBO
+                    </button>
+            </div>
+        </nav>
+    </div>
+
+        <section id="menu-cat-47cdbfd6-da61-4bbf-94a5-d4ff7ab3d167"
+                 data-cat-section="47cdbfd6-da61-4bbf-94a5-d4ff7ab3d167"
+                 class="menu-cat-section menu-chapter scroll-mt-40 sm:scroll-mt-44">
+
+            <header class="menu-chapter-head">
+                <div class="menu-chapter-head__lead">
+                    <span class="menu-chapter__index" aria-hidden="true">01</span>
+                    <h2 class="menu-cat-heading">CAFE</h2>
+                    <p class="menu-chapter__rest" data-i18n="menu.editorialFallback">C&#xE1;c m&#xF3;n trong nh&#xF3;m n&#xE0;y. H&#x1ECF;i barista n&#x1EBF;u b&#x1EA1;n c&#x1EA7;n g&#x1EE3;i &#xFD;.</p>
+                </div>
+            </header>
+
+            <div class="menu-chapter-compose">
+                    <div class="menu-chapter-hero">
+                        <article style="--reveal-delay: 0ms"
+         data-drink-card="d2b95bec-e582-4898-8269-6958611ad1aa"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--hero"
+         tabindex="0"
+         role="button"
+         aria-label="C&#xE0; ph&#xEA; s&#x1EEF;a &#x111;&#xE1;">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="d2b95bec-e582-4898-8269-6958611ad1aa"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+            <span class="menu-editorial-card__badge"
+                  data-i18n="menu.ribbonFeatured"
+                  aria-hidden="true">Kh&#xE1;ch y&#xEA;u th&#xED;ch</span>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--hero">
+            <div class="menu-editorial-card__hero-meta">
+                <h3 class="menu-editorial-card__name">C&#xE0; ph&#xEA; s&#x1EEF;a &#x111;&#xE1;</h3>
+                <div class="menu-editorial-card__hero-row">
+                    <p class="menu-editorial-card__price tabular-nums">35.000 &#x20AB;</p>
+                        <p class="menu-editorial-card__taste">C&#xE0; ph&#xEA; phin, s&#x1EEF;a &#x111;&#x1EB7;c, &#x111;&#xE1;</p>
+                </div>
+                <p class="menu-editorial-card__cta">
+                    <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                    <span class="menu-editorial-card__cta-glyph" aria-hidden="true">→</span>
+                </p>
+            </div>
+    </div>
+</article>
+
+                    </div>
+
+                    <div class="menu-chapter-support">
+                            <article style="--reveal-delay: 0ms"
+         data-drink-card="e1ab46bb-3347-404d-90c4-bf5c18995ed1"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="C&#xE0; ph&#xEA; &#x111;en &#x111;&#xE1;">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="e1ab46bb-3347-404d-90c4-bf5c18995ed1"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">C&#xE0; ph&#xEA; &#x111;en &#x111;&#xE1;</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">30.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 45ms"
+         data-drink-card="301eda3c-b913-4899-b23d-31014c22c6d8"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="B&#x1EA1;c x&#x1EC9;u">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="301eda3c-b913-4899-b23d-31014c22c6d8"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">B</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">B&#x1EA1;c x&#x1EC9;u</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">38.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 90ms"
+         data-drink-card="30b85afa-7a10-4e90-8042-d4bba57cab35"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="C&#xE0; ph&#xEA; mu&#x1ED1;i">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="30b85afa-7a10-4e90-8042-d4bba57cab35"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">C&#xE0; ph&#xEA; mu&#x1ED1;i</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 135ms"
+         data-drink-card="38f7f879-11c5-47f8-ab72-e8e43b32f28f"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Espresso">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="38f7f879-11c5-47f8-ab72-e8e43b32f28f"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">E</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Espresso</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">35.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="aab00c78-d003-4de7-bb8d-51a5c81ba4e6"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Americano">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="aab00c78-d003-4de7-bb8d-51a5c81ba4e6"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">A</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Americano</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="df878b52-ca80-4364-bde8-53e2ea409788"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Latte">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="df878b52-ca80-4364-bde8-53e2ea409788"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">L</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Latte</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="26ae430f-3d4a-49e5-a674-14d072654ef0"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Mocha">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="26ae430f-3d4a-49e5-a674-14d072654ef0"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">M</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Mocha</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">48.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="cfa199ec-e294-481a-be69-8d357a22e44c"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Caramel Macchiato">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="cfa199ec-e294-481a-be69-8d357a22e44c"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">CAFE</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Caramel Macchiato</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">50.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                    </div>
+            </div>
+
+            <div class="menu-chapter-silence" aria-hidden="true"></div>
+        </section>
+            <div class="letter-chapter-break" aria-hidden="true">
+                <span class="letter-chapter-break__glyph">—</span>
+            </div>
+        <section id="menu-cat-f88b70cf-ba7b-4b76-9e04-ae7521f4e42b"
+                 data-cat-section="f88b70cf-ba7b-4b76-9e04-ae7521f4e42b"
+                 class="menu-cat-section menu-chapter scroll-mt-40 sm:scroll-mt-44">
+
+            <header class="menu-chapter-head">
+                <div class="menu-chapter-head__lead">
+                    <span class="menu-chapter__index" aria-hidden="true">02</span>
+                    <h2 class="menu-cat-heading">TR&#xC0;</h2>
+                    <p class="menu-chapter__rest" data-i18n="menu.editorialFallback">C&#xE1;c m&#xF3;n trong nh&#xF3;m n&#xE0;y. H&#x1ECF;i barista n&#x1EBF;u b&#x1EA1;n c&#x1EA7;n g&#x1EE3;i &#xFD;.</p>
+                </div>
+            </header>
+
+            <div class="menu-chapter-compose">
+                    <div class="menu-chapter-hero">
+                        <article style="--reveal-delay: 0ms"
+         data-drink-card="ec838cfb-c7da-42df-8813-051654198c91"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--hero"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; &#x111;&#xE0;o cam s&#x1EA3;">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="ec838cfb-c7da-42df-8813-051654198c91"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+            <span class="menu-editorial-card__badge"
+                  data-i18n="menu.ribbonFeatured"
+                  aria-hidden="true">Kh&#xE1;ch y&#xEA;u th&#xED;ch</span>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--hero">
+            <div class="menu-editorial-card__hero-meta">
+                <h3 class="menu-editorial-card__name">Tr&#xE0; &#x111;&#xE0;o cam s&#x1EA3;</h3>
+                <div class="menu-editorial-card__hero-row">
+                    <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <p class="menu-editorial-card__taste">&#x110;&#xE0;o, cam, s&#x1EA3;, tr&#xE0; &#x111;en</p>
+                </div>
+                <p class="menu-editorial-card__cta">
+                    <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                    <span class="menu-editorial-card__cta-glyph" aria-hidden="true">→</span>
+                </p>
+            </div>
+    </div>
+</article>
+
+                    </div>
+
+                    <div class="menu-chapter-support">
+                            <article style="--reveal-delay: 0ms"
+         data-drink-card="b8aca53b-f9ef-46e8-80ac-5c3dd15ce308"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; v&#x1EA3;i">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="b8aca53b-f9ef-46e8-80ac-5c3dd15ce308"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; v&#x1EA3;i</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 45ms"
+         data-drink-card="69736ca6-0b83-4b49-9790-f800b50b351b"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; chanh m&#x1EAD;t ong">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="69736ca6-0b83-4b49-9790-f800b50b351b"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; chanh m&#x1EAD;t ong</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 90ms"
+         data-drink-card="7a02b0ad-770a-4831-8645-a0e7d68ff377"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; d&#xE2;u">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="7a02b0ad-770a-4831-8645-a0e7d68ff377"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; d&#xE2;u</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 135ms"
+         data-drink-card="b199e524-17fe-4388-adbd-48f753083551"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; xo&#xE0;i">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="b199e524-17fe-4388-adbd-48f753083551"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; xo&#xE0;i</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="7c61e6cd-d09a-494c-a00c-3e6e8b9bacae"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; &#xF4; long s&#x1EEF;a">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="7c61e6cd-d09a-494c-a00c-3e6e8b9bacae"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; &#xF4; long s&#x1EEF;a</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="d39ae9a4-10ff-4244-8d6d-e125c7707fcc"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; Earl Grey">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="d39ae9a4-10ff-4244-8d6d-e125c7707fcc"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; Earl Grey</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="47303b69-e6a7-44e5-ab54-3b1c4e386ee3"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; hoa c&#xFA;c m&#x1EAD;t ong">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="47303b69-e6a7-44e5-ab54-3b1c4e386ee3"
+         style="--card-accent: #c4b8e8">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">TR&#xC0;</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; hoa c&#xFA;c m&#x1EAD;t ong</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                    </div>
+            </div>
+
+            <div class="menu-chapter-silence" aria-hidden="true"></div>
+        </section>
+            <div class="letter-chapter-break" aria-hidden="true">
+                <span class="letter-chapter-break__glyph">—</span>
+            </div>
+        <section id="menu-cat-0915537f-cbe5-4095-a1b9-09bdd3169f64"
+                 data-cat-section="0915537f-cbe5-4095-a1b9-09bdd3169f64"
+                 class="menu-cat-section menu-chapter scroll-mt-40 sm:scroll-mt-44">
+
+            <header class="menu-chapter-head">
+                <div class="menu-chapter-head__lead">
+                    <span class="menu-chapter__index" aria-hidden="true">03</span>
+                    <h2 class="menu-cat-heading">B&#xC1;NH</h2>
+                    <p class="menu-chapter__rest" data-i18n="menu.editorialFallback">C&#xE1;c m&#xF3;n trong nh&#xF3;m n&#xE0;y. H&#x1ECF;i barista n&#x1EBF;u b&#x1EA1;n c&#x1EA7;n g&#x1EE3;i &#xFD;.</p>
+                </div>
+            </header>
+
+            <div class="menu-chapter-compose">
+                    <div class="menu-chapter-hero">
+                        <article style="--reveal-delay: 0ms"
+         data-drink-card="5484191a-4b8f-4be7-8d35-ce10ca127aeb"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--hero"
+         tabindex="0"
+         role="button"
+         aria-label="Croissant th&#x1ECB;t ngu&#x1ED9;i &amp; ph&#xF4; mai">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="5484191a-4b8f-4be7-8d35-ce10ca127aeb"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+            <span class="menu-editorial-card__badge"
+                  data-i18n="menu.ribbonFeatured"
+                  aria-hidden="true">Kh&#xE1;ch y&#xEA;u th&#xED;ch</span>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--hero">
+            <div class="menu-editorial-card__hero-meta">
+                <h3 class="menu-editorial-card__name">Croissant th&#x1ECB;t ngu&#x1ED9;i &amp; ph&#xF4; mai</h3>
+                <div class="menu-editorial-card__hero-row">
+                    <p class="menu-editorial-card__price tabular-nums">55.000 &#x20AB;</p>
+                        <p class="menu-editorial-card__taste">Croissant, th&#x1ECB;t ngu&#x1ED9;i, ph&#xF4; mai</p>
+                </div>
+                <p class="menu-editorial-card__cta">
+                    <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                    <span class="menu-editorial-card__cta-glyph" aria-hidden="true">→</span>
+                </p>
+            </div>
+    </div>
+</article>
+
+                    </div>
+
+                    <div class="menu-chapter-support">
+                            <article style="--reveal-delay: 0ms"
+         data-drink-card="f22576e2-ba0e-450b-8ba3-a09dfa1704ae"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Croissant tr&#x1EE9;ng mu&#x1ED1;i">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="f22576e2-ba0e-450b-8ba3-a09dfa1704ae"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Croissant tr&#x1EE9;ng mu&#x1ED1;i</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">50.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 45ms"
+         data-drink-card="3d1b75e4-8ce6-47b9-aa25-e33fa543a9d7"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Donut &#x111;&#x1B0;&#x1EDD;ng">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="3d1b75e4-8ce6-47b9-aa25-e33fa543a9d7"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">D</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Donut &#x111;&#x1B0;&#x1EDD;ng</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">30.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 90ms"
+         data-drink-card="3a58f5ce-5336-4708-872f-8d7b52538f03"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Donut chocolate">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="3a58f5ce-5336-4708-872f-8d7b52538f03"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">D</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Donut chocolate</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">35.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 135ms"
+         data-drink-card="f1d7a950-3357-45af-bfc0-f7d7b9e9e330"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Donut matcha">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="f1d7a950-3357-45af-bfc0-f7d7b9e9e330"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">D</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Donut matcha</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">35.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="5c4c9ca1-9098-4285-964f-71d00dc4a707"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Brownie chocolate">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="5c4c9ca1-9098-4285-964f-71d00dc4a707"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">B</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Brownie chocolate</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">40.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 180ms"
+         data-drink-card="a95d312f-d7ca-47cb-8190-c314dac1c0bf"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Brownie h&#x1EA1;t">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="a95d312f-d7ca-47cb-8190-c314dac1c0bf"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">B</span>
+                <span class="menu-editorial-card__no-poster-lbl">B&#xC1;NH</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Brownie h&#x1EA1;t</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">45.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                    </div>
+            </div>
+
+            <div class="menu-chapter-silence" aria-hidden="true"></div>
+        </section>
+            <div class="letter-chapter-break" aria-hidden="true">
+                <span class="letter-chapter-break__glyph">—</span>
+            </div>
+        <section id="menu-cat-20c0eae6-d052-4a94-a60c-e8e881586eba"
+                 data-cat-section="20c0eae6-d052-4a94-a60c-e8e881586eba"
+                 class="menu-cat-section menu-chapter scroll-mt-40 sm:scroll-mt-44">
+
+            <header class="menu-chapter-head">
+                <div class="menu-chapter-head__lead">
+                    <span class="menu-chapter__index" aria-hidden="true">04</span>
+                    <h2 class="menu-cat-heading">COMBO</h2>
+                    <p class="menu-chapter__rest" data-i18n="menu.editorialFallback">C&#xE1;c m&#xF3;n trong nh&#xF3;m n&#xE0;y. H&#x1ECF;i barista n&#x1EBF;u b&#x1EA1;n c&#x1EA7;n g&#x1EE3;i &#xFD;.</p>
+                </div>
+            </header>
+
+            <div class="menu-chapter-compose">
+                    <div class="menu-chapter-hero">
+                        <article style="--reveal-delay: 0ms"
+         data-drink-card="c6fd2cd2-546f-4926-8fcc-16d1877a0447"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--hero"
+         tabindex="0"
+         role="button"
+         aria-label="Coffee &#x2B; Donut">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="c6fd2cd2-546f-4926-8fcc-16d1877a0447"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">COMBO</span>
+            </div>
+            <span class="menu-editorial-card__badge"
+                  data-i18n="menu.ribbonFeatured"
+                  aria-hidden="true">Kh&#xE1;ch y&#xEA;u th&#xED;ch</span>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--hero">
+            <div class="menu-editorial-card__hero-meta">
+                <h3 class="menu-editorial-card__name">Coffee &#x2B; Donut</h3>
+                <div class="menu-editorial-card__hero-row">
+                    <p class="menu-editorial-card__price tabular-nums">60.000 &#x20AB;</p>
+                        <p class="menu-editorial-card__taste">C&#xE0; ph&#xEA; k&#xE8;m donut</p>
+                </div>
+                <p class="menu-editorial-card__cta">
+                    <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                    <span class="menu-editorial-card__cta-glyph" aria-hidden="true">→</span>
+                </p>
+            </div>
+    </div>
+</article>
+
+                    </div>
+
+                    <div class="menu-chapter-support menu-chapter-support--compact">
+                            <article style="--reveal-delay: 0ms"
+         data-drink-card="07d20a11-cf38-4cc6-ae40-a1b4c6b3fc78"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Coffee &#x2B; Brownie">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="07d20a11-cf38-4cc6-ae40-a1b4c6b3fc78"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">C</span>
+                <span class="menu-editorial-card__no-poster-lbl">COMBO</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Coffee &#x2B; Brownie</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">75.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 45ms"
+         data-drink-card="f906a747-6c84-4d77-a008-d355be98da21"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Latte &#x2B; Croissant">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="f906a747-6c84-4d77-a008-d355be98da21"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">L</span>
+                <span class="menu-editorial-card__no-poster-lbl">COMBO</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Latte &#x2B; Croissant</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">90.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                            <article style="--reveal-delay: 90ms"
+         data-drink-card="ca0ef7c6-8c03-4314-bb8b-42bccbd49c53"
+         class="menu-card-reveal menu-editorial-card menu-editorial-card--support"
+         tabindex="0"
+         role="button"
+         aria-label="Tr&#xE0; &#x2B; Donut">
+    <div class="menu-editorial-card__frame menu-editorial-card__frame--no-poster"
+         data-frame="ca0ef7c6-8c03-4314-bb8b-42bccbd49c53"
+         style="--card-accent: #d9b56a">
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">T</span>
+                <span class="menu-editorial-card__no-poster-lbl">COMBO</span>
+            </div>
+    </div>
+    <div class="menu-editorial-card__label menu-editorial-card__label--support">
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">Tr&#xE0; &#x2B; Donut</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">70.000 &#x20AB;</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</article>
+
+                    </div>
+            </div>
+
+            <div class="menu-chapter-silence" aria-hidden="true"></div>
+        </section>
+</div>
+
+<script type="application/json" id="menu-catalog-json">[{"id":"e1ab46bb-3347-404d-90c4-bf5c18995ed1","name":"C\u00E0 ph\u00EA \u0111en \u0111\u00E1","price":30000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"d2b95bec-e582-4898-8269-6958611ad1aa","name":"C\u00E0 ph\u00EA s\u1EEFa \u0111\u00E1","price":35000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"301eda3c-b913-4899-b23d-31014c22c6d8","name":"B\u1EA1c x\u1EC9u","price":38000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"30b85afa-7a10-4e90-8042-d4bba57cab35","name":"C\u00E0 ph\u00EA mu\u1ED1i","price":40000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"38f7f879-11c5-47f8-ab72-e8e43b32f28f","name":"Espresso","price":35000.00,"categoryName":"CAFE","supportsHotIced":true},{"id":"aab00c78-d003-4de7-bb8d-51a5c81ba4e6","name":"Americano","price":40000.00,"categoryName":"CAFE","supportsHotIced":true},{"id":"df878b52-ca80-4364-bde8-53e2ea409788","name":"Latte","price":45000.00,"categoryName":"CAFE","supportsHotIced":true},{"id":"26ae430f-3d4a-49e5-a674-14d072654ef0","name":"Mocha","price":48000.00,"categoryName":"CAFE","supportsHotIced":true},{"id":"cfa199ec-e294-481a-be69-8d357a22e44c","name":"Caramel Macchiato","price":50000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"ec838cfb-c7da-42df-8813-051654198c91","name":"Tr\u00E0 \u0111\u00E0o cam s\u1EA3","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"b8aca53b-f9ef-46e8-80ac-5c3dd15ce308","name":"Tr\u00E0 v\u1EA3i","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"69736ca6-0b83-4b49-9790-f800b50b351b","name":"Tr\u00E0 chanh m\u1EADt ong","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"7a02b0ad-770a-4831-8645-a0e7d68ff377","name":"Tr\u00E0 d\u00E2u","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"b199e524-17fe-4388-adbd-48f753083551","name":"Tr\u00E0 xo\u00E0i","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"7c61e6cd-d09a-494c-a00c-3e6e8b9bacae","name":"Tr\u00E0 \u00F4 long s\u1EEFa","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"d39ae9a4-10ff-4244-8d6d-e125c7707fcc","name":"Tr\u00E0 Earl Grey","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"47303b69-e6a7-44e5-ab54-3b1c4e386ee3","name":"Tr\u00E0 hoa c\u00FAc m\u1EADt ong","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"5484191a-4b8f-4be7-8d35-ce10ca127aeb","name":"Croissant th\u1ECBt ngu\u1ED9i \u0026 ph\u00F4 mai","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"f22576e2-ba0e-450b-8ba3-a09dfa1704ae","name":"Croissant tr\u1EE9ng mu\u1ED1i","price":50000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"3d1b75e4-8ce6-47b9-aa25-e33fa543a9d7","name":"Donut \u0111\u01B0\u1EDDng","price":30000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"3a58f5ce-5336-4708-872f-8d7b52538f03","name":"Donut chocolate","price":35000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"f1d7a950-3357-45af-bfc0-f7d7b9e9e330","name":"Donut matcha","price":35000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"5c4c9ca1-9098-4285-964f-71d00dc4a707","name":"Brownie chocolate","price":40000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"a95d312f-d7ca-47cb-8190-c314dac1c0bf","name":"Brownie h\u1EA1t","price":45000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"c6fd2cd2-546f-4926-8fcc-16d1877a0447","name":"Coffee \u002B Donut","price":60000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"07d20a11-cf38-4cc6-ae40-a1b4c6b3fc78","name":"Coffee \u002B Brownie","price":75000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"f906a747-6c84-4d77-a008-d355be98da21","name":"Latte \u002B Croissant","price":90000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"ca0ef7c6-8c03-4314-bb8b-42bccbd49c53","name":"Tr\u00E0 \u002B Donut","price":70000.00,"categoryName":"COMBO","supportsHotIced":false}]</script>
+<script type="application/json" id="menu-guest-context">{"seated":false,"venueTableId":null,"label":null}</script>
+
+<link rel="stylesheet" href="/css/guest-tray-submitted.css?v=Ffx0S48mchKZO-CJdDIawAwtMVVXP8yzaGOw7b9OyTU" />
+<link rel="stylesheet" href="/css/checkout-sheet.css?v=csBxC-7JqkLOlbprFhkTABG5VDJVp6vvwRhiXlzvNgY" />
+<div id="order-tray-backdrop"
+     class="order-tray-backdrop order-tray-backdrop-layer pointer-events-none fixed inset-0 z-[55] hidden opacity-0 sm:rounded-none"
+     aria-hidden="true"></div>
+
+<div id="order-tray-root"
+     class="order-tray-root order-tray-root--dock pointer-events-none fixed inset-x-0 bottom-0 z-[60] sm:left-auto sm:right-6 sm:w-[min(23.5rem,calc(100vw-2rem))]">
+    <div class="order-tray-shell pointer-events-none relative z-[60] mx-auto max-w-lg px-3 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))] sm:px-0">
+        <div class="relative flex flex-col items-stretch">
+            <div id="order-tray-sheet"
+                 class="order-tray-sheet checkout-sheet order-tray-sheet--closed pointer-events-none absolute bottom-full left-0 right-0 mb-2 flex max-h-[min(78dvh,720px)] flex-col overflow-hidden">
+                <div class="annap-tray-header order-tray-header-compact relative flex shrink-0 items-center gap-2">
+                    <div class="order-tray-handle pointer-events-none absolute left-1/2 top-1 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[rgba(26,20,16,0.1)]" aria-hidden="true"></div>
+
+                    <div class="order-tray-header__stamp order-tray-header__stamp--compact" aria-hidden="true">A</div>
+                    <div class="min-w-0 flex-1">
+                        <p id="traySheetTitle" class="order-tray-sheet-title" data-i18n="menuTray.sheetTitle">Khay của bạn</p>
+                        <p id="trayCountLine"
+                           class="order-tray-sheet-sub" data-i18n="menuTray.sheetSub">Chạm để xem và gửi order</p>
+                        <p id="trayTableMeta" class="order-tray-table-meta hidden" aria-live="polite"></p>
+                    </div>
+
+                    <div class="flex shrink-0 items-center gap-0.5">
+                        <button type="button"
+                                id="order-tray-clear"
+                                class="guest-hit inline-flex min-h-8 items-center rounded-full px-2 py-0.5 text-[8px] font-medium tracking-[0.2em] uppercase text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:scale-[0.97]"
+                                data-i18n="menuTray.clear">
+                            Xóa lựa chọn
+                        </button>
+                        <button type="button"
+                                id="annap-tray-close"
+                                class="guest-hit inline-flex h-8 w-8 items-center justify-center rounded-full text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.97]"
+                                data-i18n-aria="cart.close">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-3.5 w-3.5">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="order-tray-lines-wrap" class="order-tray-lines-wrap min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+                    <div id="cart" class="order-tray-lines pb-1 text-sm"></div>
+                    <div id="order-tray-submitted-panel" class="order-tray-submitted-panel hidden" hidden>
+                        <div id="order-tray-submitted-card" class="order-tray-submitted-card order-tray-submitted-card--compact" role="status">
+                            <div class="order-tray-submitted-card__seal" aria-hidden="true">A</div>
+                            <p id="order-tray-submitted-title" class="order-tray-submitted-card__title"></p>
+                            <p id="order-tray-submitted-status" class="order-tray-submitted-card__status hidden" hidden></p>
+                            <p id="order-tray-submitted-body" class="order-tray-submitted-card__body"></p>
+                            <p id="order-tray-submitted-note" class="order-tray-submitted-card__note"></p>
+                            <div id="order-tray-transfer-host" class="order-tray-transfer-host"></div>
+                            <a id="order-tray-submitted-track" href="#" class="order-tray-submitted-card__link"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="order-tray-sheet-footer" class="order-tray-sheet-footer shrink-0">
+                    <div id="order-tray-checkout-body" class="order-tray-checkout-body min-h-0">
+                    <div id="order-tray-checkout-review" class="order-tray-checkout hidden" hidden>
+                        <p class="order-tray-checkout__kicker" data-i18n="checkout.checkBillTitle">Kiểm tra đơn</p>
+                        <p class="order-tray-checkout__note" data-i18n="checkout.reviewNoteShort">Kiểm tra món trước khi thanh toán.</p>
+                        <ul id="order-tray-checkout-lines" class="order-tray-checkout__lines"></ul>
+                        <div class="order-tray-subtotal-row">
+                            <span data-i18n="checkout.estimatedTotal">Tạm tính</span>
+                            <p id="order-tray-checkout-total">0đ</p>
+                        </div>
+                    </div>
+
+                    <div id="order-tray-checkout-payment" class="order-tray-checkout hidden" hidden>
+                        <p class="order-tray-checkout__kicker" data-i18n="checkout.choosePaymentMethod">Chọn cách thanh toán</p>
+                        <div class="order-tray-payment-options order-tray-payment-options--triple grid grid-cols-3" role="radiogroup" data-i18n-aria="checkout.paymentMethodLabel">
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="Cash"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.payCash">Tiền mặt</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.payAtCounterHint">Thanh toán tại quầy</span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="Card"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.payCard">Thẻ</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.payAtCounterHint">Thanh toán tại quầy</span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="BankTransfer"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.bankTransfer">Chuyển khoản</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.bankTransferHint">QR theo đúng số tiền</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div id="order-tray-payment-preview"
+                             class="order-tray-payment-preview hidden"
+                             hidden
+                             aria-live="polite">
+                            <p id="order-tray-payment-preview-title" class="order-tray-payment-preview__title"></p>
+                            <p id="order-tray-payment-preview-body" class="order-tray-payment-preview__body"></p>
+                            <p id="order-tray-payment-preview-note" class="order-tray-payment-preview__note"></p>
+                            <p id="order-tray-payment-preview-keepopen"
+                               class="order-tray-payment-preview__keepopen hidden"
+                               hidden
+                               role="status"></p>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div id="order-tray-cart-footer" class="order-tray-cart-footer">
+                    <div class="order-tray-subtotal-row">
+                        <span data-i18n="menuTray.subtotal">Tạm tính</span>
+                        <p id="order-tray-subtotal">0đ</p>
+                    </div>
+
+                    <div id="menu-table-identity" class="hidden" aria-hidden="true">
+                        <p id="menu-table-primary"></p>
+                    </div>
+                    <div id="menu-table-need-qr"
+                         class="order-tray-need-qr hidden"
+                         data-i18n="cart.needQr">
+                        Vui lòng quét QR trên bàn để bắt đầu.
+                    </div>
+
+                    <input type="hidden" id="menuVenueTableId" value="" autocomplete="off" />
+
+                    <div id="order-tray-checkout-sticky" class="order-tray-checkout-sticky">
+                        <div id="order-tray-checkout-actions" class="order-tray-checkout-actions flex gap-1.5 hidden" hidden>
+                            <button type="button"
+                                    id="order-tray-checkout-back"
+                                    class="order-tray-back-btn guest-hit">
+                                <span data-i18n="menu.back">Quay lại</span>
+                            </button>
+                        </div>
+
+                        <button type="button"
+                                id="menuSubmitBtn"
+                                class="btn-ink order-tray-submit w-full disabled:opacity-45"
+                                disabled
+                                onclick="if (typeof window.__annapMenuSubmitOrder === 'function') window.__annapMenuSubmitOrder();">
+                            Kiểm tra đơn
+                        </button>
+                    </div>
+
+                    <div id="orderResult"
+                         class="order-tray-result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button"
+                    id="order-tray-chip"
+                    class="order-tray-chip checkout-sheet-chip pointer-events-auto guest-hit relative z-[1] flex min-h-[2.75rem] w-full items-center gap-1.5 px-2.5 py-1.5 text-left transition-[box-shadow] duration-200 ease-out active:scale-[0.995] sm:min-h-0 sm:duration-300 sm:ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    aria-expanded="false"
+                    aria-controls="order-tray-sheet"
+                    data-i18n-aria="menuTray.ariaChip">
+                <span id="order-tray-chip-impact" class="order-tray-chip__impact" aria-hidden="true"></span>
+                <div class="order-tray-chip__lead">
+                    <span id="order-tray-chip-stack" class="order-tray-chip__stack" aria-hidden="true">
+                        <span class="order-tray-chip__empty-line"></span>
+                    </span>
+                    <div class="order-tray-chip__copy">
+                        <p class="order-tray-chip__kicker text-[8px] font-medium tracking-[0.24em] uppercase text-[rgb(var(--muted-2))]" data-i18n="menuTray.chipKicker">Khay</p>
+                        <p id="order-tray-chip-title"
+                           class="mt-0.5 text-[0.75rem] font-medium leading-snug text-[rgb(var(--fg))]" data-i18n="menuTray.chipEmpty">Khay đang chờ</p>
+                        <p id="order-tray-chip-sub"
+                           class="order-tray-chip__sub mt-0.5 text-[10px] leading-snug text-[rgb(var(--muted))]" data-i18n="menuTray.chipSubEmpty">Chọn một ly để bắt đầu.</p>
+                        <p id="order-tray-chip-guest"
+                           class="mt-1 hidden text-[10px] font-medium tracking-[0.18em] uppercase text-[rgb(var(--accent))]/80"></p>
+                    </div>
+                </div>
+                <div class="order-tray-chip__price">
+                    <span id="order-tray-chip-total" class="order-tray-chip__total">0đ</span>
+                </div>
+                <span class="order-tray-chevron flex items-center justify-center rounded-full bg-[rgba(253,249,244,0.95)] ring-1 ring-[rgba(212,184,150,0.45)] transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      aria-hidden="true">
+                    <svg class="h-3.5 w-3.5 text-[rgb(var(--muted))]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="drink-detail-modal"
+     class="drink-detail-modal fixed inset-0 z-[350] hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-hidden="true">
+    <div id="drink-detail-backdrop" role="presentation"></div>
+    <div id="drink-detail-panel">
+        <header class="drink-detail-action-bar"
+                data-i18n-aria="menu.detailActionsAria">
+            <button type="button"
+                    id="drink-detail-close"
+                    class="drink-detail-close drink-detail-action-bar__back drink-modal-close drink-poster-back"
+                    data-i18n-aria="cart.close">
+                <span class="drink-detail-action-bar__glyph" aria-hidden="true">←</span>
+                <span data-i18n="menu.back">Quay lại</span>
+            </button>
+            <button type="button"
+                    id="drink-detail-add-top"
+                    class="drink-detail-add-top drink-detail-action-bar__add menu-add-btn"
+                    hidden
+                    disabled
+                    data-i18n="menu.prepareForTable">
+                <span class="drink-detail-add-top__label">Pha cho bàn tôi</span>
+            </button>
+        </header>
+        <div id="drink-detail-mount"></div>
+    </div>
+</div>
+
+
+
+    </main>
+
+        <div b-a9s0fj8hxd id="annap-boot-overlay" class="hidden" aria-hidden="true"></div>
+
+        </div>
+
+    <div b-a9s0fj8hxd id="guestToast" class="fixed left-4 right-4 z-50 hidden [bottom:max(1rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))]">
+        <div b-a9s0fj8hxd class="mx-auto max-w-5xl">
+            <div b-a9s0fj8hxd class="surface-glass inline-flex min-h-12 items-center gap-3 rounded-sm border border-[rgba(190,165,130,0.35)] px-5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_24px_-12px_rgba(26,18,9,0.1)]">
+                <div b-a9s0fj8hxd class="text-sm text-[rgb(var(--fg))]" id="guestToastText" data-i18n="toast.addedShort">Added.</div>
+                <button b-a9s0fj8hxd type="button" id="guestToastViewTray" class="guest-hit min-h-11 px-3 text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))] underline underline-offset-4" data-i18n="toast.viewOpen">View tray</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/json" id="annap-guest-boot-json">{"disableSommelierBoot":false,"disableSignalR":false,"disableGuestQueue":false,"disableI18n":false,"disableMoodCatalog":false,"disableCartHydration":false,"disableGuestAnimations":false,"disableGuestObservers":false,"showBootChecklist":false,"safeQuery":""}</script>
+    <script src="/js/guest-boot-harness.js?v=YnwEU-LG8Ag54dSTwBhoIdiayR7eqBjSHkDIVptMCKU"></script>
+    <script src="/js/annap-money.js?v=eOw42wjzgcO0dfBRnfIGytXJXXVcXcrvEwkiE4FjMl8"></script>
+        <script src="/js/guest-order-queue.js?v=B4CqDZrBSQkMr2Qc5KB9XjJxAnTWp1Ynm37bghf2xgY"></script>
+    <script src="/js/site.js?v=xQvlqRO252Mcv0jbZvIeKmhbow6PNZao4c_mWaOTr4k" defer></script>
+    <script src="/js/interaction-feedback.js?v=LRr7Abf4iKVVi6VF_r7kZBM4ze-FyK-KyzzFfKnzNM8"></script>
+    <script src="/js/add-to-order-animation-provider.js?v=ZJnY3N1HrUZsZcLIKyfpQcOEYUTkvQy-H8XvFfoG-8c" defer></script>
+    <script src="/js/correspondence.js?v=9THrEiztbba4J12rKz7DviwKXVEReQ0Uq0aNqsisNfQ" defer></script>
+        <script src="/js/guest-i18n.js?v=AT8Koa9gby0AVU5cBpiFP_3o7ye3iySt7N_8HrB3WwQ"></script>
+    <script src="/js/guest-interaction-contract.js?v=s2NfDqkhomxP36RDbC2x8tzcNfIS1zn9vzBQTMy6y8k"></script>
+    <script src="/js/guest-feedback.js?v=koZoP1bg_3k29iGJlQyw2QaQ1kDLuu2PwgtVIX2DQ40"></script>
+
+
+    
+    <script>
+        if (window.AnnapGuestBootHarness) {
+            AnnapGuestBootHarness.row("menu", "ok");
+            AnnapGuestBootHarness.row("mood", "skip");
+            AnnapGuestBootHarness.row("signalr", "skip");
+        }
+    </script>
+    <script src="/js/drink-detail-renderer.js?v=FJjxq5mL2phelP6R-XAbQsHGwlRHrwecIY3gOrp_3Yo"></script>
+    <script src="/js/drink-detail-modal.js?v=q2oy4g-F1s95iuUTEKKXu99cZYigTskRcs64932hEg8"></script>
+    <script src="/js/guest-bank-transfer.js?v=6F1-_GZbe7FIOOPKxSs4lIH-WSD4mXT8cyAkxSbgWss"></script>
+    <script src="/js/order-tray-dock.js?v=O6yiS6RAET7Gbcopy96OdSUudaIZflNUPGB-Pa7SAzQ"></script>
+    <script>
+        if (typeof window.annapStartOrderTrayDock === "function") window.annapStartOrderTrayDock();
+        /* Auto-open overlay when redirected from a direct drink URL */
+        (function () {
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var drinkId = params.get("openDrink");
+                if (!drinkId) return;
+                params.delete("openDrink");
+                var qs = params.toString();
+                history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
+                window.setTimeout(function () {
+                    if (typeof window.openDrinkDetail === "function") void window.openDrinkDetail(drinkId);
+                }, 80);
+            } catch (_od) {}
+        }());
+    </script>
+    <script src="/js/menu-browse-cards.js?v=IXGgx6FxJGyMFdYjSDbhrlDFcpd2Azx7B8KDwH0bVm4"></script>
+    <script>
+    /* â”€â”€ Menu browse enhancements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+       1. Card reveal â€” IntersectionObserver batched stagger.
+       2. Category chip rail â€” centre active chip in scrollable rail.
+    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    (function () {
+        "use strict";
+
+        var isCorrespond = document.documentElement.classList.contains("annap-correspond-ui");
+        var prefersReduced = typeof window.matchMedia === "function" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /* 1 â€” Card reveal via IntersectionObserver */
+        var revealAll = function () {
+            document.querySelectorAll(".menu-card-reveal").forEach(function (el) {
+                el.style.setProperty("--reveal-delay", "0ms");
+                el.classList.add("is-visible");
+            });
+        };
+
+        var coarsePointer = typeof window.matchMedia === "function" &&
+            window.matchMedia("(hover: none)").matches;
+
+        if (isCorrespond || prefersReduced || coarsePointer || typeof IntersectionObserver === "undefined") {
+            revealAll();
+        } else {
+            var pending = [];
+            var rafId = 0;
+
+            function flushBatch() {
+                rafId = 0;
+                if (!pending.length) return;
+                var batch = pending.splice(0);
+                batch.forEach(function (el, i) {
+                    el.style.setProperty("--reveal-delay", (i * 55) + "ms");
+                    el.classList.add("is-visible");
+                    cardObserver.unobserve(el);
+                });
+            }
+
+            var cardObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting && !entry.target.classList.contains("is-visible")) {
+                        pending.push(entry.target);
+                    }
+                });
+                if (pending.length && !rafId) {
+                    rafId = window.requestAnimationFrame(flushBatch);
+                }
+            }, { threshold: 0.04, rootMargin: "0px 0px -3% 0px" });
+
+            document.querySelectorAll(".menu-card-reveal").forEach(function (el) {
+                cardObserver.observe(el);
+            });
+
+            /* Fallback: reveal any stragglers after 2 s */
+            window.setTimeout(function () {
+                document.querySelectorAll(".menu-card-reveal:not(.is-visible)").forEach(function (el) {
+                    el.style.setProperty("--reveal-delay", "0ms");
+                    el.classList.add("is-visible");
+                });
+            }, 2000);
+        }
+
+        /* 2 â€” Category chip rail: scroll active chip into centre on click */
+        var catRail = document.getElementById("menu-cat-rail-inner");
+        if (catRail) {
+            document.querySelectorAll("[data-cat-nav]").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    window.requestAnimationFrame(function () {
+                        var railRect = catRail.getBoundingClientRect();
+                        var btnRect  = btn.getBoundingClientRect();
+                        if (btnRect.left < railRect.left || btnRect.right > railRect.right) {
+                            var scrollTarget = catRail.scrollLeft +
+                                (btnRect.left - railRect.left) -
+                                (railRect.width / 2 - btn.offsetWidth / 2);
+                            if (typeof window.annapEditorialScrollH === "function") {
+                                window.annapEditorialScrollH(catRail, scrollTarget, 360);
+                            } else {
+                                catRail.scrollTo({ left: scrollTarget, behavior: "smooth" });
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    })();
+    </script>
+
+    <script>
+/* Service worker disabled in Development — avoids stale /api/menu handlers on LAN devices. */    </script>
+    </div>
+</body>
+</html>

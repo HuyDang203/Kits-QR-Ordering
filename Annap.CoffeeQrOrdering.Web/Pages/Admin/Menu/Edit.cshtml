@@ -1,0 +1,107 @@
+@page "/admin/menu/edit/{id:guid}"
+@using System.Text.Json
+@model EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa món";
+    ViewData["AdminNavSection"] = "menu";
+    ViewData["AdminEyebrow"] = "Thực đơn";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin/menu");
+    ViewData["AdminReturnLabel"] = "← Quay lại thực đơn";
+    var editorModel = new MenuCurationEditorPartialModel
+    {
+        Input = Model.Input,
+        Categories = Model.CategoryOptions,
+        CurrentHeroUrl = Model.CurrentHeroUrl,
+        CurrentDetailPosterUrl = Model.CurrentDetailPosterUrl,
+        PreviewCorrelationId = Model.MenuItemId,
+        IsEdit = true
+    };
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="menu-curation-page">
+    <header class="menu-curation-page__head">
+        <div>
+            <p class="menu-curation-page__eyebrow">Thực đơn</p>
+            <h1 class="menu-curation-page__title">@(!string.IsNullOrWhiteSpace(Model.Input.Name) ? Model.Input.Name : "Chỉnh sửa món")</h1>
+            <p class="menu-curation-page__lede">Cập nhật thông tin món và cách hiển thị cho khách.</p>
+        </div>
+        <div class="menu-curation-page__head-actions">
+            <a asp-page="/Admin/Menu/Index" class="admin-btn admin-btn--quiet min-h-11 px-5 text-xs tracking-[0.1em]">Quay lại thực đơn</a>
+        </div>
+    </header>
+
+    @if (TempData["MenuCurationToast"] is string tedit)
+    {
+        <div class="menu-curation-toast" role="status">@tedit</div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mx-auto mb-6 max-w-3xl rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-200/90" asp-validation-summary="All"></div>
+    }
+
+    @if (Model.IsArchived)
+    {
+        <div class="mx-auto mb-6 max-w-3xl rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4 text-sm text-[rgb(var(--muted))]">
+            Món này <span class="text-[rgb(var(--fg))]">đã được lưu trữ</span> — không hiện trên thực đơn và không nhận đơn. Khôi phục khi muốn cho khách thấy lại.
+        </div>
+    }
+
+    <form method="post"
+          enctype="multipart/form-data"
+          asp-page="/Admin/Menu/Edit"
+          asp-route-id="@Model.MenuItemId"
+          id="menu-curation-form"
+          class="menu-curation-split"
+          data-menu-curation-form
+          data-category-labels='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryOptions.ToDictionary(c => c.Id.ToString("D"), c => c.Name)))'>
+        <div class="menu-curation-split__editor">
+            <partial name="_MenuCurationEditorForm" model="editorModel" />
+
+            <div class="menu-curation-save-strip menu-curation-save-strip--calm" id="menu-curation-save-strip" aria-live="polite">
+                <p class="menu-curation-save-strip__state" id="menu-curation-dirty-state">Sẵn sàng lưu</p>
+                <button type="submit" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs tracking-[0.12em]">
+                    Lưu thay đổi
+                </button>
+            </div>
+
+            <section class="menu-curation-danger">
+                <header class="menu-curation-danger__head">
+                    <p class="menu-curation-danger__eyebrow">Khu vực nguy hiểm</p>
+                    <h2 class="menu-curation-danger__title">Quản lý món</h2>
+                    <p class="menu-curation-danger__lede">Món sẽ không còn xuất hiện trong thực đơn của khách.</p>
+                </header>
+                <div class="menu-curation-danger__actions">
+                    @if (Model.IsArchived)
+                    {
+                        <form method="post" asp-page-handler="Restore" asp-route-id="@Model.MenuItemId" class="inline">
+                            <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-11 px-5 text-xs tracking-[0.1em]">
+                                Khôi phục món
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Archive" asp-route-id="@Model.MenuItemId" class="inline"
+                              onsubmit="return confirm('Lưu trữ món này? Món sẽ không còn hiện trên thực đơn nhưng vẫn giữ trong danh sách quản lý.');">
+                            <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-11 px-5 text-xs tracking-[0.1em] text-[rgb(var(--muted))] ring-white/[0.12]">
+                                Lưu trữ món
+                            </button>
+                        </form>
+                    }
+                </div>
+            </section>
+        </div>
+        <aside class="menu-curation-split__preview" aria-label="Xem trước trực tiếp">
+            <div class="menu-curation-preview-sticky">
+                <partial name="_MenuCurationPreviewCard" model="Model.Preview" />
+            </div>
+        </aside>
+    </form>
+</section>
+
+@section Scripts
+{
+    <script src="~/js/menu-curation.js" asp-append-version="true"></script>
+}

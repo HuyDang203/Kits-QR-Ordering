@@ -1,0 +1,38 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.Staff.ShiftClose.IndexModel
+
+<section class="staff-shift-close__section" aria-labelledby="shift-pay-heading">
+    <h2 class="staff-shift-close__section-title" id="shift-pay-heading">Phương thức thanh toán</h2>
+    <div class="staff-shift-close__pay-grid">
+        <article class="staff-shift-close__pay-card">
+            <p class="staff-shift-close__pay-label">Tiền mặt</p>
+            <p class="staff-shift-close__pay-value">@Model.Money(Model.Preview.CashAmount)</p>
+            <p class="staff-shift-close__pay-meta">@Model.Preview.CashOrders bill</p>
+        </article>
+        <article class="staff-shift-close__pay-card">
+            <p class="staff-shift-close__pay-label">Thẻ</p>
+            <p class="staff-shift-close__pay-value">@Model.Money(Model.Preview.CardAmount)</p>
+            <p class="staff-shift-close__pay-meta">@Model.Preview.CardOrders bill</p>
+        </article>
+        <article class="staff-shift-close__pay-card">
+            <p class="staff-shift-close__pay-label">Chuyển khoản</p>
+            <p class="staff-shift-close__pay-value">@Model.Money(Model.Preview.BankTransferAmount)</p>
+            <p class="staff-shift-close__pay-meta">@Model.Preview.BankTransferOrders bill</p>
+        </article>
+        @if (Model.Preview.LegacyCashOrCardAmount > 0)
+        {
+            <article class="staff-shift-close__pay-card staff-shift-close__pay-card--warn">
+                <p class="staff-shift-close__pay-label">Tiền mặt/thẻ cũ</p>
+                <p class="staff-shift-close__pay-value">@Model.Money(Model.Preview.LegacyCashOrCardAmount)</p>
+                <p class="staff-shift-close__pay-meta">@Model.Preview.LegacyCashOrCardOrders bill</p>
+            </article>
+        }
+        @if (Model.Preview.UnknownPaymentAmount > 0)
+        {
+            <article class="staff-shift-close__pay-card staff-shift-close__pay-card--warn">
+                <p class="staff-shift-close__pay-label">Chưa rõ</p>
+                <p class="staff-shift-close__pay-value">@Model.Money(Model.Preview.UnknownPaymentAmount)</p>
+                <p class="staff-shift-close__pay-meta">@Model.Preview.UnknownPaymentOrders bill</p>
+            </article>
+        }
+    </div>
+</section>

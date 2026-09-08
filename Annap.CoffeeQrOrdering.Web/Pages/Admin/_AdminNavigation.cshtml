@@ -1,0 +1,139 @@
+@{
+    var section = ViewData["AdminNavSection"] as string ?? "";
+}
+<nav class="admin-nav-primary flex flex-col gap-8" aria-label="Điều hướng chính">
+    <div>
+        <span class="admin-mark">Kits Coffee Atelier</span>
+        <span class="admin-mark__title">Quản trị viên</span>
+        <p class="admin-mark__subtitle">Điều hành nhẹ nhàng — không phải bảng tính.</p>
+    </div>
+
+    <div>
+        <p class="admin-nav-group-label">Tổng quan</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link @(section == "overview" ? "is-active" : null)" asp-page="/Admin/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◇</span>
+                    <span>Trang chính</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "reports" ? "is-active" : null)" asp-page="/Admin/Reports/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">▤</span>
+                    <span>Báo cáo bán hàng</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "payments" ? "is-active" : null)" asp-page="/Admin/Payments/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">⇄</span>
+                    <span>Đối soát chuyển khoản</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <p class="admin-nav-group-label">Vận hành</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link @(section == "floor" ? "is-active" : null)" asp-page="/Staff/Orders">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◎</span>
+                    <span>Sàn phục vụ</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "staff-accounts" ? "is-active" : null)" asp-page="/Admin/StaffAccounts/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◌</span>
+                    <span>Tài khoản nhân viên</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "tables" ? "is-active" : null)" asp-page="/Admin/Tables/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">▢</span>
+                    <span>Bàn quán</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "demo-qr" ? "is-active" : null)" asp-page="/Admin/Demo/Qr">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">▣</span>
+                    <span>Mã QR bàn</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "operations" ? "is-active" : null)" asp-page="/Admin/Operations/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◉</span>
+                    <span>Nhịp quán</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <p class="admin-nav-group-label">Menu &amp; bán hàng</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link @(section == "menu" ? "is-active" : null)" asp-page="/Admin/Menu/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">☕</span>
+                    <span>Thực đơn</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "inventory" ? "is-active" : null)" asp-page="/Admin/Inventory/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◧</span>
+                    <span>Kho nguyên liệu</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <p class="admin-nav-group-label">Phân tích</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link @(section == "intelligence" ? "is-active" : null)" asp-page="/Admin/Intelligence/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◐</span>
+                    <span>Đài quan sát</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-divider"></div>
+
+    <div>
+        <p class="admin-nav-group-label">Hệ thống</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link @(section == "system-data-audit" ? "is-active" : null)" asp-page="/Admin/Connectivity/DataAudit">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">◫</span>
+                    <span>Kiểm tra dữ liệu</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "system-network" ? "is-active" : null)" asp-page="/Admin/Connectivity/Network">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">⎘</span>
+                    <span>Địa chỉ mạng</span>
+                </a>
+            </li>
+            <li>
+                <a class="admin-nav-link @(section == "system-infrastructure" ? "is-active" : null)" asp-page="/Admin/Connectivity/Infrastructure">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">⌁</span>
+                    <span>Hạ tầng</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-divider"></div>
+    <div>
+        <p class="admin-nav-group-label">Khu khách</p>
+        <ul class="admin-nav-list">
+            <li>
+                <a class="admin-nav-link" asp-page="/Index">
+                    <span class="admin-nav-link__glyph" aria-hidden="true">→</span>
+                    <span>Trang khách</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

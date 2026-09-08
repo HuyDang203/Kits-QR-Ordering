@@ -1,0 +1,38 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.Staff.ShiftClose.IndexModel
+
+<section class="staff-shift-close__kpis" aria-label="Tổng quan ca">
+    <article class="staff-shift-close__kpi staff-shift-close__kpi--hero">
+        <p class="staff-shift-close__kpi-label">Tổng doanh thu</p>
+        <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.TotalGrossAmount)</p>
+    </article>
+    <article class="staff-shift-close__kpi">
+        <p class="staff-shift-close__kpi-label">Số bill</p>
+        <p class="staff-shift-close__kpi-value">@Model.Preview.TotalOrders</p>
+    </article>
+    <article class="staff-shift-close__kpi">
+        <p class="staff-shift-close__kpi-label">Tiền mặt</p>
+        <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.CashAmount)</p>
+    </article>
+    <article class="staff-shift-close__kpi">
+        <p class="staff-shift-close__kpi-label">Thẻ</p>
+        <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.CardAmount)</p>
+    </article>
+    <article class="staff-shift-close__kpi">
+        <p class="staff-shift-close__kpi-label">Chuyển khoản</p>
+        <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.BankTransferAmount)</p>
+    </article>
+    @if (Model.Preview.LegacyCashOrCardAmount > 0)
+    {
+        <article class="staff-shift-close__kpi staff-shift-close__kpi--warn">
+            <p class="staff-shift-close__kpi-label">Tiền mặt/thẻ cũ</p>
+            <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.LegacyCashOrCardAmount)</p>
+        </article>
+    }
+    @if (Model.Preview.UnknownPaymentAmount > 0)
+    {
+        <article class="staff-shift-close__kpi staff-shift-close__kpi--warn">
+            <p class="staff-shift-close__kpi-label">Chưa rõ</p>
+            <p class="staff-shift-close__kpi-value">@Model.Money(Model.Preview.UnknownPaymentAmount)</p>
+        </article>
+    }
+</section>

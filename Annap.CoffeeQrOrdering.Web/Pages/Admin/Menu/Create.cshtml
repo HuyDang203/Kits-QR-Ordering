@@ -1,0 +1,72 @@
+@page "/admin/menu/create"
+@using System.Text.Json
+@model CreateModel
+@{
+    ViewData["Title"] = "Thêm món mới";
+    ViewData["AdminNavSection"] = "menu";
+    ViewData["AdminEyebrow"] = "Thực đơn";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin/menu");
+    ViewData["AdminReturnLabel"] = "← Quay lại thực đơn";
+    var editorModel = new MenuCurationEditorPartialModel
+    {
+        Input = Model.Input,
+        Categories = Model.CategoryOptions,
+        CurrentHeroUrl = Model.CurrentHeroUrl,
+        CurrentDetailPosterUrl = Model.CurrentDetailPosterUrl,
+        PreviewCorrelationId = Guid.Empty,
+        IsEdit = false
+    };
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="menu-curation-page">
+    <header class="menu-curation-page__head">
+        <div>
+            <p class="menu-curation-page__eyebrow">Thực đơn</p>
+            <h1 class="menu-curation-page__title">Thêm món mới</h1>
+            <p class="menu-curation-page__lede">Nhập thông tin cơ bản để món xuất hiện trong thực đơn.</p>
+        </div>
+        <div class="menu-curation-page__head-actions">
+            <a asp-page="/Admin/Menu/Index" class="admin-btn admin-btn--quiet min-h-11 px-5 text-xs tracking-[0.1em]">Hủy</a>
+        </div>
+    </header>
+
+    @if (TempData["MenuCurationToast"] is string tcreate)
+    {
+        <div class="menu-curation-toast" role="status">@tcreate</div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mx-auto mb-6 max-w-3xl rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-200/90" asp-validation-summary="All"></div>
+    }
+
+    <form method="post"
+          enctype="multipart/form-data"
+          asp-page="/Admin/Menu/Create"
+          id="menu-curation-form"
+          class="menu-curation-split"
+          data-menu-curation-form
+          data-category-labels='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryOptions.ToDictionary(c => c.Id.ToString("D"), c => c.Name)))'>
+        <div class="menu-curation-split__editor">
+            <partial name="_MenuCurationEditorForm" model="editorModel" />
+
+            <div class="menu-curation-save-strip menu-curation-save-strip--calm" id="menu-curation-save-strip" aria-live="polite">
+                <p class="menu-curation-save-strip__state" id="menu-curation-dirty-state">Sẵn sàng lưu</p>
+                <button type="submit" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs tracking-[0.12em]">
+                    Lưu món
+                </button>
+            </div>
+        </div>
+        <aside class="menu-curation-split__preview" aria-label="Xem trước trực tiếp">
+            <div class="menu-curation-preview-sticky">
+                <partial name="_MenuCurationPreviewCard" model="Model.Preview" />
+            </div>
+        </aside>
+    </form>
+</section>
+
+@section Scripts
+{
+    <script src="~/js/menu-curation.js" asp-append-version="true"></script>
+}

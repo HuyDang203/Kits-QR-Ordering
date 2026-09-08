@@ -1,0 +1,1045 @@
+/*
+ * menu-browse.css — editorial grid · category bar · print material
+ * Loaded after site.css + correspondence.css; no Tailwind build step needed.
+ */
+
+/* ── Print material floor (static — no animation) ─────────────────────────── */
+.menu-browse {
+    --menu-print-ink: rgba(26, 20, 16, 0.82);
+    --menu-print-ink-soft: rgba(26, 20, 16, 0.56);
+    --menu-print-mat: rgba(248, 242, 232, 0.96);
+    --menu-print-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-image:
+        var(--menu-print-grain),
+        radial-gradient(ellipse 130% 70% at 50% -8%, rgba(196, 168, 130, 0.055), transparent 58%);
+    background-size: 220px 220px, 100% 100%;
+    background-blend-mode: multiply, normal;
+}
+
+.menu-browse .menu-cat-heading,
+.menu-browse .menu-chapter__rest,
+.menu-browse .menu-editorial-card__name,
+.menu-browse .menu-editorial-card__price {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. CARD REVEAL — IntersectionObserver gated
+   Atmospheric easing: slower reveal, more organic feel.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@keyframes menuCardReveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.menu-card-reveal:not(.is-visible) {
+    animation: none;
+    opacity: 0;
+    transform: translateY(22px);
+}
+
+.menu-card-reveal.is-visible {
+    animation: menuCardReveal 0.45s ease both;
+    animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* Correspondence UI â€” skip animation, show immediately */
+html.annap-correspond-ui .menu-card-reveal,
+html.annap-correspond-ui .menu-card-reveal:not(.is-visible) {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Reduced motion â€” show immediately, no animation */
+@media (prefers-reduced-motion: reduce) {
+    .menu-card-reveal,
+    .menu-card-reveal:not(.is-visible),
+    .menu-card-reveal.is-visible {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .menu-editorial-card__img {
+        opacity: 1 !important;
+        transition: none !important;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. EDITORIAL CHAPTER — tasting publication composition (no masonry)
+   One hero anchor + supporting grid per category. Mobile-first vertical rhythm.
+   ───────────────────────────────────────────────────────────────────────────── */
+.menu-chapter-head {
+    margin-bottom: clamp(1.5rem, 3.8vh, 2.35rem);
+    padding-top: 0.15rem;
+    border-top: 1px solid rgba(26, 20, 16, 0.07);
+    max-width: 100%;
+}
+
+.menu-chapter-head__lead {
+    display: grid;
+    gap: 0.42rem;
+    padding-top: clamp(0.85rem, 2.2vh, 1.15rem);
+    max-width: 28rem;
+}
+
+.menu-chapter__index {
+    font-family: var(--font-ui);
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: rgba(var(--muted-2, 160 140 115) / 0.52);
+}
+
+.menu-chapter__rest {
+    display: none;
+}
+
+.menu-chapter-compose {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.35rem, 3.5vh, 2rem);
+}
+
+.menu-chapter-hero {
+    padding-right: clamp(0.75rem, 6vw, 2rem);
+}
+
+.menu-chapter-hero .menu-editorial-card--hero {
+    margin-bottom: 0;
+    max-width: min(20.5rem, 100%);
+    gap: clamp(0.65rem, 1.8vh, 0.9rem);
+}
+
+.menu-chapter-hero .menu-editorial-card__frame {
+    background: linear-gradient(168deg, var(--menu-print-mat), rgba(239, 230, 214, 0.9));
+    box-shadow:
+        inset 0 0 0 1px rgba(26, 20, 16, 0.065),
+        inset 0 1px 0 rgba(255, 248, 238, 0.45);
+}
+
+.menu-chapter-hero .menu-editorial-card__img {
+    filter:
+        contrast(0.96)
+        saturate(0.91)
+        sepia(0.04)
+        drop-shadow(0 3px 11px rgba(42, 32, 20, 0.075));
+}
+
+.menu-chapter-hero .menu-editorial-card__name {
+    font-size: clamp(1.12rem, 3.6vw, 1.38rem);
+    letter-spacing: -0.025em;
+    color: var(--menu-print-ink);
+    line-height: 1.22;
+    text-shadow: 0 0.02em 0.14em rgba(26, 20, 16, 0.035);
+}
+
+.menu-chapter-hero .menu-editorial-card__price {
+    font-size: clamp(0.95rem, 2.6vw, 1.08rem);
+    color: rgba(var(--accent, 199 168 122) / 0.92);
+}
+
+/* Supporting pours — quiet editorial list, not a poster grid */
+.menu-chapter-support {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 100%;
+    padding-top: 0.15rem;
+}
+
+.menu-chapter-support .menu-editorial-card--support {
+    flex-direction: row;
+    align-items: stretch;
+    gap: clamp(0.85rem, 2.8vw, 1.1rem);
+    margin-bottom: 0;
+    padding: clamp(0.82rem, 2.2vh, 1rem) 0;
+    border-top: 1px solid rgba(26, 20, 16, 0.05);
+}
+
+.menu-chapter-support .menu-editorial-card--support:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.menu-chapter-support .menu-editorial-card__frame {
+    width: clamp(4rem, 21vw, 5.5rem);
+    max-width: 5.5rem;
+    flex-shrink: 0;
+}
+
+.menu-chapter-support .menu-editorial-card__img {
+    filter: contrast(0.94) saturate(0.87) sepia(0.05);
+    opacity: 0.86;
+    box-shadow: inset 0 0 0 1px rgba(26, 20, 16, 0.045);
+}
+
+.menu-chapter-support .menu-editorial-card--support:nth-child(3n + 1) .menu-editorial-card__frame {
+    transform: rotate(-0.35deg);
+}
+
+.menu-chapter-support .menu-editorial-card--support:nth-child(3n + 2) .menu-editorial-card__frame {
+    transform: rotate(0.28deg);
+}
+
+.menu-chapter-support .menu-editorial-card__label {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.menu-chapter-support .menu-editorial-card__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.menu-chapter-support .menu-editorial-card__name {
+    font-family: var(--font-ui);
+    font-size: clamp(0.9rem, 2.35vw, 1.02rem);
+    font-style: normal;
+    font-weight: 400;
+    color: rgba(26, 20, 16, 0.62);
+    line-height: 1.35;
+    flex: 1;
+    min-width: 0;
+}
+
+.menu-chapter-support .menu-editorial-card__price {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    color: rgba(var(--muted, 120 100 80) / 0.78);
+}
+
+.menu-chapter-silence {
+    display: block;
+    min-height: clamp(2rem, 5.5vh, 3.25rem);
+}
+
+@media (min-width: 720px) {
+    .menu-chapter-compose {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: clamp(2rem, 3.8vw, 2.75rem);
+        align-items: start;
+    }
+
+    .menu-chapter-hero {
+        padding-right: 0;
+    }
+
+    .menu-chapter-hero .menu-editorial-card--hero {
+        max-width: min(22.5rem, 100%);
+    }
+
+    .menu-chapter-support {
+        padding-top: 0.35rem;
+        max-width: 20rem;
+        justify-self: end;
+        width: 100%;
+    }
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   3. EDITORIAL CARD â€” photographic, no component borders, no floating-card feel
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-editorial-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    gap: 0.75rem;
+    cursor: pointer;
+    outline: none;
+    border-radius: 0;
+    --menu-card-glow-x: 50%;
+    --menu-card-glow-y: 38%;
+}
+
+.menu-editorial-card--hero .menu-editorial-card__label {
+    max-width: 17rem;
+}
+
+.menu-editorial-card__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+}
+
+.menu-editorial-card__price {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: rgba(var(--muted, 120 100 80) / 0.82);
+}
+
+.menu-editorial-card:focus-visible {
+    outline: 1px solid rgb(var(--accent, 199 168 122));
+    outline-offset: 5px;
+}
+
+/* â”€â”€ Image frame â€” photograph lying on warm paper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-editorial-card__frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0;
+    isolation: isolate;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    aspect-ratio: 4 / 3;
+}
+
+.menu-editorial-card__frame::after {
+    content: none;
+}
+
+.menu-editorial-card__frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+        circle at var(--menu-card-glow-x) var(--menu-card-glow-y),
+        rgba(255, 244, 216, 0.22),
+        transparent 52%
+    );
+    transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Press / hover physical motion — menu-browse-physical.css */
+
+.menu-editorial-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 1;
+    filter:
+        contrast(0.97)
+        saturate(0.93)
+        sepia(0.035)
+        drop-shadow(0 2px 9px rgba(42, 32, 20, 0.065));
+    transform: translate3d(0, 0, 0);
+}
+
+.menu-editorial-card__frame--no-poster {
+    background:
+        var(--menu-print-grain),
+        linear-gradient(
+            165deg,
+            rgba(248, 242, 232, 0.88) 0%,
+            color-mix(in srgb, var(--card-accent, #e8c76b) 10%, rgba(236, 226, 208, 0.94)) 100%
+        );
+    background-size: 180px 180px, 100% 100%;
+    background-blend-mode: multiply, normal;
+    box-shadow: inset 0 0 0 1px rgba(26, 20, 16, 0.055);
+}
+
+.menu-editorial-card__no-poster {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    z-index: 0;
+}
+
+.menu-editorial-card__no-poster-glyph {
+    font-family: var(--font-ui);
+    font-size: 2.75rem;
+    font-weight: 400;
+    font-style: normal;
+    color: rgba(26, 20, 16, 0.72);
+    line-height: 1;
+}
+
+.menu-editorial-card__no-poster-lbl {
+    font-size: 0.52rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(26, 20, 16, 0.38);
+}
+
+/* ── Badge (signature / featured) ─────────────────────────────────────────── */
+.menu-editorial-card__badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    z-index: 2;
+    font-size: 0.46rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(26, 20, 16, 0.62);
+    background: rgba(241, 232, 216, 0.82);
+    padding: 0.24rem 0.5rem;
+    border-radius: 0;
+    border: none;
+    box-shadow:
+        inset 0 -1px 0 rgba(26, 20, 16, 0.14),
+        inset 0 1px 0 rgba(255, 248, 238, 0.35);
+}
+
+/* â”€â”€ Label area â€” caption beneath the photograph â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-editorial-card__label {
+    padding: 0.15rem 0 0;
+}
+
+.menu-editorial-card__name {
+    font-family: var(--font-ui);
+    font-size: clamp(0.9rem, 2.3vw, 1.02rem);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.005em;
+    color: var(--menu-print-ink);
+}
+
+html.annap-correspond-ui .menu-editorial-card__name {
+    color: rgb(var(--fg, 26 18 9) / 0.82);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   4. IMAGE SKELETON SHIMMER
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-editorial-card__frame:not(.img-loaded):not(.menu-editorial-card__frame--no-poster) {
+    background:
+        var(--menu-print-grain),
+        rgba(241, 232, 216, 0.62);
+    background-size: 200px 200px, 100% 100%;
+    background-blend-mode: multiply, normal;
+    animation: none;
+}
+
+html.annap-correspond-ui .menu-editorial-card__frame:not(.img-loaded):not(.menu-editorial-card__frame--no-poster) {
+    background:
+        var(--menu-print-grain),
+        rgba(236, 226, 208, 0.68);
+    background-size: 200px 200px, 100% 100%;
+    background-blend-mode: multiply, normal;
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-editorial-card__frame:not(.img-loaded):not(.menu-editorial-card__frame--no-poster) {
+        animation: none;
+        background: rgba(26, 20, 16, 0.04) !important;
+    }
+    html.annap-correspond-ui .menu-editorial-card__frame:not(.img-loaded):not(.menu-editorial-card__frame--no-poster) {
+        background: rgba(196, 168, 130, 0.08) !important;
+    }
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   5. CATEGORY BAR â€” editorial underline tab style
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-cat-editorial-bar {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 0px);
+    z-index: 30;
+    /* Higher opacity solid background â€” backdrop-filter on a sticky element
+       triggers a compositor layer that repaints on every scroll frame on Android */
+    background: rgba(253, 249, 244, 0.98);
+    border-bottom: 1px solid rgba(168, 140, 105, 0.22);
+    box-shadow: 0 1px 0 rgba(168, 140, 105, 0.10);
+    transition: background 0.3s ease;
+}
+
+@media (min-width: 640px) {
+    .menu-cat-editorial-bar {
+        top: 7rem;
+        border: 1px solid rgba(168, 140, 105, 0.22);
+        border-radius: 0;
+        box-shadow: 0 2px 12px rgba(120, 90, 50, 0.06);
+    }
+}
+
+html.annap-correspond-ui .menu-cat-editorial-bar {
+    background: rgba(242, 235, 224, 0.99);
+    border-bottom-color: rgba(148, 120, 85, 0.28);
+}
+
+.menu-cat-editorial-rail {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 0.25rem;
+}
+
+.menu-cat-editorial-rail::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-editorial-chip {
+    position: relative;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 0.875rem 1.0rem;
+    font-size: 0.595rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(var(--muted, 120 100 80) / 0.65);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    min-height: 2.75rem;
+    white-space: nowrap;
+    transition: color 0.28s ease, font-weight 0s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+@media (min-width: 640px) {
+    .menu-editorial-chip {
+        padding: 1rem 1.25rem;
+        font-size: 0.62rem;
+    }
+}
+
+/* Active indicator â€” 2px warm ink underline, scale from center */
+.menu-editorial-chip::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0.875rem;
+    right: 0.875rem;
+    height: 2px;
+    background: rgb(var(--fg, 26 20 16));
+    border-radius: 1px 1px 0 0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 640px) {
+    .menu-editorial-chip::after {
+        left: 1.125rem;
+        right: 1.125rem;
+    }
+}
+
+.menu-editorial-chip:hover {
+    color: rgba(26, 20, 16, 0.72);
+}
+
+.menu-editorial-chip.is-active {
+    color: rgb(var(--fg, 26 20 16));
+    font-weight: 600;
+    letter-spacing: 0.20em;
+}
+
+.menu-editorial-chip.is-active::after {
+    transform: scaleX(1);
+}
+
+html.annap-correspond-ui .menu-editorial-chip::after {
+    background: rgb(var(--fg, 26 18 9));
+}
+
+html.annap-correspond-ui .menu-editorial-chip.is-active {
+    color: rgb(var(--fg, 26 18 9));
+}
+
+/* Legacy Tailwind active class compat */
+.menu-editorial-chip.text-\[rgb\(var\(--fg\)\)\] {
+    color: rgb(var(--fg, 26 20 16));
+    font-weight: 600;
+}
+.menu-editorial-chip.text-\[rgb\(var\(--fg\)\)\]::after {
+    transform: scaleX(1);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   6. CATEGORY HEADING â€” curated annotation, not section navigation
+   Italic serif, muted â€” reads as an editorial gesture not a UI label.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-cat-heading {
+    font-family: var(--font-ui);
+    font-size: clamp(1.125rem, 3.2vw, 1.625rem);
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: rgb(var(--muted, 120 100 80));
+    text-shadow: 0 0.02em 0.1em rgba(26, 20, 16, 0.03);
+}
+
+html.annap-correspond-ui .menu-cat-heading {
+    font-family: var(--font-ui);
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: var(--ink-deep, #1a1209);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   7. CATEGORY SECTION â€” ambient warmth, spacious rhythm
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.menu-cat-section.menu-chapter {
+    position: relative;
+    isolation: isolate;
+    padding-top: clamp(2.5rem, 6vh, 3.5rem);
+}
+
+.menu-cat-section.menu-chapter:first-of-type {
+    padding-top: clamp(2rem, 4.5vh, 2.75rem);
+}
+
+@media (min-width: 640px) {
+    .menu-cat-section.menu-chapter {
+        padding-top: clamp(3rem, 6.5vh, 4rem);
+    }
+
+    .menu-cat-section.menu-chapter:first-of-type {
+        padding-top: clamp(2.25rem, 5vh, 3rem);
+    }
+}
+
+.menu-cat-section::before {
+    content: none;
+}
+
+/* Mobile / touch: calm surfaces, keep grounding, no filters or hover motion */
+@media (hover: none), (pointer: coarse) {
+    .menu-editorial-card__frame:not(.img-loaded):not(.menu-editorial-card__frame--no-poster) {
+        animation: none;
+        background: rgba(244, 239, 228, 0.45);
+    }
+
+    .menu-chapter-support .menu-editorial-card__img {
+        filter: contrast(0.94) saturate(0.87) sepia(0.05);
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   8. MENU-REFINE-CATEGORY — catalogue rhythm, tray clearance, mobile catalogue
+   ───────────────────────────────────────────────────────────────────────────── */
+.menu-browse--catalogue {
+    --menu-print-mat: rgba(255, 252, 247, 0.98);
+    --menu-tray-clearance: max(8rem, calc(7rem + env(safe-area-inset-bottom, 0px)));
+    padding-bottom: var(--menu-tray-clearance);
+    scroll-padding-bottom: var(--menu-tray-clearance);
+    background-image: radial-gradient(ellipse 120% 65% at 50% 0%, rgba(255, 250, 242, 0.5), transparent 62%);
+    background-blend-mode: normal;
+    background-size: 100% 100%;
+}
+
+.menu-browse--catalogue .menu-chapter-head .menu-cat-heading {
+    margin: 0;
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card--support:nth-child(3n + 1) .menu-editorial-card__frame,
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card--support:nth-child(3n + 2) .menu-editorial-card__frame {
+    transform: none;
+}
+
+.menu-browse--catalogue .letter-chapter-break {
+    margin-top: clamp(1.75rem, 4.5vh, 2.5rem);
+    margin-bottom: clamp(0.5rem, 1.5vh, 0.85rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-browse--catalogue .menu-chapter-support .menu-editorial-card--support:nth-child(3n + 1) .menu-editorial-card__frame,
+    .menu-browse--catalogue .menu-chapter-support .menu-editorial-card--support:nth-child(3n + 2) .menu-editorial-card__frame {
+        transform: none !important;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   9. MENU-CATALOGUE-PREMIUM-1 — taste passport catalogue rhythm
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.menu-browse--catalogue .menu-cat-editorial-bar {
+    margin-top: clamp(1.35rem, 3.5vh, 2rem);
+    background: rgba(252, 248, 242, 0.97);
+    border-bottom-color: rgba(26, 20, 16, 0.08);
+    box-shadow: 0 1px 0 rgba(255, 248, 238, 0.55);
+}
+
+.menu-browse--catalogue .menu-editorial-chip {
+    padding: 0.62rem 0.8rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    color: rgba(26, 20, 16, 0.58);
+}
+
+.menu-browse--catalogue .menu-editorial-chip.is-active {
+    color: rgba(26, 20, 16, 0.88);
+    letter-spacing: 0.18em;
+}
+
+.menu-browse--catalogue .menu-chapter-head {
+    margin-bottom: clamp(1.15rem, 2.8vh, 1.75rem);
+    border-top-color: rgba(26, 20, 16, 0.09);
+}
+
+.menu-browse--catalogue .menu-chapter-head__lead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 0.7rem;
+    row-gap: 0.38rem;
+    align-items: start;
+    max-width: 100%;
+    padding-top: clamp(0.75rem, 2vh, 1rem);
+}
+
+.menu-browse--catalogue .menu-chapter__index {
+    grid-row: 1 / span 2;
+    padding-top: 0.28rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.34em;
+    color: rgba(26, 20, 16, 0.52);
+}
+
+.menu-browse--catalogue .menu-chapter-head .menu-cat-heading {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: rgba(26, 20, 16, 0.9);
+}
+
+.menu-browse--catalogue .menu-chapter__rest {
+    display: block;
+    grid-column: 2;
+    margin: 0;
+    max-width: 22rem;
+    font-family: var(--font-ui);
+    font-size: clamp(0.8rem, 2.15vw, 0.92rem);
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42;
+    color: rgba(26, 20, 16, 0.58);
+}
+
+.menu-browse--catalogue .menu-cat-section.menu-chapter {
+    padding-top: clamp(2rem, 4.8vh, 2.85rem);
+}
+
+.menu-browse--catalogue .menu-cat-section.menu-chapter:first-of-type {
+    padding-top: clamp(1.5rem, 3.5vh, 2.1rem);
+}
+
+.menu-browse--catalogue .menu-chapter-compose {
+    gap: clamp(1.1rem, 2.8vh, 1.65rem);
+}
+
+.menu-browse--catalogue .menu-chapter-hero {
+    padding-right: 0;
+}
+
+.menu-browse--catalogue .menu-chapter-hero .menu-editorial-card--hero {
+    max-width: 100%;
+    gap: clamp(0.72rem, 2vh, 0.95rem);
+}
+
+.menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__frame {
+    background: linear-gradient(168deg, rgba(255, 252, 247, 0.98), rgba(252, 246, 236, 0.94));
+    box-shadow:
+        inset 0 0 0 1px rgba(26, 20, 16, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__img {
+    transform: none;
+    filter: none;
+    opacity: 1;
+}
+
+.menu-browse--catalogue .menu-editorial-card__label--hero {
+    max-width: 100%;
+    padding: 0 0.1rem;
+}
+
+.menu-browse--catalogue .menu-editorial-card__hero-meta {
+    display: grid;
+    gap: 0.42rem;
+}
+
+.menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__name {
+    font-size: clamp(1.18rem, 3.8vw, 1.45rem);
+    line-height: 1.18;
+    text-shadow: none;
+}
+
+.menu-browse--catalogue .menu-editorial-card__hero-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.85rem;
+}
+
+.menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__price {
+    margin: 0;
+    font-size: clamp(0.98rem, 2.7vw, 1.1rem);
+    font-weight: 600;
+    color: rgba(122, 32, 24, 0.88);
+}
+
+.menu-browse--catalogue .menu-editorial-card__taste {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: clamp(0.78rem, 2.1vw, 0.88rem);
+    font-style: normal;
+    line-height: 1.35;
+    color: rgba(26, 20, 16, 0.58);
+}
+
+.menu-browse--catalogue .menu-editorial-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.1rem 0 0;
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(26, 20, 16, 0.58);
+}
+
+.menu-browse--catalogue .menu-editorial-card__cta-glyph {
+    font-size: 0.82rem;
+    line-height: 1;
+    opacity: 0.72;
+}
+
+.menu-browse--catalogue .menu-chapter-support {
+    border-top: 1px solid rgba(26, 20, 16, 0.06);
+    padding-top: 0.35rem;
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card--support {
+    padding: clamp(0.72rem, 2vh, 0.92rem) 0;
+    border-top-color: rgba(26, 20, 16, 0.045);
+    gap: clamp(0.75rem, 2.5vw, 1rem);
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card__frame {
+    width: clamp(3.65rem, 18vw, 4.85rem);
+    max-width: 4.85rem;
+    background: rgba(255, 252, 247, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(26, 20, 16, 0.07);
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card__img {
+    opacity: 1;
+    filter: none;
+}
+
+.menu-browse--catalogue .menu-editorial-card__label--support {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+}
+
+.menu-browse--catalogue .menu-editorial-card__passport-row {
+    width: 100%;
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card__caption {
+    display: grid;
+    gap: 0.32rem;
+    width: 100%;
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card__name {
+    font-family: var(--font-ui);
+    font-size: clamp(0.92rem, 2.5vw, 1.04rem);
+    font-style: normal;
+    font-weight: 400;
+    color: rgba(26, 20, 16, 0.88);
+    line-height: 1.28;
+    opacity: 1;
+}
+
+.menu-browse--catalogue .menu-editorial-card__passport-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+}
+
+.menu-browse--catalogue .menu-chapter-support .menu-editorial-card__price {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(26, 20, 16, 0.72);
+}
+
+.menu-browse--catalogue .menu-editorial-card__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    flex-shrink: 0;
+    font-family: var(--font-ui);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(26, 20, 16, 0.54);
+}
+
+.menu-browse--catalogue .menu-editorial-card__action-glyph {
+    font-size: 0.75rem;
+    line-height: 1;
+    opacity: 0.68;
+}
+
+.menu-browse--catalogue .menu-chapter-support--compact {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 0.75rem;
+    border-top: none;
+    padding-top: 0.15rem;
+}
+
+.menu-browse--catalogue .menu-chapter-support--compact .menu-editorial-card--support {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    border-top: none;
+    gap: 0.55rem;
+}
+
+.menu-browse--catalogue .menu-chapter-support--compact .menu-editorial-card__frame {
+    width: 100%;
+    max-width: none;
+}
+
+.menu-browse--catalogue .menu-chapter-support--compact .menu-editorial-card__caption {
+    gap: 0.22rem;
+}
+
+.menu-browse--catalogue .menu-chapter-support--compact .menu-editorial-card__passport-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.18rem;
+}
+
+.menu-browse--catalogue .menu-chapter-silence {
+    min-height: clamp(2rem, 5vh, 3rem);
+}
+
+@media (min-width: 720px) {
+    .menu-browse--catalogue .menu-chapter-support--compact {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 100%;
+        justify-self: stretch;
+    }
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-head .menu-cat-heading {
+    font-family: var(--font-ui);
+    color: var(--ink-deep, #1a1209);
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter__rest {
+    color: var(--ink-secondary, #8b6b47);
+    opacity: 1;
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__price {
+    font-family: var(--font-ui);
+    font-style: normal;
+    color: rgba(122, 32, 24, 0.9);
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-support .menu-editorial-card__name {
+    opacity: 1;
+    color: rgba(26, 20, 16, 0.88);
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__img,
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-support .menu-editorial-card__img {
+    filter: none;
+    opacity: 1;
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-hero .menu-editorial-card__frame {
+    background: linear-gradient(168deg, rgba(255, 252, 247, 0.98), rgba(252, 246, 236, 0.94));
+}
+
+html.annap-correspond-ui .menu-browse--catalogue .menu-chapter-support .menu-editorial-card__price {
+    font-family: var(--font-ui);
+    font-style: normal;
+    color: rgba(26, 20, 16, 0.72);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-browse--catalogue .menu-editorial-chip,
+    .menu-browse--catalogue .menu-editorial-chip::after {
+        transition: none;
+    }
+}
+
+/* ── Phase 1A: seated QR menu — mobile scanability ─────────────────────────── */
+html.annap-seated-guest .menu-browse--catalogue .menu-editorial-card {
+    min-height: 2.75rem;
+}
+
+html.annap-seated-guest .menu-browse--catalogue .menu-editorial-card__name {
+    font-size: clamp(1rem, 4.2vw, 1.125rem);
+    line-height: 1.35;
+}
+
+html.annap-seated-guest .menu-browse--catalogue .menu-editorial-card__price {
+    font-size: clamp(0.9375rem, 3.8vw, 1.0625rem);
+    font-weight: 600;
+}
+
+html.annap-seated-guest .menu-browse--catalogue .menu-editorial-chip {
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+}
+
+html.annap-seated-guest .menu-browse--catalogue .menu-cat-section {
+    margin-bottom: clamp(2rem, 5vh, 2.75rem);
+}
+
+@media (max-width: 390px) {
+    html.annap-seated-guest .menu-browse--catalogue .menu-chapter-head {
+        margin-bottom: 1.25rem;
+    }
+
+    html.annap-seated-guest .menu-browse--catalogue h1 {
+        font-size: clamp(1.75rem, 8vw, 2.15rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.annap-seated-guest .menu-browse--catalogue .menu-card-reveal,
+    html.annap-seated-guest .menu-browse--catalogue .menu-editorial-chip {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+

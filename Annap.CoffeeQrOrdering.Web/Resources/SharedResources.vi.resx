@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="cart.clear" xml:space="preserve"><value>Xóa lựa chọn</value></data>
+  <data name="cart.close" xml:space="preserve"><value>Đóng</value></data>
+  <data name="cart.empty" xml:space="preserve"><value>Chưa có món trong lựa chọn. Hãy bắt đầu bằng ly gọi bạn trước.</value></data>
+  <data name="cart.followOrder" xml:space="preserve"><value>Theo dõi đơn</value></data>
+  <data name="cart.itemsLabel" xml:space="preserve"><value>Các món đã chọn</value></data>
+  <data name="cart.linkedTable" xml:space="preserve"><value>Bàn của bạn</value></data>
+  <data name="cart.needQr" xml:space="preserve"><value>Vui lòng quét mã QR tại bàn để gọi món.</value></data>
+  <data name="cart.openSelections" xml:space="preserve"><value>Xem lựa chọn của bạn</value></data>
+  <data name="cart.pricesNote" xml:space="preserve"><value>Giá xác nhận khi gửi đơn.</value></data>
+  <data name="cart.seatedAt" xml:space="preserve"><value>Đang ngồi</value></data>
+  <data name="cart.seatedHint" xml:space="preserve"><value>Chỗ ngồi của bạn đã được ghi nhận.</value></data>
+  <data name="cart.selectionFallback" xml:space="preserve"><value>Món chọn</value></data>
+  <data name="cart.submit" xml:space="preserve"><value>Gửi order</value></data>
+  <data name="cart.subtitle" xml:space="preserve"><value>Chuẩn bị nhẹ. Xác nhận khi bạn sẵn sàng.</value></data>
+  <data name="cart.tableLabel" xml:space="preserve"><value>Bàn</value></data>
+  <data name="cart.tableLine" xml:space="preserve"><value>Bàn {label}</value></data>
+  <data name="cart.tableMetaShort" xml:space="preserve"><value>Bàn {label}</value></data>
+  <data name="cart.title" xml:space="preserve"><value>Lựa chọn của bạn</value></data>
+  <data name="cart.unitEach" xml:space="preserve"><value>mỗi ly</value></data>
+  <data name="checkout.bankPreviewBody" xml:space="preserve"><value>Sau khi gửi đơn, mã QR chuyển khoản đúng số tiền sẽ hiện tại đây.</value></data>
+  <data name="checkout.bankPreviewKeepOpen" xml:space="preserve"><value>Sau khi chuyển khoản, vui lòng giữ nguyên màn hình chuyển khoản để nhân viên ra kiểm tra.</value></data>
+  <data name="checkout.bankPreviewNote" xml:space="preserve"><value>Vui lòng chuyển đúng số tiền và nội dung để nhân viên xác nhận nhanh hơn.</value></data>
+  <data name="checkout.bankPreviewTitle" xml:space="preserve"><value>Chuyển khoản</value></data>
+  <data name="checkout.bankSubmittedBody" xml:space="preserve"><value>Phương thức chuyển khoản đã được ghi nhận. Mã QR chuyển khoản sẽ được bật ở bước tiếp theo.</value></data>
+  <data name="checkout.bankTransfer" xml:space="preserve"><value>Chuyển khoản</value></data>
+  <data name="checkout.bankTransferHint" xml:space="preserve"><value>QR theo đúng số tiền</value></data>
+  <data name="checkout.bankTransferKeepOpen" xml:space="preserve"><value>Vui lòng giữ nguyên màn hình chuyển khoản để nhân viên ra kiểm tra và xác nhận thanh toán.</value></data>
+  <data name="checkout.bankTransferPaid" xml:space="preserve"><value>Thanh toán đã được xác nhận.</value></data>
+  <data name="checkout.bankTransferPendingBody" xml:space="preserve"><value>Vui lòng quét mã QR hoặc chuyển khoản theo thông tin bên dưới.</value></data>
+  <data name="checkout.bankTransferPendingBodyShort" xml:space="preserve"><value>Quét mã QR để thanh toán.</value></data>
+  <data name="checkout.bankTransferStaffConfirmNote" xml:space="preserve"><value>Đơn chỉ chuyển sang Đã thanh toán sau khi nhân viên xác nhận.</value></data>
+  <data name="checkout.bankTransferTrackNote" xml:space="preserve"><value>Sau khi chuyển khoản, vui lòng chờ nhân viên xác nhận thanh toán.</value></data>
+  <data name="checkout.bankTransferUnavailable" xml:space="preserve"><value>Chuyển khoản hiện chưa khả dụng. Vui lòng thanh toán tại quầy.</value></data>
+  <data name="checkout.bankTransferUnavailableShort" xml:space="preserve"><value>Chuyển khoản hiện chưa khả dụng</value></data>
+  <data name="checkout.cardPreviewBody" xml:space="preserve"><value>Sau khi gửi đơn, vui lòng đến quầy để thanh toán bằng thẻ. Nhân viên sẽ kiểm tra lại đơn của bạn.</value></data>
+  <data name="checkout.cardPreviewTitle" xml:space="preserve"><value>Thanh toán bằng thẻ</value></data>
+  <data name="checkout.cardSubmittedBodyShort" xml:space="preserve"><value>Vui lòng đến quầy để thanh toán bằng thẻ.</value></data>
+  <data name="checkout.cashCardAtCounter" xml:space="preserve"><value>Tiền mặt/thẻ tại quầy</value></data>
+  <data name="checkout.cashPreviewBody" xml:space="preserve"><value>Sau khi gửi đơn, vui lòng đến quầy để thanh toán bằng tiền mặt. Nhân viên sẽ kiểm tra lại đơn của bạn.</value></data>
+  <data name="checkout.cashPreviewTitle" xml:space="preserve"><value>Thanh toán tiền mặt</value></data>
+  <data name="checkout.cashSubmittedBodyShort" xml:space="preserve"><value>Vui lòng đến quầy để thanh toán bằng tiền mặt.</value></data>
+  <data name="checkout.checkBillTitle" xml:space="preserve"><value>Kiểm tra đơn</value></data>
+  <data name="checkout.choosePayment" xml:space="preserve"><value>Chọn phương thức thanh toán</value></data>
+  <data name="checkout.choosePaymentMethod" xml:space="preserve"><value>Chọn cách thanh toán</value></data>
+  <data name="checkout.continueToPayment" xml:space="preserve"><value>Chọn phương thức thanh toán</value></data>
+  <data name="checkout.copyAmount" xml:space="preserve"><value>Sao chép số tiền</value></data>
+  <data name="checkout.copyDone" xml:space="preserve"><value>Đã sao chép.</value></data>
+  <data name="checkout.copyMemo" xml:space="preserve"><value>Sao chép nội dung</value></data>
+  <data name="checkout.counterPreviewBody" xml:space="preserve"><value>Sau khi gửi đơn, vui lòng đến quầy để thanh toán. Nhân viên sẽ kiểm tra lại đơn của bạn.</value></data>
+  <data name="checkout.counterPreviewNote" xml:space="preserve"><value>Đơn chỉ chuyển sang Đã Thanh Toán sau khi nhân viên xác nhận.</value></data>
+  <data name="checkout.counterPreviewTitle" xml:space="preserve"><value>Thanh toán tại quầy</value></data>
+  <data name="checkout.counterSubmittedBody" xml:space="preserve"><value>Vui lòng đến quầy để thanh toán. Nhân viên sẽ kiểm tra lại đơn của bạn.</value></data>
+  <data name="checkout.counterSubmittedBodyShort" xml:space="preserve"><value>Vui lòng đến quầy để thanh toán.</value></data>
+  <data name="checkout.customerNoteHelper" xml:space="preserve"><value>Quán sẽ cố gắng hỗ trợ theo ghi chú của bạn.</value></data>
+  <data name="checkout.customerNoteLabel" xml:space="preserve"><value>Ghi chú cho quán</value></data>
+  <data name="checkout.customerNotePlaceholder" xml:space="preserve"><value>Ví dụ: ít đá, ít đường, không kem...</value></data>
+  <data name="checkout.estimatedTotal" xml:space="preserve"><value>Tạm tính</value></data>
+  <data name="checkout.paidReceiptTitle" xml:space="preserve"><value>Hóa đơn đã thanh toán</value></data>
+  <data name="checkout.payAtCounter" xml:space="preserve"><value>Thanh toán tại quầy</value></data>
+  <data name="checkout.payAtCounterHint" xml:space="preserve"><value>Thanh toán tại quầy</value></data>
+  <data name="checkout.payCard" xml:space="preserve"><value>Thẻ</value></data>
+  <data name="checkout.payCash" xml:space="preserve"><value>Tiền mặt</value></data>
+  <data name="checkout.paymentMethodLabel" xml:space="preserve"><value>Phương thức thanh toán</value></data>
+  <data name="checkout.provisionalBillBody" xml:space="preserve"><value>Phiếu này dùng để kiểm tra món, chưa phải hóa đơn đã thanh toán.</value></data>
+  <data name="checkout.provisionalBillNote" xml:space="preserve"><value>Phiếu kiểm đơn này chưa phải hóa đơn đã thanh toán.</value></data>
+  <data name="checkout.reviewNote" xml:space="preserve"><value>Vui lòng kiểm tra lại món trước khi chọn phương thức thanh toán.</value></data>
+  <data name="checkout.reviewNoteShort" xml:space="preserve"><value>Kiểm tra món trước khi thanh toán.</value></data>
+  <data name="checkout.reviewOrder" xml:space="preserve"><value>Kiểm tra đơn</value></data>
+  <data name="checkout.submitAtCounter" xml:space="preserve"><value>Gửi đơn — thanh toán tại quầy</value></data>
+  <data name="checkout.submitCard" xml:space="preserve"><value>Gửi đơn — thanh toán bằng thẻ</value></data>
+  <data name="checkout.submitCash" xml:space="preserve"><value>Gửi đơn — thanh toán tiền mặt</value></data>
+  <data name="checkout.submitForQr" xml:space="preserve"><value>Gửi đơn — lấy mã QR</value></data>
+  <data name="checkout.submitWithPayment" xml:space="preserve"><value>Gửi đơn và chọn thanh toán</value></data>
+  <data name="checkout.transferAccount" xml:space="preserve"><value>Tài khoản</value></data>
+  <data name="checkout.transferAccountHolder" xml:space="preserve"><value>Chủ tài khoản</value></data>
+  <data name="checkout.transferAccountNumber" xml:space="preserve"><value>Số tài khoản</value></data>
+  <data name="checkout.transferAmount" xml:space="preserve"><value>Số tiền</value></data>
+  <data name="checkout.transferBank" xml:space="preserve"><value>Ngân hàng</value></data>
+  <data name="checkout.transferExactNote" xml:space="preserve"><value>Vui lòng chuyển đúng số tiền và nội dung để nhân viên xác nhận nhanh hơn.</value></data>
+  <data name="checkout.transferMemo" xml:space="preserve"><value>Nội dung</value></data>
+  <data name="checkout.transferQrAlt" xml:space="preserve"><value>Mã QR chuyển khoản</value></data>
+  <data name="checkout.transferQrLoadFailed" xml:space="preserve"><value>Không tải được mã QR. Bạn vẫn có thể chuyển khoản bằng thông tin bên dưới.</value></data>
+  <data name="checkout.transferQrLoading" xml:space="preserve"><value>Đang tải mã chuyển khoản...</value></data>
+  <data name="checkout.transferRetry" xml:space="preserve"><value>Tải lại mã chuyển khoản</value></data>
+  <data name="checkout.transferUnavailableInTray" xml:space="preserve"><value>Không tải được thông tin chuyển khoản. Vui lòng gọi nhân viên.</value></data>
+  <data name="checkout.waitingBankTransfer" xml:space="preserve"><value>Chờ chuyển khoản</value></data>
+  <data name="checkout.waitingCardPayment" xml:space="preserve"><value>Chờ thanh toán bằng thẻ tại quầy</value></data>
+  <data name="checkout.waitingCashPayment" xml:space="preserve"><value>Chờ thanh toán tiền mặt tại quầy</value></data>
+  <data name="checkout.waitingCounterPayment" xml:space="preserve"><value>Chờ thanh toán tại quầy</value></data>
+  <data name="drink.acidity" xml:space="preserve"><value>Độ chua</value></data>
+  <data name="drink.caffeine" xml:space="preserve"><value>Caffeine</value></data>
+  <data name="drink.chooseTemperature" xml:space="preserve"><value>Bạn muốn uống nóng hay đá?</value></data>
+  <data name="drink.composition" xml:space="preserve"><value>Thành phần</value></data>
+  <data name="drink.description" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="drink.hot" xml:space="preserve"><value>Nóng</value></data>
+  <data name="drink.iced" xml:space="preserve"><value>Đá</value></data>
+  <data name="drink.insideGlass" xml:space="preserve"><value>Trong ly</value></data>
+  <data name="drink.loading" xml:space="preserve"><value>Đang tải…</value></data>
+  <data name="drink.moodHeading" xml:space="preserve"><value>Không khí ly</value></data>
+  <data name="drink.onPalate" xml:space="preserve"><value>Trên vị giác</value></data>
+  <data name="drink.openFullPage" xml:space="preserve"><value>Xem lá thư đầy đủ</value></data>
+  <data name="drink.origin" xml:space="preserve"><value>Nguồn gốc</value></data>
+  <data name="drink.related" xml:space="preserve"><value>Có thể bạn cũng thích</value></data>
+  <data name="drink.scaleHint" xml:space="preserve"><value>Thang chủ quan · 1 tinh tế — 5 rõ nét</value></data>
+  <data name="drink.sensoryProfile" xml:space="preserve"><value>Cảm quan</value></data>
+  <data name="drink.sourcedFrom" xml:space="preserve"><value>Nguồn gốc</value></data>
+  <data name="drink.sweetness" xml:space="preserve"><value>Độ ngọt</value></data>
+  <data name="drink.tastingNotes" xml:space="preserve"><value>Ghi chú nếm</value></data>
+  <data name="drink.unavailable" xml:space="preserve"><value>Tạm hết hôm nay.</value></data>
+  <data name="errors.403Lede" xml:space="preserve"><value>Bạn không thể mở trang này.</value></data>
+  <data name="errors.403Title" xml:space="preserve"><value>Không có quyền truy cập</value></data>
+  <data name="errors.404Lede" xml:space="preserve"><value>Liên kết có thể đã đổi hoặc bàn chưa được cấu hình. Quay lại menu để tiếp tục.</value></data>
+  <data name="errors.404Title" xml:space="preserve"><value>Không tìm thấy trang</value></data>
+  <data name="errors.503Lede" xml:space="preserve"><value>Quán đang bảo trì hệ thống trong giây lát. Vui lòng thử lại sau.</value></data>
+  <data name="errors.503Title" xml:space="preserve"><value>Tạm bảo trì</value></data>
+  <data name="errors.backToMenu" xml:space="preserve"><value>Quay lại menu</value></data>
+  <data name="errors.genericLede" xml:space="preserve"><value>Chúng tôi không thể hoàn tất yêu cầu của bạn. Vui lòng thử lại hoặc quay lại thực đơn.</value></data>
+  <data name="errors.genericTitle" xml:space="preserve"><value>Đã xảy ra lỗi</value></data>
+  <data name="errors.offlineLede" xml:space="preserve"><value>Không có kết nối mạng. Kiểm tra Wi‑Fi rồi thử lại.</value></data>
+  <data name="errors.offlineTitle" xml:space="preserve"><value>Bạn đang offline</value></data>
+  <data name="errors.referenceId" xml:space="preserve"><value>Mã tham chiếu</value></data>
+  <data name="errors.retry" xml:space="preserve"><value>Thử lại</value></data>
+  <data name="errors.sommelierEmptyPrompt" xml:space="preserve"><value>Cho chúng tôi vài dòng về bạn muốn cảm thấy thế nào hôm nay.</value></data>
+  <data name="feedback.hapticToggle" xml:space="preserve"><value>Phản hồi rung</value></data>
+  <data name="feedback.prefsLabel" xml:space="preserve"><value>Âm thanh và rung</value></data>
+  <data name="feedback.soundToggle" xml:space="preserve"><value>Phản hồi âm thanh</value></data>
+  <data name="ge.arrival.beginTasting" xml:space="preserve"><value>Mời bạn</value></data>
+  <data name="ge.arrival.curatedEmptyTitle" xml:space="preserve"><value>Trải nghiệm đang được sắp đặt.</value></data>
+  <data name="ge.arrival.inviteIn" xml:space="preserve"><value>Mời bạn</value></data>
+  <data name="ge.arrival.menuWord" xml:space="preserve"><value>Thực đơn</value></data>
+  <data name="ge.arrival.welcomeWord" xml:space="preserve"><value>Sẵn sàng phục vụ</value></data>
+  <data name="ge.arrival.secondaryDiscovery" xml:space="preserve"><value>Bất ngờ có niêm phong</value></data>
+  <data name="ge.arrival.secondaryGroup" xml:space="preserve"><value>Đặt theo nhóm</value></data>
+  <data name="ge.arrival.secondaryMenu" xml:space="preserve"><value>Thực đơn</value></data>
+  <data name="ge.arrival.secondarySommelier" xml:space="preserve"><value>Trò chuyện với Kits</value></data>
+  <data name="ge.cupMoment.altKicker" xml:space="preserve"><value>Ly khác</value></data>
+  <data name="ge.cupMoment.altSectionTitle" xml:space="preserve"><value>Nếu bạn muốn đổi hướng</value></data>
+  <data name="ge.cupMoment.chosenBadge" xml:space="preserve"><value>Kits chọn cho bạn</value></data>
+  <data name="ge.cupMoment.empty" xml:space="preserve"><value>Quán chưa thể gọi tên một ly lúc này.</value></data>
+  <data name="ge.cupMoment.hostKicker" xml:space="preserve"><value>Kits chọn cho bạn</value></data>
+  <data name="ge.cupMoment.kicker" xml:space="preserve"><value>Kits chọn cho bạn</value></data>
+  <data name="ge.cupMoment.namingKicker" xml:space="preserve"><value>Kits chọn cho bạn</value></data>
+  <data name="ge.duckPost.blockedBody" xml:space="preserve"><value>Bạn đã dùng hết lượt đổi cho vòng này. Quán giữ đề xuất cuối.</value></data>
+  <data name="ge.duckPost.blockedDismiss" xml:space="preserve"><value>Đã hiểu</value></data>
+  <data name="ge.duckPost.blockedDismissAria" xml:space="preserve"><value>Đóng</value></data>
+  <data name="ge.duckPost.blockedDismissHint" xml:space="preserve"><value>Vuốt xuống một lần trên thẻ, chạm vùng tối bên ngoài, hoặc bấm Escape.</value></data>
+  <data name="ge.duckPost.blockedOwner" xml:space="preserve"><value>Quầy giữ tên cuối cùng cho bàn này.</value></data>
+  <data name="ge.duckPost.blockedTitle" xml:space="preserve"><value>Đã hết lượt đổi cho vòng này.</value></data>
+  <data name="ge.duckPost.deskCta" xml:space="preserve"><value>Để quán chọn</value></data>
+  <data name="ge.duckPost.deskEyebrow" xml:space="preserve"><value>Chủ nhà đang lắng nghe</value></data>
+  <data name="ge.duckPost.deskHint" xml:space="preserve"><value>Không vội. Một ly. Chưa mở thực đơn.</value></data>
+  <data name="ge.duckPost.deskNudge" xml:space="preserve"><value>Không vội — một ly, chọn cho bàn này.</value></data>
+  <data name="ge.duckPost.deskTitle" xml:space="preserve"><value>Chúng tôi sẽ gọi tên một ly cho bàn này.</value></data>
+  <data name="ge.duckPost.panelKicker" xml:space="preserve"><value>Buổi nếm tối nay</value></data>
+  <data name="ge.duckPost.r1Dim" xml:space="preserve"><value>Đang chuẩn bị gợi ý...</value></data>
+  <data name="ge.duckPost.r1Letter" xml:space="preserve"><value>Đang kiểm tra lựa chọn đầu tiên.</value></data>
+  <data name="ge.duckPost.r1Open" xml:space="preserve"><value>Đã ghi nhận lựa chọn cho bàn.</value></data>
+  <data name="ge.duckPost.r2Dim" xml:space="preserve"><value>Đang kiểm tra thêm lựa chọn...</value></data>
+  <data name="ge.duckPost.r2Letter" xml:space="preserve"><value>Đang so sánh lựa chọn thứ hai.</value></data>
+  <data name="ge.duckPost.r2Open" xml:space="preserve"><value>Đang giữ phương án phù hợp hơn.</value></data>
+  <data name="ge.duckPost.r3Dim" xml:space="preserve"><value>Đang kiểm tra lần cuối...</value></data>
+  <data name="ge.duckPost.r3Letter" xml:space="preserve"><value>Đang chốt lựa chọn cho bàn này.</value></data>
+  <data name="ge.duckPost.r3Open" xml:space="preserve"><value>Gợi ý đã sẵn sàng.</value></data>
+  <data name="ge.duckPost.reducedLine" xml:space="preserve"><value>Đang chuẩn bị gợi ý...</value></data>
+  <data name="ge.group.backAria" xml:space="preserve"><value>Quay lại trang chào</value></data>
+  <data name="ge.group.backToGuests" xml:space="preserve"><value>Quay về danh sách khách</value></data>
+  <data name="ge.group.countPromptFallback" xml:space="preserve"><value>Bàn có mấy khách?</value></data>
+  <data name="ge.group.cupOnTray" xml:space="preserve"><value>, đã có ly</value></data>
+  <data name="ge.group.doneBtn" xml:space="preserve"><value>Xong</value></data>
+  <data name="ge.group.exploreMenu" xml:space="preserve"><value>Xem toàn bộ thực đơn</value></data>
+  <data name="ge.group.guestLabel" xml:space="preserve"><value>Khách {n}</value></data>
+  <data name="ge.group.guestTabsAria" xml:space="preserve"><value>Khách tại bàn này</value></data>
+  <data name="ge.group.kicker" xml:space="preserve"><value>Cùng bàn</value></data>
+  <data name="ge.group.noGuest" xml:space="preserve"><value>Khách này chưa có ly nào.</value></data>
+  <data name="ge.group.notServed" xml:space="preserve"><value>, chưa chọn</value></data>
+  <data name="ge.group.passingMenu" xml:space="preserve"><value>Truyền thực đơn cho {name}…</value></data>
+  <data name="ge.group.reviewSummary" xml:space="preserve"><value>Xem tổng lựa chọn bàn</value></data>
+  <data name="ge.group.seatGuests" xml:space="preserve"><value>Bắt đầu cho cả bàn</value></data>
+  <data name="ge.group.sigAddToTray" xml:space="preserve"><value>Gửi vào bàn thưởng thức</value></data>
+  <data name="ge.group.sigDetail" xml:space="preserve"><value>Xem lá thư</value></data>
+  <data name="ge.group.signatureDrinksAria" xml:space="preserve"><value>Ly signature</value></data>
+  <data name="ge.group.signatureHeading" xml:space="preserve"><value>Ly đặc trưng cho cả bàn</value></data>
+  <data name="ge.group.summaryKickerFallback" xml:space="preserve"><value>Bàn của bạn</value></data>
+  <data name="ge.group.summaryTitleFallback" xml:space="preserve"><value>Tổng lựa chọn bàn</value></data>
+  <data name="ge.group.tableLabel" xml:space="preserve"><value>Bàn</value></data>
+  <data name="ge.group.tableTotal" xml:space="preserve"><value>Tổng bàn · </value></data>
+  <data name="ge.group.undoBtn" xml:space="preserve"><value>Hoàn tác</value></data>
+  <data name="ge.group.yourTurn" xml:space="preserve"><value>, đến lượt chọn</value></data>
+  <data name="ge.host.altKicker" xml:space="preserve"><value>Ly khác</value></data>
+  <data name="ge.host.altPour" xml:space="preserve"><value>Chọn ly này</value></data>
+  <data name="ge.host.barPause" xml:space="preserve"><value>Một chút tại quầy bar…</value></data>
+  <data name="ge.host.deskSub" xml:space="preserve"><value>Đọc phòng trước khi rót.</value></data>
+  <data name="ge.host.emptyCup" xml:space="preserve"><value>Chưa đúng — cho tôi thêm một chút.</value></data>
+  <data name="ge.host.evening.brighter" xml:space="preserve"><value>Sáng hơn một chút</value></data>
+  <data name="ge.host.evening.curious" xml:space="preserve"><value>Tò mò, nhưng điềm</value></data>
+  <data name="ge.host.evening.quieter" xml:space="preserve"><value>Yên hơn tối nay</value></data>
+  <data name="ge.host.evening.soft" xml:space="preserve"><value>Mềm và không vội</value></data>
+  <data name="ge.host.eveningAck" xml:space="preserve"><value>Đã hiểu — cho tôi một chút.</value></data>
+  <data name="ge.host.eveningPrompt" xml:space="preserve"><value>Hôm nay bạn muốn ly của mình mang cảm giác nào?</value></data>
+  <data name="ge.host.greet.afternoon" xml:space="preserve"><value>chào buổi chiều</value></data>
+  <data name="ge.host.greet.evening" xml:space="preserve"><value>chào buổi tối</value></data>
+  <data name="ge.host.greet.morning" xml:space="preserve"><value>chào buổi sáng</value></data>
+  <data name="ge.host.greet.night" xml:space="preserve"><value>chào buổi tối</value></data>
+  <data name="ge.host.invitation" xml:space="preserve"><value>Chúng tôi sẽ giữ tối nay không vội.</value></data>
+  <data name="ge.host.loading" xml:space="preserve"><value>Một chút — tôi đang ở quầy bar.</value></data>
+  <data name="ge.host.prepareForTable" xml:space="preserve"><value>Pha cho bàn tôi</value></data>
+  <data name="ge.host.readCup" xml:space="preserve"><value>Đọc lá thư nguồn gốc</value></data>
+  <data name="ge.host.readOriginLetter" xml:space="preserve"><value>Đọc lá thư nguồn gốc</value></data>
+  <data name="ge.host.reroll" xml:space="preserve"><value>Bạn muốn tôi xem lại không?</value></data>
+  <data name="ge.host.rerollBlockedBody" xml:space="preserve"><value>Tôi sẽ giữ ly cuối tôi đã gọi tên cho bàn của bạn.</value></data>
+  <data name="ge.host.rerollBlockedOwner" xml:space="preserve"><value>Buổi tối giữ nhịp của nó.</value></data>
+  <data name="ge.host.rerollBlockedTitle" xml:space="preserve"><value>Tôi đã cân nhắc đủ cho tối nay.</value></data>
+  <data name="ge.host.revealLine" xml:space="preserve"><value>Tôi nghĩ tôi biết ly nào thuộc về bàn này.</value></data>
+  <data name="ge.host.ritualErr" xml:space="preserve"><value>Có gì đó gián đoạn — thử lại một lần.</value></data>
+  <data name="ge.host.room.afternoon" xml:space="preserve"><value>Ánh chiều dịu qua sân vườn.</value></data>
+  <data name="ge.host.room.evening" xml:space="preserve"><value>Phòng đang chậm lại tối nay.</value></data>
+  <data name="ge.host.room.morning" xml:space="preserve"><value>Buổi sáng hôm nay thật dịu.</value></data>
+  <data name="ge.host.room.night" xml:space="preserve"><value>Phố yên lặng lúc này.</value></data>
+  <data name="ge.host.roomDefault" xml:space="preserve"><value>Phòng đang chậm lại tối nay.</value></data>
+  <data name="ge.host.serveLine" xml:space="preserve"><value>Kits chọn cho bạn.</value></data>
+  <data name="ge.host.tableGreet" xml:space="preserve"><value>{table} — {greet}.</value></data>
+  <data name="ge.host.trayInvite" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="ge.host.wait1" xml:space="preserve"><value>Quầy bar lặng một nhịp…</value></data>
+  <data name="ge.host.wait2" xml:space="preserve"><value>Hơi nước bốc từ bếp pass.</value></data>
+  <data name="ge.host.wait3" xml:space="preserve"><value>Tôi đang chọn một ly cho bàn của bạn.</value></data>
+  <data name="ge.host.wait4" xml:space="preserve"><value>Để tôi nhìn lại một lần…</value></data>
+  <data name="ge.host.wait5" xml:space="preserve"><value>Phòng vẫn yên — không vội.</value></data>
+  <data name="ge.host.wait6" xml:space="preserve"><value>Tôi muốn sự thật dịu hơn tối nay.</value></data>
+  <data name="ge.host.wait7" xml:space="preserve"><value>Đọc lại buổi tối lần cuối…</value></data>
+  <data name="ge.host.wait8" xml:space="preserve"><value>Phố lặng đêm nay.</value></data>
+  <data name="ge.host.wait9" xml:space="preserve"><value>Đây là ly tôi tin vào.</value></data>
+  <data name="ge.menuFirst.ctaSubtle" xml:space="preserve"><value>Mở thực đơn, bỏ qua bước chào</value></data>
+  <data name="ge.menuFirst.eyebrowSubtle" xml:space="preserve"><value>Chỉ đường quầy</value></data>
+  <data name="ge.menuFirst.noteSubtle" xml:space="preserve"><value>Quán khuyến khích ba lối phía trên; bàn của bạn vẫn được giữ.</value></data>
+  <data name="ge.originLetter.failure" xml:space="preserve"><value>Lá thư chưa đến. Thử lại nhé.</value></data>
+  <data name="ge.originLetter.invite" xml:space="preserve"><value>Khi bạn sẵn sàng — ly đang chờ.</value></data>
+  <data name="ge.originLetter.kicker" xml:space="preserve"><value>Lá thư nguồn gốc</value></data>
+  <data name="ge.originLetter.loading" xml:space="preserve"><value>Đang chuẩn bị lá thư nguồn gốc…</value></data>
+  <data name="ge.originLetter.timeout" xml:space="preserve"><value>Lá thư đang chậm một chút. Thử lại nhé.</value></data>
+  <data name="ge.originLetter.unavailable" xml:space="preserve"><value>Ly này đang nghỉ.</value></data>
+  <data name="ge.ritual.ack.q1_alert" xml:space="preserve"><value>Vậy… mình giữ tỉnh và trong.</value></data>
+  <data name="ge.ritual.ack.q1_curious" xml:space="preserve"><value>Tò mò một chút — mình nhớ rồi.</value></data>
+  <data name="ge.ritual.ack.q1_light" xml:space="preserve"><value>Hiểu rồi… tối nay mình giữ nhẹ.</value></data>
+  <data name="ge.ritual.ack.q1_refresh" xml:space="preserve"><value>Nghe giống một tối cần chút sáng.</value></data>
+  <data name="ge.ritual.ack.q2_coffee" xml:space="preserve"><value>Cà phê — mình bắt đầu thấy hướng rồi.</value></data>
+  <data name="ge.ritual.ack.q2_fruit" xml:space="preserve"><value>Một chút tươi — được.</value></data>
+  <data name="ge.ritual.ack.q2_juice" xml:space="preserve"><value>Ép — nhẹ, sáng.</value></data>
+  <data name="ge.ritual.ack.q2_matcha" xml:space="preserve"><value>Matcha, yên và xanh.</value></data>
+  <data name="ge.ritual.ack.q2_signature" xml:space="preserve"><value>Ly signature của quán — mình ghi nhận.</value></data>
+  <data name="ge.ritual.ack.q2_smoothie" xml:space="preserve"><value>Mềm và chậm — hiểu.</value></data>
+  <data name="ge.ritual.ack.q2_tea" xml:space="preserve"><value>Trà sẽ êm hơn cho tối nay.</value></data>
+  <data name="ge.ritual.ack.q3_low" xml:space="preserve"><value>Giữ sáng, ít ngọt.</value></data>
+  <data name="ge.ritual.ack.q3_medium" xml:space="preserve"><value>Vừa phải — cân bằng.</value></data>
+  <data name="ge.ritual.ack.q3_semisweet" xml:space="preserve"><value>Hơi ngọt một chút.</value></data>
+  <data name="ge.ritual.ack.q3_sweet" xml:space="preserve"><value>Để dịu xuống, ngọt hơn.</value></data>
+  <data name="ge.ritual.ack.q4_low" xml:space="preserve"><value>Một chút tỉnh thôi.</value></data>
+  <data name="ge.ritual.ack.q4_medium" xml:space="preserve"><value>Vừa đủ tỉnh cho tối nay.</value></data>
+  <data name="ge.ritual.ack.q4_none" xml:space="preserve"><value>Không cần caffeine — mình hiểu.</value></data>
+  <data name="ge.ritual.ack.q4_strong" xml:space="preserve"><value>Mạnh — mình ghi nhận.</value></data>
+  <data name="ge.ritual.deepen.2" xml:space="preserve"><value>Mình hiểu thêm một chút rồi…</value></data>
+  <data name="ge.ritual.deepen.3" xml:space="preserve"><value>Gần đến ly rồi…</value></data>
+  <data name="ge.ritual.eveningAck.bright_lift" xml:space="preserve"><value>Sáng hơn một chút — mình nghe thấy.</value></data>
+  <data name="ge.ritual.eveningAck.creamy_calm" xml:space="preserve"><value>Mềm và không vội — hiểu rồi.</value></data>
+  <data name="ge.ritual.eveningAck.curious_edge" xml:space="preserve"><value>Tò mò nhưng điềm — được.</value></data>
+  <data name="ge.ritual.eveningAck.slow_evening" xml:space="preserve"><value>Vậy mình sẽ giữ tối nay nhẹ lại.</value></data>
+  <data name="ge.ritual.finalPause" xml:space="preserve"><value>Để mình nghĩ thêm một chút…</value></data>
+  <data name="ge.ritual.reflectionKicker" xml:space="preserve"><value>Gợi ý dành cho bạn</value></data>
+  <data name="ge.sommelier.addToTray" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="ge.sommelier.beginAgain" xml:space="preserve"><value>Viết lại gu</value></data>
+  <data name="ge.sommelier.connectErr" xml:space="preserve"><value>Kết nối yếu một chút. Bạn có thể thử lại sau.</value></data>
+  <data name="ge.sommelier.entry.invite" xml:space="preserve"><value>Trả lời vài câu hỏi để nhận gợi ý phù hợp.</value></data>
+  <data name="ge.sommelier.hostPause" xml:space="preserve"><value>Một chút tại quầy — quầy đang cân…</value></data>
+  <data name="ge.sommelier.kicker" xml:space="preserve"><value>Hôm nay bạn muốn ly của mình mang cảm giác nào?</value></data>
+  <data name="ge.sommelier.question.reading" xml:space="preserve"><value>Đang đọc khẩu vị</value></data>
+  <data name="ge.sommelier.question.step" xml:space="preserve"><value>Bước {n} / {total}</value></data>
+  <data name="ge.sommelier.readCup" xml:space="preserve"><value>Đọc lá thư nguồn gốc</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.note1" xml:space="preserve"><value>Hoa nhài</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.note2" xml:space="preserve"><value>Trà</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.title" xml:space="preserve"><value>Hoa và trà</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.note1" xml:space="preserve"><value>Đào</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.note2" xml:space="preserve"><value>Mật ong</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.title" xml:space="preserve"><value>Trái cây ngọt</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.note1" xml:space="preserve"><value>Socola</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.note2" xml:space="preserve"><value>Hạt</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.title" xml:space="preserve"><value>Socola và vị sâu</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.note1" xml:space="preserve"><value>Việt quất</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.note2" xml:space="preserve"><value>Mật ong</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.title" xml:space="preserve"><value>Quả mọng nổi bật</value></data>
+  <data name="ge.sommelier.tasting.calibration.feel.question" xml:space="preserve"><value>Bạn thích cảm giác ly cà phê thế nào?</value></data>
+  <data name="ge.sommelier.tasting.calibration.flavor.question" xml:space="preserve"><value>Điều gì nên dẫn đầu trong ly?</value></data>
+  <data name="ge.sommelier.tasting.error" xml:space="preserve"><value>Quán chưa gọi tên được lúc này.</value></data>
+  <data name="ge.sommelier.tasting.eyebrow" xml:space="preserve"><value>Khẩu vị hôm nay của bạn</value></data>
+  <data name="ge.sommelier.tasting.helper" xml:space="preserve"><value>Mất khoảng vài giây.</value></data>
+  <data name="ge.sommelier.tasting.micro1" xml:space="preserve"><value>Đọc lựa chọn của bạn</value></data>
+  <data name="ge.sommelier.tasting.micro2" xml:space="preserve"><value>Quầy cân lại vị</value></data>
+  <data name="ge.sommelier.tasting.micro3" xml:space="preserve"><value>Chọn ly dành riêng cho hôm nay</value></data>
+  <data name="ge.sommelier.tasting.note.base" xml:space="preserve"><value>Kiểu ly</value></data>
+  <data name="ge.sommelier.tasting.note.caffeine" xml:space="preserve"><value>Nhiệt độ</value></data>
+  <data name="ge.sommelier.tasting.note.detail" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="ge.sommelier.tasting.note.direction" xml:space="preserve"><value>Hướng</value></data>
+  <data name="ge.sommelier.tasting.note.experience" xml:space="preserve"><value>Cảm giác</value></data>
+  <data name="ge.sommelier.tasting.note.finish" xml:space="preserve"><value>Kết</value></data>
+  <data name="ge.sommelier.tasting.note.flavor" xml:space="preserve"><value>Hương vị</value></data>
+  <data name="ge.sommelier.tasting.note.mood" xml:space="preserve"><value>Cảm giác</value></data>
+  <data name="ge.sommelier.tasting.note.preference" xml:space="preserve"><value>Sở thích</value></data>
+  <data name="ge.sommelier.tasting.note.prepare" xml:space="preserve"><value>Chuẩn bị ly dành riêng cho hôm nay</value></data>
+  <data name="ge.sommelier.tasting.note.sweet" xml:space="preserve"><value>Vị sữa</value></data>
+  <data name="ge.sommelier.tasting.note.title" xml:space="preserve"><value>Đang viết lá thư vị giác của bạn</value></data>
+  <data name="ge.sommelier.tasting.note.writing" xml:space="preserve"><value>Kits đang chọn một món hợp với ghi chú này.</value></data>
+  <data name="ge.sommelier.tasting.offline" xml:space="preserve"><value>Quán chưa gọi tên được lúc này.</value></data>
+  <data name="ge.sommelier.tasting.recognition.beat1" xml:space="preserve"><value>Một chút.</value></data>
+  <data name="ge.sommelier.tasting.retry" xml:space="preserve"><value>Thử lại</value></data>
+  <data name="ge.sommelier.tasting.step1" xml:space="preserve"><value>Đọc cảm giác</value></data>
+  <data name="ge.sommelier.tasting.step2" xml:space="preserve"><value>Cân vị</value></data>
+  <data name="ge.sommelier.tasting.step3" xml:space="preserve"><value>Gọi tên ly</value></data>
+  <data name="ge.sommelier.tasting.support" xml:space="preserve"><value>Dựa trên lựa chọn của bạn, Kits đang chọn một ly hợp với ghi chú này.</value></data>
+  <data name="ge.sommelier.tasting.supportCurate" xml:space="preserve"><value>Kits đang cân lại vị để chọn một ly thật hợp với ghi chú này.</value></data>
+  <data name="ge.sommelier.tasting.supportWait" xml:space="preserve"><value>Đợi mình một chút — Kits đang chọn ly.</value></data>
+  <data name="ge.sommelier.tasting.title" xml:space="preserve"><value>Đang cân bằng vị cho bạn</value></data>
+  <data name="ge.sommelier.tasting.titleRitual" xml:space="preserve"><value>Quầy đang chuẩn bị riêng cho bạn</value></data>
+  <data name="ge.sommelier.whisper1" xml:space="preserve"><value>Trả lời theo gu của bạn.</value></data>
+  <data name="ge.sommelier.whisper2" xml:space="preserve"><value>Không cần thuật ngữ chuyên môn.</value></data>
+  <data name="ge.sommelier.whisper3" xml:space="preserve"><value>Bạn có thể chọn mức độ ngọt.</value></data>
+  <data name="ge.sommelier.whisper4" xml:space="preserve"><value>Bạn có thể chọn mức caffeine phù hợp.</value></data>
+  <data name="guest.sommelierLite.added" xml:space="preserve"><value>Đã thêm</value></data>
+  <data name="guest.sommelierLite.addToTray" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="guest.sommelierLite.caffeineLegend" xml:space="preserve"><value>Caffeine</value></data>
+  <data name="guest.sommelierLite.caffeineLow" xml:space="preserve"><value>Ít</value></data>
+  <data name="guest.sommelierLite.caffeineNo" xml:space="preserve"><value>Không</value></data>
+  <data name="guest.sommelierLite.caffeineYes" xml:space="preserve"><value>Có</value></data>
+  <data name="guest.sommelierLite.empty" xml:space="preserve"><value>Quán chưa thể gọi tên một ly lúc này.</value></data>
+  <data name="guest.sommelierLite.error" xml:space="preserve"><value>Chưa gợi ý được lúc này. Mở thực đơn để chọn nhé.</value></data>
+  <data name="guest.sommelierLite.incompatibleSheet" xml:space="preserve"><value>Tôi cần thêm một chút dữ liệu để gợi ý chính xác. Bạn vẫn có thể mở thực đơn hoặc thử lại sau.</value></data>
+  <data name="guest.sommelierLite.loading" xml:space="preserve"><value>Đang tìm ly phù hợp…</value></data>
+  <data name="guest.sommelierLite.milkEither" xml:space="preserve"><value>Tùy</value></data>
+  <data name="guest.sommelierLite.milkLegend" xml:space="preserve"><value>Sữa</value></data>
+  <data name="guest.sommelierLite.milkNo" xml:space="preserve"><value>Không</value></data>
+  <data name="guest.sommelierLite.milkYes" xml:space="preserve"><value>Có</value></data>
+  <data name="guest.sommelierLite.offline" xml:space="preserve"><value>Chưa kết nối được quầy bar. Mở thực đơn hoặc thử lại.</value></data>
+  <data name="guest.sommelierLite.submit" xml:space="preserve"><value>Gợi ý cho tôi</value></data>
+  <data name="guest.sommelierLite.tasteBalanced" xml:space="preserve"><value>Cân bằng</value></data>
+  <data name="guest.sommelierLite.tasteLegend" xml:space="preserve"><value>Vị bạn muốn</value></data>
+  <data name="guest.sommelierLite.tasteRefreshing" xml:space="preserve"><value>Tươi mát</value></data>
+  <data name="guest.sommelierLite.tasteStrong" xml:space="preserve"><value>Đậm</value></data>
+  <data name="guest.sommelierLite.tasteSweet" xml:space="preserve"><value>Ngọt dịu</value></data>
+  <data name="guest.sommelierLite.tempEither" xml:space="preserve"><value>Tùy</value></data>
+  <data name="guest.sommelierLite.tempHot" xml:space="preserve"><value>Nóng</value></data>
+  <data name="guest.sommelierLite.tempIced" xml:space="preserve"><value>Lạnh</value></data>
+  <data name="guest.sommelierLite.tempLegend" xml:space="preserve"><value>Nhiệt độ</value></data>
+  <data name="guest.sommelierLite.title" xml:space="preserve"><value>Gợi ý từ AI</value></data>
+  <data name="guest.sommelierLite.trayUnavailable" xml:space="preserve"><value>Mở thực đơn để thêm món này.</value></data>
+  <data name="guest.sommelierLite.unavailable" xml:space="preserve"><value>AI gợi ý món hiện chưa sẵn sàng. Bạn vẫn có thể mở thực đơn để gọi món.</value></data>
+  <data name="guest.sommelierLite.viewDrink" xml:space="preserve"><value>Xem món</value></data>
+  <data name="guest.tableNotice.browseOnlyNote" xml:space="preserve"><value>Bạn có thể xem thực đơn, nhưng cần quét QR tại bàn để gửi đơn.</value></data>
+  <data name="guest.tableNotice.handoffInvalidTitle" xml:space="preserve"><value>Liên kết bàn không còn hiệu lực</value></data>
+  <data name="guest.tableNotice.qrInvalidTitle" xml:space="preserve"><value>Không nhận diện được bàn</value></data>
+  <data name="home.brand" xml:space="preserve"><value>Kits Coffee Atelier</value></data>
+  <data name="home.categoriesHint" xml:space="preserve"><value>Chọn một hướng. Chúng tôi giữ phần còn lại thật gọn.</value></data>
+  <data name="home.devTableLink" xml:space="preserve"><value>Mở bàn T12</value></data>
+  <data name="home.devTableSetup" xml:space="preserve"><value>Môi trường dev:</value></data>
+  <data name="home.heroLead" xml:space="preserve"><value>Ly ấm. Hậu vị sạch. Dư ngọt lâu.</value></data>
+  <data name="home.heroLine1" xml:space="preserve"><value>Espresso. Filter.</value></data>
+  <data name="home.heroLine2" xml:space="preserve"><value>Ngọt dịu, không ồn.</value></data>
+  <data name="home.menuCta" xml:space="preserve"><value>Thực đơn</value></data>
+  <data name="home.orderCta" xml:space="preserve"><value>Gọi món</value></data>
+  <data name="home.postalFrom" xml:space="preserve"><value>Từ Kinini Village, Rwanda</value></data>
+  <data name="home.postalStamp" xml:space="preserve"><value>Từ nông trại đến ly</value></data>
+  <data name="home.signatureCupBadge" xml:space="preserve"><value>Ly</value></data>
+  <data name="home.signatureHeading" xml:space="preserve"><value>Ly chữ ký</value></data>
+  <data name="home.signatureSeeAll" xml:space="preserve"><value>Xem tất cả</value></data>
+  <data name="home.signatureSub" xml:space="preserve"><value>Ngọt cân. Cấu trúc sạch. Hậu dài.</value></data>
+  <data name="home.signatureTastingLabel" xml:space="preserve"><value>Ghi chú nếm</value></data>
+  <data name="home.statProfile" xml:space="preserve"><value>Gu ly</value></data>
+  <data name="home.statProfileValue" xml:space="preserve"><value>Chanh · ca cao</value></data>
+  <data name="home.statService" xml:space="preserve"><value>Phục vụ</value></data>
+  <data name="home.statServiceValue" xml:space="preserve"><value>Êm · chuẩn</value></data>
+  <data name="home.tapBrowse" xml:space="preserve"><value>Chạm để xem</value></data>
+  <data name="home.unseatedHint" xml:space="preserve"><value>Để gọi món và theo dõi lựa chọn của bạn, vui lòng quét QR trên bàn. Bạn vẫn có thể xem thực đơn như một vòng xem thử nhẹ nhàng.</value></data>
+  <data name="houseSelection.afterAdd" xml:space="preserve"><value>Bạn có thể thêm ly khác hoặc chọn bánh dùng kèm.</value></data>
+  <data name="houseSelection.altAdd" xml:space="preserve"><value>Chọn ly này</value></data>
+  <data name="houseSelection.altKicker" xml:space="preserve"><value>Ly khác</value></data>
+  <data name="houseSelection.ambientListen" xml:space="preserve"><value>Đang chọn một ly phù hợp cho bạn…</value></data>
+  <data name="houseSelection.ctaPrimary" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="houseSelection.fitReference" xml:space="preserve"><value>tham khảo</value></data>
+  <data name="houseSelection.readCup" xml:space="preserve"><value>Xem chi tiết ly</value></data>
+  <data name="houseSelection.rerollBlocked" xml:space="preserve"><value>Quán tin đây là ly phù hợp tối nay.</value></data>
+  <data name="houseSelection.rerollFirst" xml:space="preserve"><value>Chưa đúng tối nay?</value></data>
+  <data name="houseSelection.rerollSealed" xml:space="preserve"><value>Quán giữ đề xuất này để đảm bảo nhất quán.</value></data>
+  <data name="houseSelection.rerollSecond" xml:space="preserve"><value>Một lần đổi cuối</value></data>
+  <data name="houseSelection.rerollWait" xml:space="preserve"><value>Đợi một chút rồi thử lại.</value></data>
+  <data name="langSwitcher.en" xml:space="preserve"><value>EN</value></data>
+  <data name="langSwitcher.label" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="langSwitcher.vi" xml:space="preserve"><value>VI</value></data>
+  <data name="letterRoom.ctaPrimary" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="letterRoom.earnedKicker" xml:space="preserve"><value>Quán gọi tên ly này cho bạn.</value></data>
+  <data name="letterRoom.rerollCta" xml:space="preserve"><value>Nhờ vịt giao thêm một thư</value></data>
+  <data name="menu.addedWithCare" xml:space="preserve"><value>Đã thêm cẩn thận</value></data>
+  <data name="menu.addToOrder" xml:space="preserve"><value>Pha cho bàn tôi</value></data>
+  <data name="menu.addToTray" xml:space="preserve"><value>Gửi vào bàn thưởng thức</value></data>
+  <data name="menu.aWordLabel" xml:space="preserve"><value>Một dòng</value></data>
+  <data name="menu.back" xml:space="preserve"><value>Quay lại</value></data>
+  <data name="menu.backHome" xml:space="preserve"><value>← Chọn lại</value></data>
+  <data name="menu.backHomeAria" xml:space="preserve"><value>Quay lại màn hình chọn một trong ba lối</value></data>
+  <data name="menu.backNav" xml:space="preserve"><value>← Thực đơn</value></data>
+  <data name="menu.browseEyebrow" xml:space="preserve"><value>KITS</value></data>
+  <data name="menu.browseIntro" xml:space="preserve"><value></value></data>
+  <data name="menu.browseTitle" xml:space="preserve"><value>Lựa chọn của quán</value></data>
+  <data name="menu.categoriesNavAria" xml:space="preserve"><value>Danh mục thực đơn</value></data>
+  <data name="menu.categorySeasonalNote" xml:space="preserve"><value>Luân phiên theo mùa. Hỏi barista về microlot hôm nay nhé.</value></data>
+  <data name="menu.curatedCup" xml:space="preserve"><value>Ly được chọn</value></data>
+  <data name="menu.detailActionsAria" xml:space="preserve"><value>Thao tác thẻ hương vị</value></data>
+  <data name="menu.discover" xml:space="preserve"><value>Khám phá</value></data>
+  <data name="menu.editorialBakery" xml:space="preserve"><value>Bánh ngọt kèm cà phê hoặc trà. Chọn khi muốn ăn nhẹ cùng ly uống.</value></data>
+  <data name="menu.editorialBlack" xml:space="preserve"><value>Những ly cà phê đen pha máy. Đậm đà, cân bằng và dễ uống.</value></data>
+  <data name="menu.editorialCoffee" xml:space="preserve"><value>Cà phê pha máy hằng ngày. Đậm đà, cân bằng và dễ uống.</value></data>
+  <data name="menu.editorialColdBrew" xml:space="preserve"><value>Cà phê ủ lạnh chậm. Êm và ít đắng, uống mát cả ngày.</value></data>
+  <data name="menu.editorialDefault" xml:space="preserve"><value>Các món đang có trên quầy. Hỏi barista nếu bạn cần gợi ý.</value></data>
+  <data name="menu.editorialEspresso" xml:space="preserve"><value>Những ly espresso pha hằng ngày. Đậm đà, cân bằng và dễ uống.</value></data>
+  <data name="menu.editorialFallback" xml:space="preserve"><value>Các món trong nhóm này. Hỏi barista nếu bạn cần gợi ý.</value></data>
+  <data name="menu.editorialJuice" xml:space="preserve"><value>Nước ép trái cây tươi. Mát và thanh, chọn khi muốn giải khát nhanh.</value></data>
+  <data name="menu.editorialMilk" xml:space="preserve"><value>Cà phê pha cùng sữa. Êm và dễ uống, chọn khi muốn ly dịu hơn.</value></data>
+  <data name="menu.editorialSeasonal" xml:space="preserve"><value>Món theo mùa, có trong thời gian giới hạn. Hỏi barista món nào đang còn hôm nay.</value></data>
+  <data name="menu.editorialSignature" xml:space="preserve"><value>Những ly đặc trưng của quán. Công thức riêng, đậm vị và dễ nhận ra.</value></data>
+  <data name="menu.editorialSmoothie" xml:space="preserve"><value>Sinh tố trái cây xay cùng sữa. Dày mịn và ngọt tự nhiên, chọn khi muốn no nhẹ.</value></data>
+  <data name="menu.editorialSpark" xml:space="preserve"><value>Đồ uống trái cây mát lạnh. Chọn khi muốn giải khát và tỉnh táo.</value></data>
+  <data name="menu.editorialSpecialty" xml:space="preserve"><value>4 lô Specialty Coffee tuyển chọn. Mỗi lô mang một hương vị và câu chuyện riêng.</value></data>
+  <data name="menu.editorialTea" xml:space="preserve"><value>Trà nguyên lá pha theo từng ly. Nhẹ caffeine, hậu vị sạch.</value></data>
+  <data name="menu.editorialVietnamese" xml:space="preserve"><value>Cà phê Việt Nam pha phin. Đậm và ngọt sữa, quen thuộc và chắc chắn.</value></data>
+  <data name="menu.pairingAdded" xml:space="preserve"><value>Đã thêm</value></data>
+  <data name="menu.pairingReceipt" xml:space="preserve"><value>Đã thêm {name} vào khay</value></data>
+  <data name="menu.pairingReceiptShort" xml:space="preserve"><value>Đã thêm vào khay</value></data>
+  <data name="menu.pairingsLead" xml:space="preserve"><value>Chúng tôi gợi ý kèm</value></data>
+  <data name="menu.pairingTap" xml:space="preserve"><value>Chạm để thêm</value></data>
+  <data name="menu.preparedPrefix" xml:space="preserve"><value>Pha theo đơn ·</value></data>
+  <data name="menu.prepareForTable" xml:space="preserve"><value>Pha cho bàn tôi</value></data>
+  <data name="menu.ribbonBright" xml:space="preserve"><value>Sáng và tỉnh</value></data>
+  <data name="menu.ribbonEasy" xml:space="preserve"><value>Ly dễ uống</value></data>
+  <data name="menu.ribbonFeatured" xml:space="preserve"><value>Khách yêu thích</value></data>
+  <data name="menu.ribbonSeasonal" xml:space="preserve"><value>Nổi bật theo mùa</value></data>
+  <data name="menu.ribbonSignature" xml:space="preserve"><value>Đặc trưng quán</value></data>
+  <data name="menu.ribbonSlow" xml:space="preserve"><value>Dịu dàng buổi sáng</value></data>
+  <data name="menu.stillLifeBadge" xml:space="preserve"><value>Tĩnh vật</value></data>
+  <data name="menu.tastingCard" xml:space="preserve"><value>Kits Thẻ Món</value></data>
+  <data name="menu.tastingNotesLabel" xml:space="preserve"><value>Ghi chú nếm</value></data>
+  <data name="menu.viewDetail" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="menuTray.ariaChip" xml:space="preserve"><value>Mở khay gọi món</value></data>
+  <data name="menuTray.chipCompleteBody" xml:space="preserve"><value>Cảm ơn bạn đã ghé Kits.</value></data>
+  <data name="menuTray.chipCompleteTitle" xml:space="preserve"><value>Đơn đã hoàn thành</value></data>
+  <data name="menuTray.chipEmpty" xml:space="preserve"><value>Khay đang chờ</value></data>
+  <data name="menuTray.chipEmptySomm" xml:space="preserve"><value>Khay đang chờ</value></data>
+  <data name="menuTray.chipGuestPouring" xml:space="preserve"><value>Đang phục vụ cho</value></data>
+  <data name="menuTray.chipKicker" xml:space="preserve"><value>Khay</value></data>
+  <data name="menuTray.chipMany" xml:space="preserve"><value>{n} món đã đặt</value></data>
+  <data name="menuTray.chipManySomm" xml:space="preserve"><value>{n} món đã đặt</value></data>
+  <data name="menuTray.chipOne" xml:space="preserve"><value>Một ly trên khay</value></data>
+  <data name="menuTray.chipPaidBody" xml:space="preserve"><value>Đơn của bạn đã được nhân viên xác nhận. Chúng tôi đang chuẩn bị món.</value></data>
+  <data name="menuTray.chipPaidTitle" xml:space="preserve"><value>Thanh toán thành công</value></data>
+  <data name="menuTray.chipPreparingShort" xml:space="preserve"><value>Đơn đang chuẩn bị</value></data>
+  <data name="menuTray.chipSubEmpty" xml:space="preserve"><value>Chọn một ly để bắt đầu.</value></data>
+  <data name="menuTray.chipSubFilled" xml:space="preserve"><value>Chạm để xem khay</value></data>
+  <data name="menuTray.chipSubFilledShort" xml:space="preserve"><value>Chạm để mở</value></data>
+  <data name="menuTray.chipSubmittedBody" xml:space="preserve"><value>Nhân viên sẽ đến kiểm tra lại đơn và hỗ trợ thanh toán.</value></data>
+  <data name="menuTray.chipSubmittedNote" xml:space="preserve"><value>Bạn có thể giữ màn hình này mở để nhận cập nhật.</value></data>
+  <data name="menuTray.chipSubmittedTitle" xml:space="preserve"><value>Đơn đã được gửi</value></data>
+  <data name="menuTray.chipSubSomm" xml:space="preserve"><value>Chọn một ly để bắt đầu.</value></data>
+  <data name="menuTray.chipTrackCta" xml:space="preserve"><value>Theo dõi đơn</value></data>
+  <data name="menuTray.clear" xml:space="preserve"><value>Xóa lựa chọn</value></data>
+  <data name="menuTray.countMany" xml:space="preserve"><value>{n} ly trên khay.</value></data>
+  <data name="menuTray.countNone" xml:space="preserve"><value>Chưa có ly nào trên khay.</value></data>
+  <data name="menuTray.countOne" xml:space="preserve"><value>Một ly trên khay.</value></data>
+  <data name="menuTray.eachSuffix" xml:space="preserve"><value>mỗi ly</value></data>
+  <data name="menuTray.emptyBody" xml:space="preserve"><value>Thêm một ly từ gợi ý hoặc thực đơn — khay sẽ hiện tại đây.</value></data>
+  <data name="menuTray.emptyGuest" xml:space="preserve"><value>Khách này chưa chọn ly nào — chạm một ly khi đã sẵn sàng.</value></data>
+  <data name="menuTray.emptyGuestSection" xml:space="preserve"><value></value></data>
+  <data name="menuTray.guestKicker" xml:space="preserve"><value>Khay gọi món</value></data>
+  <data name="menuTray.itemNoteAction" xml:space="preserve"><value>Ghi chú</value></data>
+  <data name="menuTray.itemNotePlaceholder" xml:space="preserve"><value>Ví dụ: ít đá, ít đường...</value></data>
+  <data name="menuTray.itemNotePreview" xml:space="preserve"><value>Ghi chú:</value></data>
+  <data name="menuTray.tempHot" xml:space="preserve"><value>Nóng</value></data>
+  <data name="menuTray.tempIced" xml:space="preserve"><value>Đá</value></data>
+  <data name="menuTray.modalUnavailable" xml:space="preserve"><value>Ly này hiện không có.</value></data>
+  <data name="menuTray.paymentSuccessCelebrationBody" xml:space="preserve"><value>Đơn của bạn đã được nhân viên xác nhận. Chúng tôi đang chuẩn bị món.</value></data>
+  <data name="menuTray.paymentSuccessClose" xml:space="preserve"><value>Đóng</value></data>
+  <data name="menuTray.receivedThanks" xml:space="preserve"><value>Quầy đã nhận order</value></data>
+  <data name="menuTray.remove" xml:space="preserve"><value>Bỏ món</value></data>
+  <data name="menuTray.requestPreparation" xml:space="preserve"><value>Gửi order xuống quầy</value></data>
+  <data name="menuTray.sheetSub" xml:space="preserve"><value>Chạm để xem và gửi order</value></data>
+  <data name="menuTray.sheetTitle" xml:space="preserve"><value>Khay của bạn</value></data>
+  <data name="menuTray.sheetTitleMany" xml:space="preserve"><value>Khay · {n} món</value></data>
+  <data name="menuTray.sheetTitleOne" xml:space="preserve"><value>Khay · 1 món</value></data>
+  <data name="menuTray.subtotal" xml:space="preserve"><value>Tạm tính</value></data>
+  <data name="menuTray.yourOrder" xml:space="preserve"><value>Lựa chọn tại bàn</value></data>
+  <data name="moods.adventurous.caption" xml:space="preserve"><value>Phù hợp khi bạn muốn hương vị rõ và có điểm nhấn.</value></data>
+  <data name="moods.adventurous.glimpse" xml:space="preserve"><value>Dành cho người muốn thử vị mới hoặc mạnh hơn.</value></data>
+  <data name="moods.adventurous.kicker" xml:space="preserve"><value>Dấn</value></data>
+  <data name="moods.adventurous.line" xml:space="preserve"><value>Nhiều tầng vị, độ đậm cao hơn.</value></data>
+  <data name="moods.adventurous.prompt" xml:space="preserve"><value>dấn táo bạo gia vị lớp sâu bất ngờ</value></data>
+  <data name="moods.adventurous.tastingDirection" xml:space="preserve"><value>Ưu tiên độ đậm và lớp vị rõ ràng.</value></data>
+  <data name="moods.adventurous.title" xml:space="preserve"><value>Muốn dấn thêm</value></data>
+  <data name="moods.bright.caption" xml:space="preserve"><value>Phù hợp khi bạn muốn đồ uống tươi và rõ vị.</value></data>
+  <data name="moods.bright.glimpse" xml:space="preserve"><value>Dành cho người thích vị chua thanh và cảm giác nhẹ.</value></data>
+  <data name="moods.bright.kicker" xml:space="preserve"><value>Thanh</value></data>
+  <data name="moods.bright.line" xml:space="preserve"><value>Vị sáng, chua thanh, hậu sạch.</value></data>
+  <data name="moods.bright.prompt" xml:space="preserve"><value>sáng chanh trong mát nắng yuzu ly nhẹ ánh</value></data>
+  <data name="moods.bright.tastingDirection" xml:space="preserve"><value>Ưu tiên hương citrus và độ chua rõ.</value></data>
+  <data name="moods.bright.title" xml:space="preserve"><value>Sáng và chanh</value></data>
+  <data name="moods.floral.caption" xml:space="preserve"><value>Phù hợp khi bạn muốn mùi hương rõ nhưng nhẹ vị.</value></data>
+  <data name="moods.floral.glimpse" xml:space="preserve"><value>Dành cho người thích hương hoa nhẹ, không ngọt gắt.</value></data>
+  <data name="moods.floral.kicker" xml:space="preserve"><value>Mềm</value></data>
+  <data name="moods.floral.line" xml:space="preserve"><value>Hương hoa nhẹ, vị thanh.</value></data>
+  <data name="moods.floral.prompt" xml:space="preserve"><value>hoa nhẹ hương jasmine sương porcelain êm</value></data>
+  <data name="moods.floral.tastingDirection" xml:space="preserve"><value>Ưu tiên nốt hoa và hậu vị sạch.</value></data>
+  <data name="moods.floral.title" xml:space="preserve"><value>Hoa và nhẹ</value></data>
+  <data name="moods.focus.caption" xml:space="preserve"><value>Phù hợp khi bạn cần đồ uống thanh và ít nặng bụng.</value></data>
+  <data name="moods.focus.glimpse" xml:space="preserve"><value>Dành cho người thích ly nhẹ, dễ uống lâu.</value></data>
+  <data name="moods.focus.kicker" xml:space="preserve"><value>Lặng</value></data>
+  <data name="moods.focus.line" xml:space="preserve"><value>Vị sạch, nhẹ, dễ tập trung.</value></data>
+  <data name="moods.focus.prompt" xml:space="preserve"><value>lặng tập trung trà trong im suy tư mưa</value></data>
+  <data name="moods.focus.tastingDirection" xml:space="preserve"><value>Ưu tiên độ trong, hậu vị ngắn và sạch.</value></data>
+  <data name="moods.focus.title" xml:space="preserve"><value>Khoảng lặng để tập trung</value></data>
+  <data name="moods.slow.caption" xml:space="preserve"><value>Phù hợp khi bạn muốn ly êm và dễ uống.</value></data>
+  <data name="moods.slow.glimpse" xml:space="preserve"><value>Dành cho người thích vị mềm, ít gắt.</value></data>
+  <data name="moods.slow.kicker" xml:space="preserve"><value>Ôm</value></data>
+  <data name="moods.slow.line" xml:space="preserve"><value>Vị ngọt dịu, tròn miệng.</value></data>
+  <data name="moods.slow.prompt" xml:space="preserve"><value>chậm ấm ôm ngọt nhẹ nhung êm an</value></data>
+  <data name="moods.slow.tastingDirection" xml:space="preserve"><value>Ưu tiên độ béo nhẹ và hậu vị mềm.</value></data>
+  <data name="moods.slow.title" xml:space="preserve"><value>Ấm và chậm</value></data>
+  <data name="nav.menu" xml:space="preserve"><value>Thực đơn</value></data>
+  <data name="nav.privacy" xml:space="preserve"><value>Riêng tư</value></data>
+  <data name="nav.siteAria" xml:space="preserve"><value>Điều hướng trang</value></data>
+  <data name="nav.staff" xml:space="preserve"><value>Đội phục vụ</value></data>
+  <data name="order.confirmBody" xml:space="preserve"><value>Quầy đã nhận order của bạn.</value></data>
+  <data name="order.confirmKicker" xml:space="preserve"><value>Đã gửi</value></data>
+  <data name="order.followLink" xml:space="preserve"><value>Theo dõi đơn</value></data>
+  <data name="order.followPreparation" xml:space="preserve"><value>Theo nhịp pha chế</value></data>
+  <data name="order.inProgressKicker" xml:space="preserve"><value>Đang phục vụ</value></data>
+  <data name="order.inProgressLine" xml:space="preserve"><value>Bạn còn một đơn mở từ bàn này.</value></data>
+  <data name="order.menuChanged" xml:space="preserve"><value>Thực đơn vừa đổi. Làm mới trang rồi chọn lại nhé.</value></data>
+  <data name="order.minOne" xml:space="preserve"><value>Hãy chọn ít nhất một ly trước.</value></data>
+  <data name="order.needTable" xml:space="preserve"><value>Vui lòng quét mã QR tại bàn để gọi món.</value></data>
+  <data name="order.needTableScan" xml:space="preserve"><value>Vui lòng quét mã QR tại bàn để gọi món.</value></data>
+  <data name="order.queuedSoft" xml:space="preserve"><value>Kết nối yếu một chút — chúng tôi sẽ gửi lựa chọn này khi phòng ổn định trở lại.</value></data>
+  <data name="order.serverMaintenance" xml:space="preserve"><value>Hệ thống đang cập nhật — vui lòng gọi nhân viên để gửi đơn.</value></data>
+  <data name="order.submitFailed" xml:space="preserve"><value>Chưa gửi được lựa chọn lúc này.</value></data>
+  <data name="order.submitFailedRetry" xml:space="preserve"><value>Không gửi được đơn. Vui lòng thử lại hoặc gọi nhân viên.</value></data>
+  <data name="order.submitFailedStaff" xml:space="preserve"><value>Không gửi được đơn, vui lòng gọi nhân viên.</value></data>
+  <data name="order.submitted" xml:space="preserve"><value>Quầy đã nhận order của bạn.</value></data>
+  <data name="order.submitting" xml:space="preserve"><value>Đang gửi…</value></data>
+  <data name="order.tableUnavailable" xml:space="preserve"><value>Bàn này hiện chưa mở. Nhờ người dẫn giúp bạn chọn chỗ nhé.</value></data>
+  <data name="refine.brighter.label" xml:space="preserve"><value>Vị thanh và mở</value></data>
+  <data name="refine.brighter.snippet" xml:space="preserve"><value>muốn vị sáng và chua thanh hơn</value></data>
+  <data name="refine.less_sweet.label" xml:space="preserve"><value>Gu khô và trong</value></data>
+  <data name="refine.less_sweet.snippet" xml:space="preserve"><value>muốn giảm độ ngọt, hậu sạch</value></data>
+  <data name="refine.low_caffeine.label" xml:space="preserve"><value>Gu caffeine êm hơn</value></data>
+  <data name="refine.low_caffeine.snippet" xml:space="preserve"><value>muốn ít caffeine hơn</value></data>
+  <data name="refine.more_adventurous.label" xml:space="preserve"><value>Dấn thêm một nhịp</value></data>
+  <data name="refine.more_adventurous.snippet" xml:space="preserve"><value>muốn hương vị đậm và nhiều tầng hơn</value></data>
+  <data name="refine.softer.label" xml:space="preserve"><value>Miệng êm hơn</value></data>
+  <data name="refine.softer.snippet" xml:space="preserve"><value>muốn ly êm hơn và ít gắt</value></data>
+  <data name="ritual.beginWith" xml:space="preserve"><value>Có lẽ nhịp này mở bằng</value></data>
+  <data name="ritual.catalogErr" xml:space="preserve"><value>Chưa tải được thực đơn. Khi kết nối ổn, phần nếm sẽ trở lại.</value></data>
+  <data name="ritual.catalogOffline" xml:space="preserve"><value>Đang dùng danh sách gần nhất do kết nối chưa ổn định.</value></data>
+  <data name="ritual.cupsInLight" xml:space="preserve"><value>Những ly trong ánh này</value></data>
+  <data name="ritual.fineAdjustments" xml:space="preserve"><value>Điều chỉnh nhẹ</value></data>
+  <data name="ritual.flavorPath" xml:space="preserve"><value>Hướng vị</value></data>
+  <data name="ritual.fullMenu" xml:space="preserve"><value>Xem cả thực đơn</value></data>
+  <data name="ritual.heading" xml:space="preserve"><value>Chọn gu vị để nhận gợi ý phù hợp.</value></data>
+  <data name="ritual.hold" xml:space="preserve"><value>Giữ lại</value></data>
+  <data name="ritual.inTheCup" xml:space="preserve"><value>Điều trong ly</value></data>
+  <data name="ritual.intro" xml:space="preserve"><value>Trả lời vài câu hỏi ngắn để quán gợi ý đồ uống phù hợp với bạn.</value></data>
+  <data name="ritual.kicker" xml:space="preserve"><value>Nếm nhà</value></data>
+  <data name="ritual.moodAria" xml:space="preserve"><value>Bạn muốn bước vào thế nào</value></data>
+  <data name="ritual.otherDirections" xml:space="preserve"><value>Hướng khác</value></data>
+  <data name="ritual.otherDirectionsHint" xml:space="preserve"><value>Bạn có thể chọn phương án khác nếu cần.</value></data>
+  <data name="ritual.pairingClose" xml:space="preserve"><value>Rất gần với ánh sáng này</value></data>
+  <data name="ritual.pairingEcho" xml:space="preserve"><value>Món cùng hướng vị</value></data>
+  <data name="ritual.pairingLine" xml:space="preserve"><value>Món gần với gu bạn chọn</value></data>
+  <data name="ritual.pairingNeighbor" xml:space="preserve"><value>Người hàng xóm dịu hơn trên khay</value></data>
+  <data name="ritual.placeTray" xml:space="preserve"><value>Thêm vào khay</value></data>
+  <data name="ritual.readCup" xml:space="preserve"><value>Xem lá thư</value></data>
+  <data name="ritual.readingRite1" xml:space="preserve"><value>Đang phân tích lựa chọn của bạn...</value></data>
+  <data name="ritual.readingRite2" xml:space="preserve"><value>Đang đối chiếu các món phù hợp...</value></data>
+  <data name="ritual.readingRite3" xml:space="preserve"><value>Đang hoàn tất gợi ý...</value></data>
+  <data name="ritual.refinementGroupAria" xml:space="preserve"><value>Chỉnh nhẹ theo nhịp ly</value></data>
+  <data name="ritual.reserve" xml:space="preserve"><value>Chọn</value></data>
+  <data name="ritual.roomBriefly" xml:space="preserve"><value>Không gian trong vài nhịp</value></data>
+  <data name="ritual.secondGesture" xml:space="preserve"><value>Nhịp tiếp theo</value></data>
+  <data name="ritual.shroudBody" xml:space="preserve"><value>Đang phân tích lựa chọn của bạn để đề xuất món.</value></data>
+  <data name="ritual.shroudKicker" xml:space="preserve"><value>Người dẫn</value></data>
+  <data name="ritual.sommelierDefaultOpening" xml:space="preserve"><value>Gợi ý hiện tại: {name}.</value></data>
+  <data name="ritual.sommelierFallbackOpen" xml:space="preserve"><value>Chưa nhận được gợi ý tự động. Bạn có thể chọn trực tiếp từ danh sách bên phải.</value></data>
+  <data name="ritual.sommelierFallbackReason" xml:space="preserve"><value>Chúng tôi giữ lựa chọn gọn cho đến khi tín hiệu trở lại.</value></data>
+  <data name="ritual.sommelierFallbackTasting" xml:space="preserve"><value>Chọn một dòng trước; khi sóng ổn, người dẫn sẽ trở lại.</value></data>
+  <data name="ritual.sommelierFallbackTone" xml:space="preserve"><value>Chậm · có chừng</value></data>
+  <data name="ritual.study" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="ritual.tastingDirection" xml:space="preserve"><value>Điều bạn sẽ cảm nhận</value></data>
+  <data name="ritual.whyBelongs" xml:space="preserve"><value>Vì sao hợp nhịp này</value></data>
+  <data name="toast.addedLong" xml:space="preserve"><value>Đã thêm cẩn thận.</value></data>
+  <data name="toast.addedShort" xml:space="preserve"><value>Đã trên khay.</value></data>
+  <data name="toast.ceremonyPlaced" xml:space="preserve"><value>Đã thêm vào khay Kits</value></data>
+  <data name="toast.ceremonySaved" xml:space="preserve"><value>Giữ cho vòng này</value></data>
+  <data name="toast.ceremonyWaiting" xml:space="preserve"><value>Chờ bên quầy Kits</value></data>
+  <data name="toast.viewOpen" xml:space="preserve"><value>Xem lựa chọn của bạn</value></data>
+  <data name="track.billBrand" xml:space="preserve"><value>Kits Coffee Atelier</value></data>
+  <data name="track.billEyebrow" xml:space="preserve"><value>Hóa đơn điện tử</value></data>
+  <data name="track.billMetaPaid" xml:space="preserve"><value>Thanh toán lúc</value></data>
+  <data name="track.billMetaSent" xml:space="preserve"><value>Gửi lúc</value></data>
+  <data name="track.billMetaStatus" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="track.billMetaTable" xml:space="preserve"><value>Bàn</value></data>
+  <data name="track.billPaidLabel" xml:space="preserve"><value>Đã thanh toán</value></data>
+  <data name="track.billPending" xml:space="preserve"><value>Chờ nhân viên xác nhận thanh toán.</value></data>
+  <data name="track.billSection" xml:space="preserve"><value>Hóa đơn điện tử</value></data>
+  <data name="track.billThanks" xml:space="preserve"><value>Cảm ơn bạn đã ghé Kits.</value></data>
+  <data name="track.billTotal" xml:space="preserve"><value>Tổng cộng</value></data>
+  <data name="track.cancelledFallback" xml:space="preserve"><value>Đơn này không còn hiệu lực.</value></data>
+  <data name="track.detailsUnavailable" xml:space="preserve"><value>Chưa có chi tiết món.</value></data>
+  <data name="track.err404" xml:space="preserve"><value>Chúng tôi không tìm thấy đơn này.</value></data>
+  <data name="track.errSoft" xml:space="preserve"><value>Kết nối đang yếu. Chúng tôi sẽ thử lại sớm.</value></data>
+  <data name="track.footnote" xml:space="preserve"><value>Trang tự cập nhật khi quầy xử lý đơn.</value></data>
+  <data name="track.keepOpenNote" xml:space="preserve"><value>Bạn có thể giữ màn hình này mở để nhận cập nhật.</value></data>
+  <data name="track.orderRefLabel" xml:space="preserve"><value>Mã đơn</value></data>
+  <data name="track.pageEyebrow" xml:space="preserve"><value>Trạng thái đơn</value></data>
+  <data name="track.progressAria" xml:space="preserve"><value>Tiến độ đơn hàng</value></data>
+  <data name="track.selectionSection" xml:space="preserve"><value>Lựa chọn của bạn</value></data>
+  <data name="track.statusComplete" xml:space="preserve"><value>Hoàn thành</value></data>
+  <data name="track.statusPaid" xml:space="preserve"><value>Đang chuẩn bị</value></data>
+  <data name="track.statusPending" xml:space="preserve"><value>Chờ thanh toán</value></data>
+  <data name="track.step1" xml:space="preserve"><value>Đã gửi đơn</value></data>
+  <data name="track.step2" xml:space="preserve"><value>Đã thanh toán</value></data>
+  <data name="track.step3" xml:space="preserve"><value>Đang chuẩn bị</value></data>
+  <data name="track.step4" xml:space="preserve"><value>Hoàn thành</value></data>
+  <data name="track.tableEyebrow" xml:space="preserve"><value>Bàn</value></data>
+  <data name="track.thankYou" xml:space="preserve"><value>Cảm ơn bạn đã ghé Kits.</value></data>
+  <data name="track.untilNext" xml:space="preserve"><value>Hẹn lần sau.</value></data>
+</root>

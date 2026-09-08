@@ -1,0 +1,1 @@
+SELECT id, name, item_type FROM menu_items WHERE is_archived = false LIMIT 5;

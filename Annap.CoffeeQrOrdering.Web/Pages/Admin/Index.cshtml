@@ -1,0 +1,239 @@
+@page "/admin"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.IndexModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Bảng điều hành";
+    ViewData["AdminNavSection"] = "overview";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-experience.css" asp-append-version="true" />
+}
+@{
+    ViewData["AdminEyebrow"] = "Quản trị";
+    ViewData["AdminReturnHref"] = Url.Content("~/");
+    ViewData["AdminReturnLabel"] = "← Về trang khách";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="ah ah-wrap">
+    <header class="ah-hero">
+        <div>
+            <p class="ah-hero__kicker">Kits Coffee Atelier</p>
+            <h1 class="ah-hero__title">Bảng điều hành</h1>
+            <p class="ah-hero__lede">
+                Chỉnh thực đơn, hướng dẫn khách khám phá và quản lý sàn theo thời gian thực — từ một giao diện yên tĩnh.
+            </p>
+        </div>
+        <aside class="ah-hero-aside" aria-label="Trạng thái quán">
+            <dl>
+                <div>
+                    <dt>Thời gian</dt>
+                    <dd>@Model.ServerLocalTime</dd>
+                </div>
+                <div>
+                    <dt>Môi trường</dt>
+                    <dd>@Model.EnvironmentDisplayName</dd>
+                </div>
+                @if (Model.DatabaseConnected)
+                {
+                    <div>
+                        <dt>Cơ sở dữ liệu</dt>
+                        <dd>Kết nối được</dd>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <dt>Cơ sở dữ liệu</dt>
+                        <dd class="text-amber-200/90">Không kết nối được</dd>
+                    </div>
+                }
+                <div>
+                    <dt>Di trú khi khởi động</dt>
+                    <dd>@(Model.ApplyMigrationsOnStartup ? "Bật" : "Tắt")</dd>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.LanPublicBaseUrl))
+                {
+                    <div>
+                        <dt>Địa chỉ mạng công khai</dt>
+                        <dd style="word-break: break-all;">@Model.LanPublicBaseUrl</dd>
+                    </div>
+                }
+            </dl>
+        </aside>
+    </header>
+
+    <section class="ah-section" aria-labelledby="ah-quick-heading">
+        <p class="ah-section__label" id="ah-quick-heading">Tổng quan</p>
+        <h2 class="ah-section__title">Truy cập nhanh</h2>
+        <div class="ah-grid-ops ah-grid-quick">
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Doanh thu</p>
+                <h3 class="ah-panel__title">Báo cáo bán hàng</h3>
+                <p class="ah-panel__copy">Xem doanh thu, số ly bán ra và bill trong ngày.</p>
+                <div class="ah-panel__action">
+                    <a href="/admin/reports">Mở báo cáo</a>
+                </div>
+            </article>
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Chuyển khoản</p>
+                <h3 class="ah-panel__title">Đối soát chuyển khoản</h3>
+                <p class="ah-panel__copy">Theo dõi webhook, giao dịch khớp và giao dịch cần kiểm tra.</p>
+                <div class="ah-panel__action">
+                    <a href="/admin/payments">Mở đối soát</a>
+                </div>
+            </article>
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Nhân sự</p>
+                <h3 class="ah-panel__title">Tài khoản nhân viên</h3>
+                <p class="ah-panel__copy">Tạo và quản lý tài khoản thu ngân / nhân viên.</p>
+                <div class="ah-panel__action">
+                    <a href="/admin/staff-accounts">Quản lý tài khoản</a>
+                </div>
+            </article>
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Bàn &amp; QR</p>
+                <h3 class="ah-panel__title">Bàn &amp; mã QR</h3>
+                <p class="ah-panel__copy">Quản lý bàn và mã QR gọi món.</p>
+                <div class="ah-panel__action">
+                    <a href="/admin/tables">Quản lý bàn</a>
+                </div>
+            </article>
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Thực đơn</p>
+                <h3 class="ah-panel__title">Menu</h3>
+                <p class="ah-panel__copy">Quản lý món, giá và trạng thái hiển thị.</p>
+                <div class="ah-panel__action">
+                    <a href="/admin/menu">Mở thực đơn</a>
+                </div>
+            </article>
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Quầy</p>
+                <h3 class="ah-panel__title">Sàn phục vụ</h3>
+                <p class="ah-panel__copy">Mở màn hình đơn hàng tại quầy.</p>
+                <div class="ah-panel__action">
+                    <a href="/staff/orders">Mở bảng nhân viên</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <div class="ah-homepage-composition">
+        <partial name="Experience/Homepage/_HomepageCompositionPanel" model="Model" />
+    </div>
+
+    <section class="ah-section" aria-labelledby="ah-ops-heading">
+        <p class="ah-section__label" id="ah-ops-heading">Vận hành</p>
+        <h2 class="ah-section__title">Sàn phục vụ trực tiếp</h2>
+
+        <div class="ah-grid-ops">
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Phục vụ trực tiếp</p>
+                <h3 class="ah-panel__title">Bảng nhân viên</h3>
+                <p class="ah-panel__copy">
+                    Phiếu gọi, giai đoạn pha chế và bàn giao — SignalR giữ hàng đợi đồng bộ với sàn.
+                </p>
+                <p class="ah-panel__meta">
+                    @Model.OpenOrdersCount phiếu mở · @Model.CupsInFlight ly đang pha · @VndMoneyFormatter.Format(Model.OpenTicketsValue) tổng cộng
+                </p>
+                <div class="ah-panel__action">
+                    <a href="/staff/orders">Mở bảng nhân viên</a>
+                </div>
+            </article>
+
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Sàn quán</p>
+                <h3 class="ah-panel__title">Bàn quán</h3>
+                <p class="ah-panel__copy">
+                    Bàn đang hoạt động, mã nhận diện và trạng thái phục vụ.
+                </p>
+                <p class="ah-panel__meta">
+                    @Model.ActiveVenueTables bàn đang hoạt động
+                </p>
+                <div class="ah-panel__action">
+                    <a href="/admin/tables">Xem bàn quán</a>
+                </div>
+            </article>
+
+            <article class="ah-panel">
+                <p class="ah-panel__eyebrow">Đón khách</p>
+                <h3 class="ah-panel__title">Mã QR trải nghiệm</h3>
+                <p class="ah-panel__copy">
+                    Tạo mã bàn, sao chép đường dẫn LAN, in thẻ cho buổi dùng thử.
+                </p>
+                <p class="ah-panel__meta">
+                    Hub · <span class="font-mono text-[11px]">/hubs/orders</span>
+                </p>
+                <div class="ah-panel__action">
+                    <a href="/admin/demo/qr">Xem mã QR</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="ah-section" aria-labelledby="ah-curation-heading">
+        <p class="ah-section__label" id="ah-curation-heading">Thực đơn &amp; trải nghiệm</p>
+        <h2 class="ah-section__title">Xưởng thực đơn</h2>
+
+        <div class="ah-editorial">
+            <div class="ah-editorial__grid">
+                <div>
+                    <p class="text-sm font-light leading-relaxed text-[rgb(var(--muted))]">
+                        Chỉnh đồ uống, giá, hình ảnh và trạng thái. Định hình thanh đặc trưng, lộ trình nếm thử
+                        và hồ bơi khám phá — tất cả kết nối với trải nghiệm khách đang chạy trên sàn.
+                    </p>
+                    <dl class="ah-stat-row">
+                        <div class="ah-stat">
+                            <dt>Danh mục thực đơn</dt>
+                            <dd>@Model.ActiveMenuCategories danh mục</dd>
+                        </div>
+                        <div class="ah-stat">
+                            <dt>Đồ uống trong thực đơn</dt>
+                            <dd>@Model.AvailableMenuDrinks món có sẵn</dd>
+                        </div>
+                        <div class="ah-stat">
+                            <dt>Nổi bật theo mùa</dt>
+                            <dd>@Model.SeasonalHighlightDrinks món</dd>
+                        </div>
+                    </dl>
+                </div>
+                <nav class="ah-editorial__links" aria-label="Điểm đến quản lý">
+                    <a href="/admin/menu">Thực đơn <span>Danh sách &amp; hình ảnh</span></a>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <section class="ah-section" aria-labelledby="ah-guest-heading">
+        <p class="ah-section__label" id="ah-guest-heading">Trải nghiệm khách</p>
+        <h2 class="ah-section__title">Những gì quán đang cung cấp</h2>
+        <p class="mt-2 max-w-2xl text-sm font-light leading-relaxed text-[rgb(var(--muted))]">
+            Tổng quan về cách ứng dụng khách có thể hoạt động hôm nay — chỉ đọc, lấy trực tiếp từ cơ sở dữ liệu.
+        </p>
+        <dl class="ah-stat-row mt-4">
+            <div class="ah-stat">
+                <dt>Sảnh khách · lối vào đang hiện</dt>
+                <dd>@Model.HomepageModesVisible / 3 — chỉnh ngay ở thẻ bố cục phía trên</dd>
+            </div>
+        </dl>
+    </section>
+
+    <section class="ah-section" aria-labelledby="ah-obs-heading">
+        <p class="ah-section__label" id="ah-obs-heading">Phân tích</p>
+        <h2 class="ah-section__title">Đài quan sát</h2>
+        <div class="ah-observatory">
+            <p class="ah-hero__kicker" style="letter-spacing: 0.05em;">Vị giác &amp; tâm trạng</p>
+            <p class="ah-observatory__copy">
+                Quan sát cách khách di chuyển qua hương vị, tâm trạng và nhịp độ trên sàn — kết quả nếm thử,
+                tinh chỉnh và hiệu suất đặc trưng trong một góc nhìn yên tĩnh.
+            </p>
+            <div class="ah-observatory__action">
+                <a href="/admin/intelligence">Mở đài quan sát</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-homepage-composition.js" asp-append-version="true"></script>
+}

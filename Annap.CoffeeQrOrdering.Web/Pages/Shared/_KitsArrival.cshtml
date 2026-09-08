@@ -1,0 +1,121 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.IndexModel
+@*
+    Kits Arrival — venue-photo hero shown when a guest lands on the home page
+    with a valid table context (`?vt=` or sessionStorage). The arrival screen
+    preserves the QR/table identity and routes the guest into the existing
+    menu experience on tap of "Bắt đầu" or "Thực đơn".
+
+    Composition:
+      - immersive venue photo (covers viewport, layered dark overlay for type)
+      - compact chrome: KITS | EN VI | sound/haptic
+      - quiet table-context label (e.g. "BÀN T01 · Bàn của bạn")
+      - welcome heading + supporting line
+      - primary CTA "Bắt đầu" + secondary CTA "Thực đơn"
+
+    Table identity is preserved by `data-guest-vt-link="1"` which the existing
+    `GuestInteractionContract.navigation.applyVtNavPatches()` rewrites with
+    `?vt=<id>` on hydration. Razor also renders `asp-route-vt` so the link
+    works without JS as a fallback.
+*@
+@{
+    var vt = Model.VenueTableId;
+    var tableLabel = string.IsNullOrWhiteSpace(Model.TableGuestLabel) ? "" : Model.TableGuestLabel;
+    var arrivalImg = "/images/arrival/kits-venue.jpg";
+}
+
+<link rel="stylesheet" href="~/css/arrival.css" asp-append-version="true" />
+
+<div class="kits-arrival @(Model.CalmArrivalAnimations ? "kits-arrival--calm" : "")"
+     id="kits-arrival-root"
+     data-vt="@(vt?.ToString("D") ?? "")"
+     data-table-label="@tableLabel"
+     role="region"
+     aria-labelledby="kits-arrival-heading">
+    <div class="kits-arrival__stage" aria-hidden="true">
+        <img class="kits-arrival__photo"
+             src="@arrivalImg"
+             alt=""
+             decoding="async"
+             fetchpriority="high" />
+        <div class="kits-arrival__overlay"></div>
+        <div class="kits-arrival__gradient"></div>
+    </div>
+
+    <header class="kits-arrival__chrome" role="banner">
+        <a class="kits-arrival__mark guest-hit"
+           asp-page="/Index"
+           asp-route-vt="@vt"
+           data-guest-vt-link="1"
+           aria-label="KITS"
+           data-i18n="arrival.kitsBrand">KITS</a>
+        <div class="kits-arrival__chrome-right">
+            <div class="guest-lang-register"
+                 role="group"
+                 data-i18n-aria="langSwitcher.label">
+                <button type="button"
+                        data-lang-set="en"
+                        class="guest-hit"
+                        aria-pressed="false"
+                        data-i18n="langSwitcher.en">EN</button>
+                <button type="button"
+                        data-lang-set="vi"
+                        class="guest-hit"
+                        aria-pressed="false"
+                        data-i18n="langSwitcher.vi">VI</button>
+            </div>
+            <partial name="Shared/_InteractionPrefs" />
+        </div>
+    </header>
+
+    <main class="kits-arrival__content" role="main">
+        <p class="kits-arrival__eyebrow">
+            <span class="kits-arrival__eyebrow-dot" aria-hidden="true"></span>
+            <span data-i18n="arrival.kitsEyebrow">Bàn của bạn</span>
+            @if (!string.IsNullOrWhiteSpace(tableLabel))
+            {
+                <span class="kits-arrival__table-code">· @tableLabel</span>
+            }
+        </p>
+        <h1 id="kits-arrival-heading" class="kits-arrival__heading" data-i18n="arrival.kitsHeading">Chào mừng bạn đến với KITS</h1>
+        <p class="kits-arrival__supporting" data-i18n="arrival.kitsSupporting">Sẵn sàng gọi món?</p>
+    </main>
+
+    <nav class="kits-arrival__actions" aria-label="Arrival actions">
+        <a class="kits-arrival__cta kits-arrival__cta--primary guest-hit"
+           asp-page="/Menu/Index"
+           asp-route-vt="@vt"
+           data-guest-vt-link="1"
+           data-arrival-cta="primary">
+            <span class="kits-arrival__cta-text" data-i18n="arrival.kitsCtaStart">Bắt đầu</span>
+            <span class="kits-arrival__cta-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="kits-arrival__cta kits-arrival__cta--secondary guest-hit"
+           asp-page="/Menu/Index"
+           asp-route-vt="@vt"
+           data-guest-vt-link="1"
+           data-arrival-cta="secondary">
+            <span class="kits-arrival__cta-text" data-i18n="arrival.kitsCtaMenu">Thực đơn</span>
+            <span class="kits-arrival__cta-arrow" aria-hidden="true">→</span>
+        </a>
+    </nav>
+</div>
+
+<script>
+    /* Add .is-live on next paint so the photo/overlay/content fade in once.
+       No-motion / reduced-motion users get the no-transition override from
+       kits-identity.css and the CSS media query above. */
+    (function () {
+        try {
+            var root = document.getElementById("kits-arrival-root");
+            if (!root) return;
+            /* Mark the document so non-arrival chrome hides (footer, ambient). */
+            document.documentElement.classList.add("kits-arrival-active");
+            var apply = function () { root.classList.add("is-live"); };
+            if (typeof window.requestAnimationFrame === "function") {
+                window.requestAnimationFrame(function () { window.requestAnimationFrame(apply); });
+            } else {
+                setTimeout(apply, 16);
+            }
+        } catch (_e) { /* ignore */ }
+    })();
+</script>

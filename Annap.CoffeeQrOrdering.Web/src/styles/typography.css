@@ -1,0 +1,239 @@
+/**
+
+ * ANNAP — typography utilities (imported via Styles/input.css).
+
+ * Brand display rules live in wwwroot/css/typography-brand.css (loaded in layouts).
+
+ */
+
+
+
+@layer base {
+
+  body {
+
+    font-family: var(--font-ui);
+
+    font-size: 0.9375rem;
+
+    line-height: 1.55;
+
+  }
+
+
+
+  button,
+
+  input,
+
+  select,
+
+  textarea {
+
+    font-family: inherit;
+
+  }
+
+}
+
+
+
+@layer utilities {
+
+  .annap-type-display {
+
+    font-family: var(--font-display);
+
+    font-weight: 500;
+
+    font-style: normal;
+
+    letter-spacing: -0.02em;
+
+    line-height: 1.12;
+
+  }
+
+
+
+  .annap-type-narrative {
+
+    font-family: var(--font-ui);
+
+    font-weight: 400;
+
+    font-style: normal;
+
+    letter-spacing: 0;
+
+    line-height: 1.55;
+
+  }
+
+
+
+  .annap-type-functional {
+
+    font-family: var(--font-ui);
+
+    font-weight: 600;
+
+    font-size: 0.75rem;
+
+    line-height: 1.35;
+
+    letter-spacing: var(--tracking-functional);
+
+    text-transform: uppercase;
+
+  }
+
+
+
+  .font-tabular {
+
+    font-family: var(--font-code);
+
+    font-variant-numeric: tabular-nums;
+
+  }
+
+
+
+  .font-code {
+
+    font-family: var(--font-code);
+
+    letter-spacing: -0.02em;
+
+    font-variant-numeric: tabular-nums;
+
+  }
+
+
+
+  .font-display {
+
+    font-family: var(--font-display);
+
+  }
+
+}
+
+
+
+/* Operational numbers — prices, KPIs, totals */
+
+.staff-order-card__table-code,
+
+.guest-track-bill__table-code,
+
+.staff-shift-close__bill-no,
+
+.staff-shift-close__shift-window,
+
+.staff-shift-close__kpi-value,
+
+.staff-shift-close__pay-value,
+
+.staff-mobile-kpi__value,
+
+.staff-floor-kpi__value,
+
+.admin-kpi__value,
+
+.admin-reports__kpi-value,
+
+.admin-payments__amount,
+
+.order-tray-total,
+
+.menu-editorial-card__price,
+
+.menu-card-price,
+
+.guest-track-bill__amount,
+
+.drink-detail-price,
+
+[class*="__price"]:not(.menu-editorial-card__name),
+
+[class*="__total"],
+
+[class*="__amount"] {
+
+  font-family: var(--font-code);
+
+  font-variant-numeric: tabular-nums;
+
+}
+
+
+
+.staff-order-card__table-code,
+
+.guest-track-bill__table-code,
+
+.staff-shift-close__bill-no,
+
+.demo-qr-base__code,
+
+.admin-demo-qr__table-code {
+
+  letter-spacing: -0.02em;
+
+}
+
+
+
+.staff-shell,
+
+.admin-root,
+
+body.staff-shift-close-page {
+
+  font-family: var(--font-ui);
+
+}
+
+
+
+/* Guest payment / QR — UI sans body, mono for account/memo/amount */
+
+.order-tray-sheet,
+
+.guest-track-bill,
+
+.guest-bank-transfer,
+
+[class*="bank-transfer"],
+
+[class*="transfer-qr"] {
+
+  font-family: var(--font-ui);
+
+}
+
+
+
+.order-tray-sheet [class*="account"],
+
+.order-tray-sheet [class*="memo"],
+
+.order-tray-sheet [class*="amount"],
+
+.guest-bank-transfer__account,
+
+.guest-bank-transfer__memo,
+
+.guest-bank-transfer__amount {
+
+  font-family: var(--font-code);
+
+  font-variant-numeric: tabular-nums;
+
+  letter-spacing: -0.01em;
+
+}
+
+

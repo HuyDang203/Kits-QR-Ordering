@@ -1,0 +1,1549 @@
+/**
+ * ANNAP Correspondence Layer â€” letter experience CSS.
+ * Activates via html.annap-correspond-ui (paper world).
+ * Seated chrome suppressed via html.annap-seated-guest.
+ * Loads after site.css; overrides legacy token system for paper mode.
+ */
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   1. LEGACY RGB TOKEN OVERRIDES
+   Templates use text-[rgb(var(--fg))] etc. Without these, white-on-white
+   renders invisible when paper background activates.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui {
+  --fg:      26 18 9;      /* ink-deep  */
+  --bg:      250 247 242;  /* paper-letter */
+  --muted:   139 107 71;   /* ink-secondary */
+  --muted-2: 196 168 130;  /* ink-tertiary */
+  --accent:  196 168 130;  /* wax-seal */
+  --accent-2: 74 99 88;    /* forest accent */
+  --paper:   242 235 224;  /* paper-aged */
+  --glass:   242 235 224;  /* glass â†’ paper */
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   2. AMBIENT STACK â€” warm paper world
+   Replaces dark void gradient with natural parchment warmth.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui body {
+  background-color: var(--paper-letter, #faf7f2);
+}
+
+html.annap-correspond-ui body::before,
+html.annap-correspond-ui body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+html.annap-correspond-ui body::before {
+  background:
+    radial-gradient(ellipse 58% 44% at 18% 12%, rgba(255, 236, 198, 0.28), transparent 66%),
+    radial-gradient(ellipse 62% 48% at 86% 6%, rgba(196, 168, 130, 0.18), transparent 68%),
+    linear-gradient(115deg, transparent 0%, rgba(255, 250, 240, 0.16) 42%, transparent 76%);
+  opacity: 0.78;
+  transform: translate3d(0, 0, 0);
+  animation: annap-luxury-light-drift 18s ease-in-out infinite alternate;
+}
+
+html.annap-correspond-ui body::after {
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(26, 18, 9, 0.34) 0 0.55px, transparent 0.7px),
+    radial-gradient(circle at 78% 68%, rgba(26, 18, 9, 0.24) 0 0.45px, transparent 0.65px);
+  background-size: 17px 19px, 23px 29px;
+  animation: annap-luxury-grain-drift 38s steps(6, end) infinite;
+}
+
+html.annap-correspond-ui #annap-root,
+html.annap-correspond-ui .guest-main,
+html.annap-correspond-ui #guest-experience-root {
+  position: relative;
+  z-index: 1;
+}
+
+html.annap-correspond-ui #order-tray-root {
+  position: fixed;
+  z-index: 60;
+}
+
+html.annap-correspond-ui body.drink-detail-open #order-tray-root.order-tray-root--sheet-open {
+  z-index: 386;
+}
+
+html.annap-correspond-ui body.drink-detail-open #order-tray-root {
+  z-index: 386;
+}
+
+html.annap-correspond-ui body.annap-add-ceremony-active::before,
+html.annap-correspond-ui body.annap-order-confirming::before {
+  opacity: 1;
+  animation-duration: 9s;
+}
+
+@keyframes annap-luxury-light-drift {
+  from { transform: translate3d(-1.2%, -0.4%, 0) scale(1); }
+  to   { transform: translate3d(1.4%, 0.8%, 0) scale(1.025); }
+}
+
+@keyframes annap-luxury-grain-drift {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 17px 19px, -23px 29px; }
+}
+
+html.annap-correspond-ui .annap-ambient-bg {
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 15%,
+    rgba(255, 251, 244, 0.95) 0%,
+    rgba(250, 247, 242, 0.98) 45%,
+    rgba(242, 235, 224, 0.82) 100%
+  );
+}
+
+html.annap-correspond-ui .annap-ambient-thermal {
+  display: none;
+}
+
+html.annap-correspond-ui .annap-ambient-grain {
+  opacity: 0.032;
+  mix-blend-mode: multiply;
+}
+
+.annap-add-order-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 390;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* FRONTEND-CLEANUP-PHASE-1A — static body wash on seated / touch (no continuous repaint) */
+html.annap-correspond-ui.annap-seated-guest body::before,
+html.annap-correspond-ui.annap-seated-guest body::after {
+  animation: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  html.annap-correspond-ui .annap-ambient-grain {
+    display: none;
+  }
+
+  html.annap-correspond-ui body::after {
+    display: none;
+  }
+
+  html.annap-correspond-ui body::before {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.annap-correspond-ui body::before,
+  html.annap-correspond-ui body::after {
+    animation: none;
+  }
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   3. TYPOGRAPHY â€” correspondence fonts activated globally
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui h1,
+html.annap-correspond-ui h2,
+html.annap-correspond-ui h3 {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   4. SEATED GUEST CHROME SUPPRESSION
+   No nav, no footer on seated pages. Arrival scene owns the entry moment.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-seated-guest .guest-header {
+  display: none !important;
+}
+
+html.annap-seated-guest .annap-ambient-stack {
+  display: none !important;
+}
+
+html.annap-seated-guest .annap-root-surface > footer {
+  display: none !important;
+}
+
+html.annap-seated-guest .guest-main {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+html.annap-seated-guest .guest-main--seated {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   5. SURFACE MATERIALS â€” paper world
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .surface-paper {
+  background-color: var(--paper-letter, #faf7f2);
+  color: var(--ink-primary, #3d2b1a);
+}
+
+html.annap-correspond-ui .surface-glass {
+  background-color: rgba(250, 247, 242, 0.94);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border-color: rgba(196, 168, 130, 0.38);
+  color: var(--ink-primary, #3d2b1a);
+}
+
+/* Touch/Android: surface-glass with backdrop-filter can create a compositor layer that
+   repaints every scroll frame — remove on coarse pointer devices.
+   Note: order tray chip no longer uses surface-glass (checkout-sheet solid chip). */
+@media (hover: none), (pointer: coarse) {
+  html.annap-correspond-ui .surface-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(250, 247, 242, 0.97);
+  }
+}
+
+html.annap-correspond-ui .btn-ink {
+  background-color: var(--ink-deep, #1a1209);
+  color: var(--paper-letter, #faf7f2);
+  border-color: transparent;
+  /* Physical press: fast descent, slow settle â€” paper weight feel */
+  transition:
+    background-color 200ms ease,
+    box-shadow 280ms ease,
+    transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html.annap-correspond-ui .btn-ink:not(:disabled):hover {
+  background-color: #2e1e0f;
+}
+
+/* Press: fast compression inward, release uses the base transition (slow settle) */
+html.annap-correspond-ui .btn-ink:not(:disabled):active {
+  transform: scale(0.965);
+  transition:
+    background-color 200ms ease,
+    box-shadow 280ms ease,
+    transform 88ms ease-in;
+}
+
+/* Confirmed state â€” JS adds this when item is received by the bar */
+html.annap-correspond-ui .btn-ink--added,
+html.annap-correspond-ui .btn-ink--added:hover {
+  background-color: rgba(61, 43, 26, 0.92) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 18px -3px rgba(196, 168, 130, 0.28) !important;
+  color: var(--paper-letter, #faf7f2) !important;
+  transition:
+    background-color 320ms ease,
+    box-shadow 320ms ease,
+    transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+html.annap-correspond-ui .btn-quiet {
+  background-color: transparent;
+  color: var(--ink-secondary, #8b6b47);
+  border-color: rgba(196, 168, 130, 0.5);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   6. MASTHEAD â€” stationery styling
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .guest-masthead__sheet {
+  background-color: rgba(250, 247, 242, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 20px -8px rgba(26, 18, 9, 0.06);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   7. CATEGORY NAVIGATION â€” letter-marker tab bar
+   Sticky, minimal, horizontal scroll. No pills, no cards.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .menu-cat-rail-wrapper {
+  display: block;
+}
+
+html.annap-correspond-ui .menu-cat-rail-wrapper > nav {
+  background-color: rgba(250, 247, 242, 0.97);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border-top: none !important;
+  border-bottom: 1px solid rgba(196, 168, 130, 0.28) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin-top: clamp(1.5rem, 3.5vh, 2rem) !important;
+  box-shadow: none !important;
+}
+
+/* Seated menu: solid category rail — no sticky blur (WebKit scroll stability) */
+html.annap-seated-guest.annap-correspond-ui .menu-cat-rail-wrapper > nav {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: rgba(250, 247, 242, 0.98);
+}
+
+/* Touch: sticky + backdrop-filter often causes list rows / images to vanish after scroll on WebKit */
+@media (hover: none), (pointer: coarse) {
+  html.annap-correspond-ui .menu-cat-rail-wrapper > nav {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background-color: rgba(250, 247, 242, 0.98);
+  }
+}
+
+/* Seated: no header above, so nav sits at very top */
+html.annap-seated-guest .menu-cat-rail-wrapper > nav {
+  top: 0 !important;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   8. MENU HEADER â€” editorial, tasting-booklet register
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .menu-browse > header {
+  padding-bottom: clamp(1.25rem, 3vh, 2rem);
+}
+
+html.annap-correspond-ui .menu-browse > header h1 {
+  font-size: clamp(2.25rem, 8vw, 3.5rem);
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.0;
+  margin-top: clamp(0.75rem, 2vh, 1rem);
+  text-shadow: 0 0.02em 0.12em rgba(26, 18, 9, 0.04);
+}
+
+html.annap-correspond-ui .menu-browse > header > p:first-of-type {
+  font-family: var(--font-ui);
+  font-size: 0.575rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary, #c4a882);
+}
+
+html.annap-correspond-ui .menu-browse > header p.leading-\[1\.7\] {
+  font-family: var(--font-ui);
+  font-size: 1.0625rem;
+  font-style: italic;
+  line-height: 1.72;
+  color: var(--ink-secondary, #8b6b47);
+  max-width: 46ch;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   9. CATEGORY SECTION HEADER
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .menu-cat-section {
+  /* Non-seated: sticky masthead + category rail â€” keep generous so native anchors still work */
+  scroll-margin-top: 9.5rem;
+}
+
+/* Seated: masthead hidden; only category rail sticks under safe-area */
+html.annap-correspond-ui.annap-seated-guest .menu-cat-section {
+  scroll-margin-top: 5.5rem;
+}
+
+html.annap-correspond-ui .menu-chapter__index {
+  color: var(--ink-tertiary, #c4a882);
+  opacity: 0.65;
+}
+
+html.annap-correspond-ui .menu-chapter__rest {
+  color: var(--ink-secondary, #8b6b47);
+  opacity: 0.72;
+}
+
+html.annap-correspond-ui .menu-chapter-support .menu-editorial-card__name {
+  color: var(--ink-secondary, #8b6b47);
+  opacity: 0.82;
+}
+
+html.annap-correspond-ui .menu-chapter-hero .menu-editorial-card__name {
+  color: var(--ink-deep, #1a1209);
+}
+
+html.annap-correspond-ui .menu-cat-section h2,
+html.annap-correspond-ui .menu-chapter-head .menu-cat-heading {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+  color: var(--ink-deep, #1a1209);
+}
+
+html.annap-correspond-ui .menu-cat-section > div > p {
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-style: normal;
+  line-height: 1.55;
+  color: var(--ink-secondary, #8b6b47);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   10. MENU ITEM ENTRIES â€” specialty coffee editorial cards
+   Items are ALWAYS VISIBLE. No transform or opacity animations on scroll â€”
+   avoids GPU compositing overhead and item-vanishing artifacts on mobile.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Menu card reveal motion — menu-browse-physical.css (transform-only settle) */
+html.annap-correspond-ui .menu-card-reveal,
+html.annap-correspond-ui body.guest-app .menu-card-reveal {
+  opacity: 1 !important;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   11. CHAPTER BREAK â€” visual pause between menu categories
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.letter-chapter-break {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(2.25rem, 6vh, 3.25rem);
+  margin-bottom: clamp(1rem, 2.5vh, 1.75rem);
+  color: var(--wax-seal, #c4a882);
+}
+
+.letter-chapter-break::before,
+.letter-chapter-break::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-bottom: 1px solid rgba(148, 120, 88, 0.2);
+  background: none;
+  opacity: 0.78;
+}
+
+.letter-chapter-break__glyph {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: 0.72rem;
+  color: var(--wax-seal, #c4a882);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  opacity: 0.42;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   11b. TRAY SCROLL LOCK â€” applied on all viewports when tray sheet is open
+   Prevents page from scrolling under the backdrop on iOS Safari.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Scroll lock only when order-tray-dock enables it (tablet+); avoid mobile fixed-body jumps */
+@media (min-width: 640px) {
+  body.order-tray-locked {
+    position: fixed;
+    width: 100%;
+    overflow-y: scroll;
+  }
+}
+
+/* ============================================================
+   12–14. ORDER TRAY — layout / motion only
+   Visual ownership: checkout-sheet.css
+   ============================================================ */
+
+html.annap-correspond-ui #order-tray-chip {
+  overflow: visible;
+  transform-origin: 50% 100%;
+}
+
+html.annap-correspond-ui #order-tray-chip::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes annap-tray-chip-ring {
+  0%   { transform: scale(1);    opacity: 0.55; }
+  70%  { transform: scale(1.03); opacity: 0.2; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+
+html.annap-correspond-ui .annap-tray-chip--pulse::after {
+  animation: annap-tray-chip-ring 560ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip {
+  min-height: 2.75rem;
+  gap: 0.45rem;
+  padding: 0.48rem 0.62rem;
+}
+
+body.ge-sommelier-flow .order-tray-root--empty .order-tray-chip__stack,
+body.ge-sommelier-flow .order-tray-root--empty .order-tray-chip__kicker {
+  display: none;
+}
+
+body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip-title {
+  margin-top: 0;
+  line-height: 1.25;
+}
+
+body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip-sub {
+  margin-top: 0.1rem;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.ge-sommelier-flow .order-tray-chip__kicker,
+html.annap-mode-pending .order-tray-chip__kicker {
+  display: none;
+}
+
+.order-tray-root--empty .order-tray-chip__total--empty {
+  min-width: 0;
+  text-align: right;
+}
+
+.order-tray-chip__stack {
+  position: relative;
+  display: block;
+  width: 3.7rem;
+  height: 2.6rem;
+}
+
+.order-tray-chip__card,
+.order-tray-chip__empty-line {
+  position: absolute;
+  left: calc(var(--tray-card-i, 0) * 0.54rem);
+  top: calc(0.62rem - var(--tray-card-i, 0) * 0.16rem);
+  width: 2.05rem;
+  height: 1.85rem;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transform: rotate(calc(-7deg + var(--tray-card-i, 0) * 6deg));
+}
+
+.order-tray-chip__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.1rem;
+}
+
+.order-tray-chip__empty-line {
+  left: 0.35rem;
+  top: 1.32rem;
+  width: 2.9rem;
+  height: 1px;
+  padding: 0;
+  transform: none;
+}
+
+html.annap-correspond-ui .order-tray-sheet {
+  transform-origin: 50% 100%;
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  transition:
+    opacity 360ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.annap-correspond-ui .order-tray-sheet--closed {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  transform: translate3d(0, 12px, 0) scale(0.98);
+  pointer-events: none;
+}
+
+html.annap-correspond-ui #order-tray-root.order-tray-root--dock:not(.order-tray-root--sheet-open) {
+  pointer-events: none;
+}
+
+html.annap-correspond-ui #order-tray-root.order-tray-root--dock:not(.order-tray-root--sheet-open) #order-tray-chip {
+  pointer-events: auto;
+}
+
+html.annap-correspond-ui #order-tray-root.order-tray-root--sheet-open #order-tray-sheet {
+  visibility: visible;
+  max-height: min(68dvh, calc(100dvh - 5rem));
+  height: auto;
+  margin-bottom: 0.5rem;
+  pointer-events: auto;
+}
+
+html.annap-correspond-ui .order-tray-sheet--dragging {
+  transform: translate3d(0, var(--order-tray-drag-y, 0px), 0) scale(1);
+  transition: none;
+}
+
+html.annap-correspond-ui .annap-tray-header {
+  touch-action: none;
+  cursor: grab;
+}
+
+html.annap-correspond-ui .annap-tray-header:active {
+  cursor: grabbing;
+}
+
+html.annap-correspond-ui .order-tray-backdrop.is-visible {
+  display: block;
+  transition-duration: 360ms;
+}
+
+html.annap-correspond-ui #order-tray-backdrop:not(.is-visible) {
+  display: none;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.order-tray-header__stamp {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  transform: rotate(-7deg);
+}
+
+.order-tray-lines {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.order-tray-empty {
+  margin: 0;
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.order-tray-qty {
+  line-height: 1;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.order-tray-qty:active {
+  transform: scale(0.9);
+}
+
+.order-tray-remove {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  transition: transform 180ms ease;
+}
+
+.order-tray-remove:active {
+  transform: scale(0.9);
+}
+
+@media (max-width: 640px) {
+  body.annap-has-order-tray-dock #guest-experience-root,
+  body.annap-has-order-tray-dock .menu-browse:not(.menu-browse--catalogue) {
+    padding-bottom: max(8.25rem, calc(6.25rem + env(safe-area-inset-bottom, 0px)));
+  }
+
+  body.ge-sommelier-flow.annap-has-order-tray-dock #guest-experience-root {
+    padding-bottom: max(9.75rem, calc(7.5rem + env(safe-area-inset-bottom, 0px)));
+  }
+
+  html.annap-correspond-ui #order-tray-root.order-tray-root--dock {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: max(0.5rem, calc(env(safe-area-inset-bottom, 0px) + 0.38rem));
+    width: auto;
+  }
+
+  html.annap-correspond-ui #order-tray-root.order-tray-root--dock.order-tray-root--sheet-open {
+    bottom: max(0.42rem, calc(env(safe-area-inset-bottom) + 0.28rem));
+  }
+
+  html.annap-correspond-ui #order-tray-root .order-tray-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  html.annap-correspond-ui #order-tray-chip {
+    min-height: 2.75rem;
+    gap: 0.5rem;
+    padding: 0.42rem 0.58rem;
+  }
+
+  html.annap-correspond-ui .order-tray-root--empty #order-tray-chip {
+    min-height: 2.5rem;
+  }
+
+  body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip {
+    min-height: 2.75rem;
+    gap: 0.45rem;
+    padding: 0.48rem 0.62rem;
+  }
+
+  body.ge-sommelier-flow .order-tray-root--empty .order-tray-chip__stack,
+  body.ge-sommelier-flow .order-tray-root--empty .order-tray-chip__kicker {
+    display: none;
+  }
+
+  body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip-sub {
+    margin-top: 0.1rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  html.annap-correspond-ui .order-tray-chip__stack {
+    width: 2.5rem;
+    height: 1.9rem;
+  }
+
+  html.annap-correspond-ui .order-tray-chip__card,
+  html.annap-correspond-ui .order-tray-chip__empty-line {
+    left: calc(var(--tray-card-i, 0) * 0.42rem);
+    top: calc(0.5rem - var(--tray-card-i, 0) * 0.12rem);
+    width: 1.72rem;
+    height: 1.58rem;
+  }
+
+  html.annap-correspond-ui .order-tray-chip__empty-line {
+    top: 1.14rem;
+    width: 2.3rem;
+    height: 1px;
+  }
+
+  html.annap-correspond-ui #order-tray-chip-title {
+    margin-top: 0.02rem;
+    line-height: 1.2;
+  }
+
+  html.annap-correspond-ui #order-tray-chip-sub {
+    margin-top: 0.04rem;
+    line-height: 1.25;
+  }
+
+  html.annap-correspond-ui .order-tray-root--sheet-open #order-tray-chip {
+    min-height: 2.36rem;
+    gap: 0.45rem;
+    padding: 0.38rem 0.48rem 0.38rem 0.72rem;
+  }
+
+  html.annap-correspond-ui .order-tray-root--sheet-open #order-tray-chip-impact,
+  html.annap-correspond-ui .order-tray-root--sheet-open .order-tray-chip__stack,
+  html.annap-correspond-ui .order-tray-root--sheet-open .order-tray-chip__kicker,
+  html.annap-correspond-ui .order-tray-root--sheet-open #order-tray-chip-sub,
+  html.annap-correspond-ui .order-tray-root--sheet-open #order-tray-chip-guest {
+    display: none;
+  }
+
+  html.annap-correspond-ui .order-tray-root--sheet-open #order-tray-chip-title {
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  html.annap-correspond-ui .order-tray-sheet {
+    max-height: min(58dvh, calc(100dvh - 7.25rem));
+    margin-bottom: 0.42rem;
+  }
+
+  html.annap-correspond-ui .order-tray-lines {
+    gap: 0.75rem;
+  }
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   15. TOAST â€” paper surface
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui #guestToast .surface-glass {
+  background-color: rgba(250, 247, 242, 0.96);
+  border-color: rgba(196, 168, 130, 0.45);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   16. ADDITION CEREMONY â€” "noted." ghost word travel
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@keyframes ghostWordTravel {
+  0%   { opacity: 0;    transform: translate(-50%, 0)      scale(0.88); filter: blur(3px); }
+  15%  { opacity: 1;    transform: translate(-50%, 10px)   scale(1.0);  filter: blur(0); }
+  64%  { opacity: 0.75; transform: translate(-50%, 58px)   scale(0.98); filter: blur(0); }
+  100% { opacity: 0;    transform: translate(-50%, 92px)   scale(0.92); filter: blur(2px); }
+}
+
+.annap-ghost-word {
+  position: fixed;
+  z-index: 200;
+  left: 50%;
+  pointer-events: none;
+  font-family: var(--font-ui);
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--ink-secondary, #8b6b47);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  animation: ghostWordTravel 860ms var(--ease-unfold, cubic-bezier(0.16, 1, 0.3, 1)) forwards;
+}
+
+.annap-add-confirmation {
+  position: fixed;
+  z-index: 211;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  padding: 0.48rem 0.78rem;
+  border: 1px solid rgba(196, 168, 130, 0.26);
+  background: rgba(250, 247, 242, 0.78);
+  box-shadow:
+    0 10px 28px rgba(26, 18, 9, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  color: rgba(91, 65, 38, 0.78);
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  font-style: italic;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  animation: annap-add-confirmation-in 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes annap-add-confirmation-in {
+  0% { opacity: 0; transform: translate(-50%, -42%) scale(0.96); filter: blur(5px); }
+  18% { opacity: 1; transform: translate(-50%, -54%) scale(1); filter: blur(0); }
+  72% { opacity: 0.92; transform: translate(-50%, -68%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -84%) scale(0.98); filter: blur(2px); }
+}
+
+/* DETAIL-HIGH-END-FINAL — receipt toast above tray (pairing add) */
+.annap-tray-receipt-toast {
+  position: fixed;
+  z-index: 385;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.5rem 0.78rem;
+  border: 1px solid rgba(196, 168, 130, 0.34);
+  border-radius: 0.55rem;
+  background: rgba(252, 248, 242, 0.96);
+  box-shadow:
+    0 8px 22px rgba(26, 18, 9, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  color: rgba(61, 43, 26, 0.88);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  pointer-events: none;
+  opacity: 0;
+  animation: annap-tray-receipt-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.annap-tray-receipt-toast__mark {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(196, 168, 130, 0.42);
+  background: rgba(244, 236, 222, 0.9);
+  font-size: 0.58rem;
+  line-height: 1;
+  color: rgba(91, 65, 38, 0.9);
+}
+
+.annap-tray-receipt-toast__copy {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.annap-tray-receipt-toast--out {
+  animation: annap-tray-receipt-out 0.32s ease forwards;
+}
+
+@keyframes annap-tray-receipt-in {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  14% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  78% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
+}
+
+@keyframes annap-tray-receipt-out {
+  from { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
+  to { opacity: 0; transform: translateX(-50%) translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annap-tray-receipt-toast {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .annap-tray-receipt-toast--out {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+html.annap-guest-no-motion .annap-tray-receipt-toast {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+html.annap-guest-no-motion .annap-tray-receipt-toast--out {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.annap-cart-impact-ripple {
+  position: fixed;
+  z-index: 209;
+  pointer-events: none;
+  width: 7.75rem;
+  height: 4.75rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at center, rgba(196, 168, 130, 0.2), transparent 70%);
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: annap-cart-impact-ripple 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes annap-cart-impact-ripple {
+  0% { opacity: 0.88; transform: translate(-50%, -50%) scale(0.32); }
+  70% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.02); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.34); }
+}
+
+@keyframes annap-cup-fly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.84) rotate(-3deg);
+    filter: blur(5px);
+  }
+  12% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  54% {
+    opacity: 0.98;
+    transform: translate3d(calc(var(--annap-fly-x) * 0.62), calc(var(--annap-fly-y) * 0.48 - 42px), 0) scale(1.04) rotate(2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--annap-fly-x), var(--annap-fly-y), 0) scale(0.38) rotate(0deg);
+    filter: blur(2px);
+  }
+}
+
+.annap-cup-flyer {
+  position: fixed;
+  z-index: 205;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 250, 242, 0.9), rgba(242, 222, 190, 0.18) 64%, transparent 74%);
+  box-shadow:
+    0 18px 44px rgba(26, 18, 9, 0.18),
+    0 0 28px rgba(196, 168, 130, 0.22);
+  overflow: hidden;
+  animation: annap-cup-fly 920ms cubic-bezier(0.18, 0.82, 0.18, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.annap-cup-flyer--sommelier {
+  box-shadow:
+    0 22px 54px rgba(26, 18, 9, 0.2),
+    0 0 42px rgba(196, 168, 130, 0.28),
+    0 0 18px rgba(140, 35, 24, 0.08);
+  animation-duration: 980ms;
+}
+
+.annap-cup-flyer img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.18rem;
+}
+
+.annap-cup-flyer__glyph {
+  font-family: var(--font-ui);
+  font-style: italic;
+  color: var(--wax-seal, #c4a882);
+  font-size: 1.35rem;
+}
+
+@keyframes annap-card-ceremony-lift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  38% { transform: translate3d(0, -5px, 0) scale(1.012); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.annap-card-ceremony-lift {
+  animation: annap-card-ceremony-lift 760ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
+}
+
+.annap-card-ceremony-lift--sommelier {
+  animation-duration: 980ms;
+}
+
+.annap-card-ceremony-lift .menu-editorial-card__img,
+.annap-card-ceremony-lift .ge-result-visual,
+.annap-card-ceremony-lift .dd-product,
+.annap-card-ceremony-lift .dd-pairing__img {
+  box-shadow:
+    0 14px 42px rgba(26, 18, 9, 0.12),
+    0 0 30px rgba(196, 168, 130, 0.18);
+}
+
+.annap-cart-impact {
+  animation: annap-cart-magnetic-impact 680ms cubic-bezier(0.2, 0.86, 0.22, 1) both;
+}
+
+@keyframes annap-cart-magnetic-impact {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  36% { transform: translate3d(0, -2px, 0) scale(1.028); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* Cart-impact motion uses .annap-cart-impact + annap-cart-magnetic-impact keyframes above.
+   Chip surface stays owned by checkout-sheet.css. */
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   16b. WAX ACKNOWLEDGEMENT PULSE â€” soft warmth expanding from add button
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@keyframes annap-wax-pulse {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(0.2); }
+  55%  { opacity: 0.4; transform: translate(-50%, -50%) scale(1.0); }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(1.5); }
+}
+
+.annap-wax-pulse {
+  position: fixed;
+  z-index: 198;
+  pointer-events: none;
+  width: 6rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(139, 58, 40, 0.20) 0%,
+    rgba(196, 168, 130, 0.10) 55%,
+    transparent 100%);
+  animation: annap-wax-pulse 640ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   17. PAGE TRANSITIONS â€” letter-turning fades
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+#annap-root {
+  transition: opacity 280ms ease-out, transform 280ms ease-out;
+}
+
+#annap-root.is-leaving {
+  opacity: 0;
+  transform: translateY(5px);
+  pointer-events: none;
+}
+
+@keyframes annap-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.annap-page-in {
+  animation: annap-page-in 400ms var(--ease-unfold, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+html.annap-guest-no-motion #annap-root {
+  transition: none !important;
+}
+
+html.annap-guest-no-motion .annap-page-in {
+  animation: none !important;
+}
+
+html.annap-guest-no-motion body::before,
+html.annap-guest-no-motion body::after,
+html.annap-guest-no-motion .annap-cup-flyer,
+html.annap-guest-no-motion .annap-ghost-word,
+html.annap-guest-no-motion .annap-wax-pulse,
+html.annap-guest-no-motion .annap-card-ceremony-lift {
+  animation: none !important;
+  transition: none !important;
+}
+
+html.annap-guest-no-motion .annap-cup-flyer,
+html.annap-guest-no-motion .annap-ghost-word,
+html.annap-guest-no-motion .annap-wax-pulse {
+  display: none !important;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   18. DRINK MODAL â€” paper material
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .drink-modal-panel {
+  background-color: var(--paper-letter, #faf7f2);
+  color: var(--ink-primary, #3d2b1a);
+}
+
+html.annap-correspond-ui .drink-modal-backdrop {
+  background-color: rgba(61, 43, 26, 0.28);
+}
+
+html.annap-correspond-ui .drink-poster-back {
+  left: calc(1.125rem + 20px);
+  color: rgba(30, 20, 8, 0.68);
+  background: rgba(237, 227, 206, 0.9);
+  border-color: rgba(100, 76, 40, 0.3);
+}
+
+html.annap-correspond-ui .drink-poster-back:hover {
+  color: rgba(26, 16, 8, 0.92);
+  background: rgba(237, 227, 206, 0.98);
+  border-color: rgba(100, 76, 40, 0.52);
+}
+
+@media (min-width: 768px) {
+  html.annap-correspond-ui .drink-poster-back {
+    left: calc(1.75rem + 20px);
+  }
+}
+
+/* â”€â”€ CTA â€” postal red approval stamp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   20. MOBILE PRESS STATES â€” tactile response
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (hover: none) and (pointer: coarse) {
+  html.annap-correspond-ui .menu-tasting-entry:active {
+    background-color: rgba(196, 168, 130, 0.1);
+    transition-duration: 80ms;
+  }
+
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   20. TRAY — motion only (visuals: checkout-sheet.css)
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+html.annap-correspond-ui #menuSubmitBtn {
+  transition: transform 180ms var(--ease-press, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+html.annap-correspond-ui #menuSubmitBtn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+html.annap-correspond-ui #menuSubmitBtn:not(:disabled):active {
+  transform: scale(0.98) translateY(0);
+}
+
+
+/* â”€â”€ Qty span selector fix â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui span.tabular-nums.tracking-wide {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  color: var(--ink-primary, #3d2b1a);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/* â”€â”€ Manifest label â€” "Composition" heading â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+html.annap-correspond-ui .dd-manifest__lbl {
+  color: rgba(100, 76, 40, 0.42);
+}
+
+html.annap-correspond-ui .dd-manifest--composition,
+html.annap-correspond-ui .dd-manifest--provenance,
+html.annap-correspond-ui .dd-manifest--tasting {
+  border-bottom-color: rgba(100, 76, 40, 0.12);
+}
+
+html.annap-correspond-ui .dd-composition-line {
+  color: rgba(30, 20, 8, 0.72);
+}
+
+html.annap-correspond-ui .dd-provenance-origin {
+  color: rgba(30, 20, 8, 0.58);
+}
+
+html.annap-correspond-ui .dd-tasting-body {
+  color: rgba(30, 20, 8, 0.62);
+}
+
+html.annap-correspond-ui .dd-no-poster__name {
+  color: rgba(100, 76, 40, 0.12);
+}
+
+html.annap-correspond-ui .dd-no-poster__cat {
+  color: rgba(100, 76, 40, 0.28);
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   23. MENU BROWSE CARDS â€” warm parchment editorial treatment
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+/* Print-mounted cards — mat, ink warmth, collected wear */
+html.annap-correspond-ui .menu-chapter-hero .menu-editorial-card__frame {
+  background: linear-gradient(168deg, rgba(245, 238, 226, 0.98), rgba(232, 220, 200, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(100, 76, 40, 0.08),
+    inset 0 1px 0 rgba(255, 248, 238, 0.4);
+}
+
+html.annap-correspond-ui .menu-editorial-card__frame--no-poster {
+  background:
+    var(--menu-print-grain, none),
+    linear-gradient(
+      165deg,
+      rgba(242, 235, 224, 0.82) 0%,
+      rgba(224, 212, 192, 0.94) 100%
+    );
+  background-size: 180px 180px, 100% 100%;
+  background-blend-mode: multiply, normal;
+  box-shadow: inset 0 0 0 1px rgba(100, 76, 40, 0.07);
+}
+
+html.annap-correspond-ui .menu-chapter-hero .menu-editorial-card__img {
+  filter:
+    contrast(0.95)
+    saturate(0.9)
+    sepia(0.05)
+    drop-shadow(0 3px 12px rgba(60, 38, 14, 0.1));
+}
+
+html.annap-correspond-ui .menu-chapter-support .menu-editorial-card__img {
+  filter: contrast(0.93) saturate(0.86) sepia(0.055);
+  opacity: 0.84;
+}
+
+html.annap-correspond-ui .menu-editorial-card__badge {
+  background: rgba(234, 222, 202, 0.78);
+  color: rgba(61, 43, 26, 0.58);
+  box-shadow: inset 0 -1px 0 rgba(61, 43, 26, 0.12);
+}
+
+html.annap-correspond-ui .menu-chapter-head .menu-cat-heading {
+  text-shadow: 0 0.02em 0.1em rgba(26, 18, 9, 0.035);
+}
+
+html.annap-correspond-ui .menu-chapter-head {
+  border-top-color: rgba(148, 120, 88, 0.18);
+}
+
+html.annap-correspond-ui .menu-editorial-card__price {
+  font-family: var(--font-ui);
+  font-style: italic;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+html.annap-correspond-ui .menu-chapter-hero .menu-editorial-card__price {
+  font-size: clamp(1rem, 2.8vw, 1.12rem);
+  color: var(--wax-seal, #c4a882);
+}
+
+html.annap-correspond-ui .menu-chapter-support .menu-editorial-card__price {
+  font-size: 0.8rem;
+  color: var(--ink-secondary, #8b6b47);
+  opacity: 0.88;
+}
+
+/* MENU-REFINE-CATEGORY — quieter tray while browsing catalogue */
+body.guest-app:has(.menu-browse--catalogue) .order-tray-root--empty .order-tray-chip__kicker {
+  display: none;
+}
+
+/* Menu card hover — menu-browse-physical.css */
+
+/* ── Tray surface (fly-to-tray + correspondence cards) — single owner: correspondence.css ── */
+
+@keyframes annap-tasting-fly {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.88) rotate(-4deg); filter: blur(4px); }
+  10% { opacity: 1; filter: blur(0); }
+  48% { opacity: 1; transform: translate3d(calc(var(--annap-fly-x) * 0.58), calc(var(--annap-fly-y) * 0.5 - 48px), 0) scale(1.06) rotate(3deg); }
+  78% { opacity: 0.92; transform: translate3d(calc(var(--annap-fly-x) * 0.92), calc(var(--annap-fly-y) * 0.88), 0) scale(0.72); }
+  100% { opacity: 0; transform: translate3d(var(--annap-fly-x), var(--annap-fly-y), 0) scale(0.28); }
+}
+
+.annap-tasting-flyer {
+  position: fixed;
+  z-index: 205;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  border-radius: 0.55rem;
+  border: 1px solid #d6c4a8;
+  background: #faf7f2;
+  box-shadow: 0 22px 48px rgba(26, 18, 9, 0.18);
+  overflow: hidden;
+  animation: annap-tasting-fly 980ms cubic-bezier(0.18, 0.82, 0.18, 1) forwards;
+}
+
+.annap-tasting-flyer img { width: 100%; height: 100%; object-fit: contain; padding: 0.14rem; }
+.annap-tasting-flyer__glyph { font-family: var(--font-ui); font-style: italic; color: var(--wax-seal, #c4a882); font-size: 1.2rem; }
+.annap-tasting-flyer--sommelier { animation-duration: 1040ms; }
+
+.order-tray-chip__stack.annap-tray-slot-receive .order-tray-chip__card:last-child {
+  animation: traySlotReceive 680ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes traySlotReceive {
+  0% { transform: rotate(calc(-7deg + var(--tray-card-i, 0) * 6deg)) scale(0.4); opacity: 0; }
+  55% { transform: rotate(calc(-7deg + var(--tray-card-i, 0) * 6deg)) scale(1.12); opacity: 1; }
+  100% { transform: rotate(calc(-7deg + var(--tray-card-i, 0) * 6deg)) scale(1); opacity: 1; }
+}
+
+.order-tray-chip__count--settling {
+  animation: trayCountSettle 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes trayCountSettle {
+  0% { opacity: 0.4; transform: translateY(3px); }
+  60% { opacity: 1; transform: translateY(-1px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.order-tray-lines--correspondence { display: flex; flex-direction: column; gap: 1.15rem; padding: 0.35rem 0.15rem 0.5rem; }
+
+.tray-correspondence-card {
+  position: relative;
+  --tray-card-rotate: calc(-2.8deg + var(--tray-line-i, 0) * 2.1deg);
+  transform: rotate(var(--tray-card-rotate));
+  transform-origin: 50% 80%;
+  margin-left: calc(var(--tray-line-i, 0) * 0.18rem);
+}
+
+.tray-correspondence-card__shadow {
+  position: absolute;
+  inset: 0.35rem -0.15rem -0.25rem 0.15rem;
+  z-index: 0;
+}
+
+.tray-correspondence-card__layer {
+  position: absolute;
+  inset: -0.12rem 0.28rem 0.18rem -0.22rem;
+  z-index: 0;
+}
+
+.tray-correspondence-card__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 3.1rem minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 0.35rem 0.65rem;
+  align-items: center;
+  padding: 0.72rem 0.68rem;
+}
+
+.tray-correspondence-card__visual {
+  grid-row: 1 / span 2;
+  width: 3.1rem;
+  height: 3.35rem;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.tray-correspondence-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.14rem;
+}
+.tray-correspondence-card__name {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tray-correspondence-card__note {
+  margin: 0.22rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tray-correspondence-card__actions {
+  grid-column: 2 / span 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.tray-correspondence-card__qty-ring {
+  display: inline-grid;
+  grid-template-columns: 1.5rem 1.2rem 1.5rem;
+  align-items: center;
+}
+.tray-correspondence-card__qty {
+  min-width: 1rem;
+  text-align: center;
+}
+.tray-correspondence-card__price {
+  white-space: nowrap;
+}
+.tray-correspondence-card__release {
+  width: 1.55rem;
+  height: 1.55rem;
+  display: grid;
+  place-items: center;
+}
+
+html.annap-guest-no-motion .annap-tasting-flyer,
+html.annap-guest-no-motion .tray-correspondence-card,
+html.annap-guest-no-motion .order-tray-chip__count--settling {
+  animation: none !important;
+}
+
+/* ── TRAY-CRITICAL-FIX-1 — compact dock, controlled sheet, page clearance ───── */
+html.annap-correspond-ui body.annap-has-order-tray-dock {
+  --tray-dock-height-empty: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  --tray-dock-height-filled: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  --tray-dock-clearance: calc(var(--tray-dock-height-filled) + 0.85rem);
+  --menu-catalogue-tray-clearance: max(11rem, calc(8.5rem + env(safe-area-inset-bottom, 0px)), var(--tray-dock-clearance));
+}
+
+html.annap-correspond-ui .order-tray-chip__kicker {
+  display: none;
+}
+
+html.annap-correspond-ui .order-tray-root--empty #order-tray-chip {
+  min-height: 2.65rem;
+  padding: 0.42rem 0.58rem;
+  gap: 0.4rem;
+}
+
+html.annap-correspond-ui .order-tray-root--empty .order-tray-chip__stack {
+  display: none;
+}
+
+html.annap-correspond-ui .order-tray-chip--has-items #order-tray-chip {
+  min-height: 2.75rem;
+}
+
+html.annap-correspond-ui #order-tray-chip {
+  transform: none;
+}
+
+html.annap-correspond-ui .annap-tray-chip--pulse::after {
+  animation: annap-tray-chip-ring 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+html.annap-correspond-ui #order-tray-root.order-tray-root--sheet-open #order-tray-sheet,
+html.annap-correspond-ui .order-tray-sheet {
+  max-height: min(72dvh, 680px);
+}
+
+html.annap-correspond-ui .order-tray-root--sheet-open .order-tray-sheet {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (max-width: 640px) {
+  /* FRONTEND-CLEANUP-PHASE-1A — single catalogue tray clearance owner (!important beats menu-browse.css) */
+  body.annap-has-order-tray-dock .menu-browse--catalogue {
+    padding-bottom: var(--menu-catalogue-tray-clearance) !important;
+    scroll-padding-bottom: var(--menu-catalogue-tray-clearance) !important;
+  }
+
+  body.annap-has-order-tray-dock .menu-browse:not(.menu-browse--catalogue) {
+    padding-bottom: max(var(--tray-dock-clearance), calc(5.25rem + env(safe-area-inset-bottom, 0px))) !important;
+  }
+
+  body.drink-detail-open.annap-has-order-tray-dock .dd-passport__inner {
+    --dd-tray-clearance: max(var(--tray-dock-clearance), calc(5.75rem + env(safe-area-inset-bottom, 0px)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.annap-correspond-ui .annap-tray-chip--pulse::after,
+  html.annap-correspond-ui #order-tray-chip {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.tray-line-note-toggle {
+  margin-top: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(91, 65, 38, 0.72);
+  cursor: pointer;
+}
+
+.tray-line-customer-note--pill {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgba(91, 65, 38, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tray-line-note-input {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(212, 184, 150, 0.45);
+  background: rgba(253, 249, 244, 0.85);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: rgb(var(--fg));
+  resize: vertical;
+  min-height: 2.4rem;
+  max-height: 5rem;
+}
+
+.tray-line-note-input:focus {
+  outline: 2px solid rgba(199, 168, 122, 0.35);
+  outline-offset: 1px;
+}
+
+.tray-line-note-count {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.625rem;
+  line-height: 1.3;
+  text-align: right;
+  color: rgba(91, 65, 38, 0.55);
+}
+
+.tray-correspondence-card__letter {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+}
+

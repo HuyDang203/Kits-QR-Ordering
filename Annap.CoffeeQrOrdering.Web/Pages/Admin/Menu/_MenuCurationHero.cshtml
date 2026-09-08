@@ -1,0 +1,11 @@
+@model MenuCurationHeroVm
+
+@* Operator page header — kept for compatibility with older views.
+   Create/Edit pages now render their own .menu-curation-page__head. *@
+@if (!string.IsNullOrEmpty(Model.BackPage))
+{
+    <a class="menu-curation-hero__back guest-hit" asp-page="@Model.BackPage">
+        <span aria-hidden="true">←</span>
+        <span>@(Model.BackLabel ?? "Quay lại")</span>
+    </a>
+}

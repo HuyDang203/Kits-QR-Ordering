@@ -1,0 +1,65 @@
+# Production-oriented stack. Set secrets via environment or an .env file (not committed).
+# Example: docker compose -f docker-compose.prod.yml up -d --build
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: annap-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-annap_qr_ordering}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    ports:
+      # Bind Postgres to loopback only — never expose 5432 on the public interface.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - annap_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: annap-web
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ANNAP_COMPOSE_MODE: production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-annap_qr_ordering};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}"
+      StaffAuth__UserName: ${StaffAuth__UserName:-host}
+      StaffAuth__Password: ${StaffAuth__Password:?StaffAuth__Password is required}
+      StaffAuth__CheckoutPassword: ${StaffAuth__CheckoutPassword:?StaffAuth__CheckoutPassword is required}
+      StaffAuth__BaristaPassword: ${StaffAuth__BaristaPassword:?StaffAuth__BaristaPassword is required}
+      Database__ApplyMigrationsOnStartup: ${Database__ApplyMigrationsOnStartup:-true}
+      AppUrl__PublicBaseUrl: ${AppUrl__PublicBaseUrl:?AppUrl__PublicBaseUrl is required}
+      Cloudinary__CloudName: ${Cloudinary__CloudName:?Cloudinary__CloudName is required}
+      Cloudinary__ApiKey: ${Cloudinary__ApiKey:?Cloudinary__ApiKey is required}
+      Cloudinary__ApiSecret: ${Cloudinary__ApiSecret:?Cloudinary__ApiSecret is required}
+      Cloudinary__Folder: ${Cloudinary__Folder:-annap/menu-items}
+      DataProtection__KeysPath: /var/data/dataprotection-keys
+      DataProtection__ApplicationName: Annap.CoffeeQrOrdering
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    volumes:
+      - annap_data_protection:/var/data
+
+volumes:
+  annap_pgdata:
+    name: annap_pgdata
+  annap_data_protection:
+    name: annap_data_protection

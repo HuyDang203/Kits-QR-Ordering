@@ -1,0 +1,572 @@
+@page "/admin/staff-accounts"
+
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Policy = "StaffAdmin")]
+
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.StaffAccounts.IndexModel
+
+@using System.Globalization
+@using Annap.CoffeeQrOrdering.Domain.Entities
+
+@{
+
+    ViewData["Title"] = "Tài khoản nhân viên";
+
+    ViewData["AdminNavSection"] = "staff-accounts";
+
+    ViewData["AdminEyebrow"] = "Vận hành";
+
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+
+    var vi = CultureInfo.GetCultureInfo("vi-VN");
+
+    var credentialCopy = Model.CredentialReveal?.BuildCopyText() ?? "";
+
+}
+
+
+
+@section Styles {
+
+    <link rel="stylesheet" href="~/css/admin-staff-accounts.css" asp-append-version="true" />
+
+}
+
+
+
+<partial name="Admin/_AdminEditorialReturn" />
+
+<section class="admin-staff-accounts" aria-label="Tài khoản nhân viên">
+
+    <div class="admin-staff-accounts-sheet">
+
+
+
+        <header class="admin-staff-accounts-header">
+
+            <p class="admin-staff-accounts-eyebrow">Vận hành</p>
+
+            <h1 class="admin-staff-accounts-title">Tài khoản nhân viên</h1>
+
+            <p class="admin-staff-accounts-lead">
+
+                Tạo tài khoản cá nhân cho nhân viên thu ngân và pha chế tại quầy.
+
+            </p>
+
+            <p class="admin-staff-accounts-header__link">
+
+                <a class="admin-btn admin-btn--quiet admin-btn--sm" href="/staff/login">Mở trang đăng nhập nhân viên</a>
+
+            </p>
+
+        </header>
+
+
+
+        @if (Model.CredentialReveal is { } cred)
+
+        {
+
+            <article class="admin-staff-accounts-credential" role="status" aria-live="polite">
+
+                <h2 class="admin-staff-accounts-credential__title">@cred.PanelTitle</h2>
+
+                <dl class="admin-staff-accounts-credential__list">
+
+                    <div>
+
+                        <dt>Tên đăng nhập</dt>
+
+                        <dd><code>@cred.Username</code></dd>
+
+                    </div>
+
+                    @if (cred.IsCreate)
+
+                    {
+
+                        <div>
+
+                            <dt>Tên hiển thị</dt>
+
+                            <dd>@cred.DisplayName</dd>
+
+                        </div>
+
+                    }
+
+                    <div>
+
+                        <dt>Mật khẩu tạm thời</dt>
+
+                        <dd><code class="admin-staff-accounts-credential__password">@cred.TemporaryPassword</code></dd>
+
+                    </div>
+
+                </dl>
+
+                <p class="admin-staff-accounts-credential__hint">
+
+                    Nhân viên đăng nhập tại
+
+                    <a href="/staff/login">/staff/login</a>
+
+                    bằng tên đăng nhập và mật khẩu tạm thời.
+
+                </p>
+
+                <div class="admin-staff-accounts-credential__actions">
+
+                    <button type="button"
+
+                            class="admin-btn admin-btn--primary admin-staff-accounts-copy"
+
+                            id="staff-credential-copy"
+
+                            data-copy="@credentialCopy">
+
+                        Sao chép thông tin đăng nhập
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        }
+
+
+
+        @if (!string.IsNullOrEmpty(Model.StatusMessage))
+
+        {
+
+            <p class="admin-staff-accounts-flash admin-staff-accounts-flash--ok" role="status">@Model.StatusMessage</p>
+
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+
+        {
+
+            <p class="admin-staff-accounts-flash admin-staff-accounts-flash--err" role="alert">@Model.ErrorMessage</p>
+
+        }
+
+
+
+        <article class="admin-staff-accounts-panel">
+
+            <h2 class="admin-staff-accounts-panel__title">Tạo tài khoản</h2>
+
+            <form method="post" asp-page-handler="Create" class="admin-staff-accounts-form" id="staff-account-create-form">
+
+                @Html.AntiForgeryToken()
+
+                <label class="admin-staff-accounts-field">
+
+                    <span>Tên đăng nhập</span>
+
+                    <input asp-for="CreateUsername"
+
+                           required
+
+                           autocomplete="off"
+
+                           placeholder="thu-ngan-1" />
+
+                </label>
+
+                <label class="admin-staff-accounts-field">
+
+                    <span>Tên hiển thị</span>
+
+                    <input asp-for="CreateDisplayName"
+
+                           required
+
+                           autocomplete="off"
+
+                           placeholder="Nguyễn Văn A" />
+
+                </label>
+
+                <label class="admin-staff-accounts-field">
+
+                    <span>Vai trò</span>
+
+                    <select asp-for="CreateRole" required>
+
+                        <option value="@StaffAccountRoles.EmployeeCheckout">Thu ngân</option>
+
+                        <option value="@StaffAccountRoles.EmployeeBarista">Pha chế</option>
+
+                    </select>
+
+                </label>
+
+                <label class="admin-staff-accounts-field">
+
+                    <span>Mật khẩu tạm thời</span>
+
+                    <div class="admin-staff-accounts-password">
+
+                        <input asp-for="CreatePassword"
+
+                               type="password"
+
+                               required
+
+                               autocomplete="new-password"
+
+                               minlength="8"
+
+                               placeholder="Tối thiểu 8 ký tự"
+
+                               id="create-password" />
+
+                        <button type="button"
+
+                                class="admin-staff-accounts-password__toggle"
+
+                                data-password-target="create-password"
+
+                                aria-label="Hiện hoặc ẩn mật khẩu">
+
+                            Hiện
+
+                        </button>
+
+                    </div>
+
+                    <span class="admin-staff-accounts-field__hint">
+
+                        Mật khẩu chỉ hiển thị một lần sau khi tạo. Nếu quên, hãy đặt lại mật khẩu.
+
+                    </span>
+
+                </label>
+
+                <div class="admin-staff-accounts-form__actions">
+
+                    <button type="button"
+
+                            class="admin-btn admin-btn--quiet admin-btn--sm"
+
+                            data-generate-password="create-password">
+
+                        Tạo mật khẩu
+
+                    </button>
+
+                    <button type="submit" class="admin-btn admin-btn--primary">Tạo tài khoản</button>
+
+                </div>
+
+            </form>
+
+        </article>
+
+
+
+        @if (Model.EditId is Guid editId)
+
+        {
+
+            var editRow = Model.Accounts.FirstOrDefault(a => a.Id == editId);
+
+            if (editRow is not null)
+
+            {
+
+                <article class="admin-staff-accounts-panel" id="edit-account">
+
+                    <h2 class="admin-staff-accounts-panel__title">Chỉnh sửa — @editRow.Username</h2>
+
+                    <form method="post" asp-page-handler="Update" class="admin-staff-accounts-form">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="EditAccountId" />
+
+                        <label class="admin-staff-accounts-field">
+
+                            <span>Tên hiển thị</span>
+
+                            <input asp-for="EditDisplayName" required />
+
+                        </label>
+
+                        <label class="admin-staff-accounts-field">
+
+                            <span>Vai trò</span>
+
+                            <select asp-for="EditRole" required>
+
+                                <option value="@StaffAccountRoles.EmployeeCheckout">Thu ngân</option>
+
+                                <option value="@StaffAccountRoles.EmployeeBarista">Pha chế</option>
+
+                            </select>
+
+                        </label>
+
+                        <label class="admin-staff-accounts-field admin-staff-accounts-field--check">
+
+                            <input asp-for="EditIsActive" type="checkbox" />
+
+                            <span>Đang hoạt động</span>
+
+                        </label>
+
+                        <div class="admin-staff-accounts-form__actions">
+
+                            <button type="submit" class="admin-btn admin-btn--primary">Lưu</button>
+
+                            <a class="admin-btn admin-btn--quiet" asp-page="/Admin/StaffAccounts/Index">Hủy</a>
+
+                        </div>
+
+                    </form>
+
+
+
+                    <form method="post"
+
+                          asp-page-handler="ResetPassword"
+
+                          class="admin-staff-accounts-form admin-staff-accounts-form--reset"
+
+                          id="reset-password">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="ResetAccountId" value="@editRow.Id" />
+
+                        <h3 class="admin-staff-accounts-form__subtitle">Đặt lại mật khẩu</h3>
+
+                        <p class="admin-staff-accounts-field__hint">
+
+                            Nhập mật khẩu tạm thời mới. Mật khẩu cũ không thể xem lại.
+
+                        </p>
+
+                        <label class="admin-staff-accounts-field">
+
+                            <span>Mật khẩu tạm thời mới</span>
+
+                            <div class="admin-staff-accounts-password">
+
+                                <input asp-for="ResetPassword"
+
+                                       type="password"
+
+                                       required
+
+                                       autocomplete="new-password"
+
+                                       minlength="8"
+
+                                       placeholder="Tối thiểu 8 ký tự"
+
+                                       id="reset-password-input" />
+
+                                <button type="button"
+
+                                        class="admin-staff-accounts-password__toggle"
+
+                                        data-password-target="reset-password-input"
+
+                                        aria-label="Hiện hoặc ẩn mật khẩu">
+
+                                    Hiện
+
+                                </button>
+
+                            </div>
+
+                        </label>
+
+                        <div class="admin-staff-accounts-form__actions">
+
+                            <button type="button"
+
+                                    class="admin-btn admin-btn--quiet admin-btn--sm"
+
+                                    data-generate-password="reset-password-input">
+
+                                Tạo mật khẩu
+
+                            </button>
+
+                            <button type="submit" class="admin-btn admin-btn--primary">Đặt lại mật khẩu</button>
+
+                        </div>
+
+                    </form>
+
+                </article>
+
+            }
+
+        }
+
+
+
+        <p class="admin-staff-accounts-security-note">
+
+            Vì lý do bảo mật, mật khẩu hiện tại không được hiển thị. Hãy đặt lại mật khẩu nếu cần cấp lại cho nhân viên.
+
+        </p>
+
+
+
+        <div class="admin-staff-accounts-table-wrap">
+
+            <table class="admin-staff-accounts-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th scope="col">Tên đăng nhập</th>
+
+                        <th scope="col">Tên hiển thị</th>
+
+                        <th scope="col">Vai trò</th>
+
+                        <th scope="col">Trạng thái</th>
+
+                        <th scope="col">Đăng nhập gần nhất</th>
+
+                        <th scope="col"><span class="sr-only">Thao tác</span></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                @if (Model.Accounts.Count == 0)
+
+                {
+
+                    <tr>
+
+                        <td colspan="6" class="admin-staff-accounts-empty">Chưa có tài khoản nhân viên.</td>
+
+                    </tr>
+
+                }
+
+                else
+
+                {
+
+                    foreach (var a in Model.Accounts)
+
+                    {
+
+                        <tr>
+
+                            <td><code>@a.Username</code></td>
+
+                            <td>@a.DisplayName</td>
+
+                            <td>@StaffAccountRoles.LabelVi(a.Role)</td>
+
+                            <td>
+
+                                @if (a.IsActive)
+
+                                {
+
+                                    <span class="admin-staff-accounts-badge admin-staff-accounts-badge--active">Đang hoạt động</span>
+
+                                }
+
+                                else
+
+                                {
+
+                                    <span class="admin-staff-accounts-badge admin-staff-accounts-badge--locked">Tạm khóa</span>
+
+                                }
+
+                            </td>
+
+                            <td class="tabular-nums">
+
+                                @(a.LastLoginAtUtc?.ToLocalTime().ToString("dd/MM/yyyy HH:mm", vi) ?? "—")
+
+                            </td>
+
+                            <td class="admin-staff-accounts-actions">
+
+                                <a class="admin-btn admin-btn--quiet admin-btn--sm"
+
+                                   asp-page="/Admin/StaffAccounts/Index"
+
+                                   asp-route-edit="@a.Id">Sửa</a>
+
+                                <a class="admin-btn admin-btn--quiet admin-btn--sm"
+
+                                   asp-page="/Admin/StaffAccounts/Index"
+
+                                   asp-route-edit="@a.Id"
+
+                                   asp-fragment="reset-password">Đặt lại mật khẩu</a>
+
+                                <form method="post" asp-page-handler="ToggleActive" class="admin-staff-accounts-inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="ToggleAccountId" value="@a.Id" />
+
+                                    @if (a.IsActive)
+
+                                    {
+
+                                        <button type="submit" class="admin-btn admin-btn--quiet admin-btn--sm">Khóa tài khoản</button>
+
+                                    }
+
+                                    else
+
+                                    {
+
+                                        <button type="submit" class="admin-btn admin-btn--quiet admin-btn--sm">Mở khóa</button>
+
+                                    }
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+                }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+@section Scripts {
+
+    <script src="~/js/admin-staff-accounts.js" asp-append-version="true"></script>
+
+}
+
+

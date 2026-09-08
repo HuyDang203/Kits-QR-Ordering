@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="cart.clear" xml:space="preserve"><value>Clear tray</value></data>
+  <data name="cart.close" xml:space="preserve"><value>Close</value></data>
+  <data name="cart.empty" xml:space="preserve"><value>Nothing chosen yet. Begin with any cup that calls to you.</value></data>
+  <data name="cart.followOrder" xml:space="preserve"><value>Follow your order</value></data>
+  <data name="cart.itemsLabel" xml:space="preserve"><value>Items</value></data>
+  <data name="cart.linkedTable" xml:space="preserve"><value>Your table</value></data>
+  <data name="cart.needQr" xml:space="preserve"><value>Please scan the table QR code to order.</value></data>
+  <data name="cart.openSelections" xml:space="preserve"><value>Open order</value></data>
+  <data name="cart.pricesNote" xml:space="preserve"><value>Prices are confirmed when you submit.</value></data>
+  <data name="cart.seatedAt" xml:space="preserve"><value>Seated at</value></data>
+  <data name="cart.seatedHint" xml:space="preserve"><value>Your seat is noted.</value></data>
+  <data name="cart.selectionFallback" xml:space="preserve"><value>Selection</value></data>
+  <data name="cart.submit" xml:space="preserve"><value>Send order</value></data>
+  <data name="cart.subtitle" xml:space="preserve"><value>Quietly prepared. Confirm when ready.</value></data>
+  <data name="cart.tableLabel" xml:space="preserve"><value>Table</value></data>
+  <data name="cart.tableLine" xml:space="preserve"><value>Table {label}</value></data>
+  <data name="cart.tableMetaShort" xml:space="preserve"><value>Table {label}</value></data>
+  <data name="cart.title" xml:space="preserve"><value>Order tray</value></data>
+  <data name="cart.unitEach" xml:space="preserve"><value>each</value></data>
+  <data name="checkout.bankPreviewBody" xml:space="preserve"><value>After you send the order, a transfer QR for the exact amount will appear here.</value></data>
+  <data name="checkout.bankPreviewKeepOpen" xml:space="preserve"><value>After transferring, please keep the bank transfer screen open for staff to verify.</value></data>
+  <data name="checkout.bankPreviewNote" xml:space="preserve"><value>Please transfer the exact amount and memo so staff can confirm faster.</value></data>
+  <data name="checkout.bankPreviewTitle" xml:space="preserve"><value>Bank transfer</value></data>
+  <data name="checkout.bankSubmittedBody" xml:space="preserve"><value>Bank transfer was recorded. Transfer QR will be enabled in a later step.</value></data>
+  <data name="checkout.bankTransfer" xml:space="preserve"><value>Bank transfer</value></data>
+  <data name="checkout.bankTransferHint" xml:space="preserve"><value>QR for exact amount</value></data>
+  <data name="checkout.bankTransferKeepOpen" xml:space="preserve"><value>Please keep the bank transfer screen open so staff can come verify and confirm payment.</value></data>
+  <data name="checkout.bankTransferPaid" xml:space="preserve"><value>Payment has been confirmed.</value></data>
+  <data name="checkout.bankTransferPendingBody" xml:space="preserve"><value>Please scan the QR code or transfer using the details below.</value></data>
+  <data name="checkout.bankTransferPendingBodyShort" xml:space="preserve"><value>Scan the QR to pay.</value></data>
+  <data name="checkout.bankTransferStaffConfirmNote" xml:space="preserve"><value>Your order is marked paid only after staff confirm payment.</value></data>
+  <data name="checkout.bankTransferTrackNote" xml:space="preserve"><value>After transferring, please wait for staff to confirm payment.</value></data>
+  <data name="checkout.bankTransferUnavailable" xml:space="preserve"><value>Bank transfer is currently unavailable. Please pay at the counter.</value></data>
+  <data name="checkout.bankTransferUnavailableShort" xml:space="preserve"><value>Bank transfer unavailable</value></data>
+  <data name="checkout.cardPreviewBody" xml:space="preserve"><value>After you send the order, please go to the counter to pay by card. Staff will check your order.</value></data>
+  <data name="checkout.cardPreviewTitle" xml:space="preserve"><value>Pay by card</value></data>
+  <data name="checkout.cardSubmittedBodyShort" xml:space="preserve"><value>Please go to the counter to pay by card.</value></data>
+  <data name="checkout.cashCardAtCounter" xml:space="preserve"><value>Cash/Card at counter</value></data>
+  <data name="checkout.cashPreviewBody" xml:space="preserve"><value>After you send the order, please go to the counter to pay cash. Staff will check your order.</value></data>
+  <data name="checkout.cashPreviewTitle" xml:space="preserve"><value>Pay cash</value></data>
+  <data name="checkout.cashSubmittedBodyShort" xml:space="preserve"><value>Please go to the counter to pay cash.</value></data>
+  <data name="checkout.checkBillTitle" xml:space="preserve"><value>Review your order</value></data>
+  <data name="checkout.choosePayment" xml:space="preserve"><value>Choose payment method</value></data>
+  <data name="checkout.choosePaymentMethod" xml:space="preserve"><value>Choose how to pay</value></data>
+  <data name="checkout.continueToPayment" xml:space="preserve"><value>Choose payment method</value></data>
+  <data name="checkout.copyAmount" xml:space="preserve"><value>Copy amount</value></data>
+  <data name="checkout.copyDone" xml:space="preserve"><value>Copied.</value></data>
+  <data name="checkout.copyMemo" xml:space="preserve"><value>Copy memo</value></data>
+  <data name="checkout.counterPreviewBody" xml:space="preserve"><value>After you send the order, please go to the counter to pay. Staff will check your order.</value></data>
+  <data name="checkout.counterPreviewNote" xml:space="preserve"><value>Your order is marked paid only after staff confirm payment.</value></data>
+  <data name="checkout.counterPreviewTitle" xml:space="preserve"><value>Pay at counter</value></data>
+  <data name="checkout.counterSubmittedBody" xml:space="preserve"><value>Please go to the counter to pay. Staff will check your order.</value></data>
+  <data name="checkout.counterSubmittedBodyShort" xml:space="preserve"><value>Please go to the counter to pay.</value></data>
+  <data name="checkout.customerNoteHelper" xml:space="preserve"><value>We will try to follow your note when preparing your order.</value></data>
+  <data name="checkout.customerNoteLabel" xml:space="preserve"><value>Note for the café</value></data>
+  <data name="checkout.customerNotePlaceholder" xml:space="preserve"><value>e.g. less ice, less sugar, no cream...</value></data>
+  <data name="checkout.estimatedTotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="checkout.paidReceiptTitle" xml:space="preserve"><value>Paid receipt</value></data>
+  <data name="checkout.payAtCounter" xml:space="preserve"><value>Pay at counter</value></data>
+  <data name="checkout.payAtCounterHint" xml:space="preserve"><value>Pay at counter</value></data>
+  <data name="checkout.payCard" xml:space="preserve"><value>Card</value></data>
+  <data name="checkout.payCash" xml:space="preserve"><value>Cash</value></data>
+  <data name="checkout.paymentMethodLabel" xml:space="preserve"><value>Payment method</value></data>
+  <data name="checkout.provisionalBillBody" xml:space="preserve"><value>This check bill is for review only and is not a paid receipt.</value></data>
+  <data name="checkout.provisionalBillNote" xml:space="preserve"><value>This check bill is not a paid receipt.</value></data>
+  <data name="checkout.reviewNote" xml:space="preserve"><value>Please review your items before choosing a payment method.</value></data>
+  <data name="checkout.reviewNoteShort" xml:space="preserve"><value>Review items before paying.</value></data>
+  <data name="checkout.reviewOrder" xml:space="preserve"><value>Review order</value></data>
+  <data name="checkout.submitAtCounter" xml:space="preserve"><value>Send order — pay at counter</value></data>
+  <data name="checkout.submitCard" xml:space="preserve"><value>Send order — pay by card</value></data>
+  <data name="checkout.submitCash" xml:space="preserve"><value>Send order — pay cash</value></data>
+  <data name="checkout.submitForQr" xml:space="preserve"><value>Send order — get QR code</value></data>
+  <data name="checkout.submitWithPayment" xml:space="preserve"><value>Send order and choose payment</value></data>
+  <data name="checkout.transferAccount" xml:space="preserve"><value>Account</value></data>
+  <data name="checkout.transferAccountHolder" xml:space="preserve"><value>Account holder</value></data>
+  <data name="checkout.transferAccountNumber" xml:space="preserve"><value>Account number</value></data>
+  <data name="checkout.transferAmount" xml:space="preserve"><value>Amount</value></data>
+  <data name="checkout.transferBank" xml:space="preserve"><value>Bank</value></data>
+  <data name="checkout.transferExactNote" xml:space="preserve"><value>Please transfer the exact amount and memo so staff can confirm faster.</value></data>
+  <data name="checkout.transferMemo" xml:space="preserve"><value>Transfer memo</value></data>
+  <data name="checkout.transferQrAlt" xml:space="preserve"><value>Transfer QR code</value></data>
+  <data name="checkout.transferQrLoadFailed" xml:space="preserve"><value>Could not load the QR code. You can still transfer using the details below.</value></data>
+  <data name="checkout.transferQrLoading" xml:space="preserve"><value>Loading transfer QR...</value></data>
+  <data name="checkout.transferRetry" xml:space="preserve"><value>Retry transfer QR</value></data>
+  <data name="checkout.transferUnavailableInTray" xml:space="preserve"><value>Could not load transfer details. Please call staff.</value></data>
+  <data name="checkout.waitingBankTransfer" xml:space="preserve"><value>Waiting for bank transfer</value></data>
+  <data name="checkout.waitingCardPayment" xml:space="preserve"><value>Waiting for card payment at counter</value></data>
+  <data name="checkout.waitingCashPayment" xml:space="preserve"><value>Waiting for cash payment at counter</value></data>
+  <data name="checkout.waitingCounterPayment" xml:space="preserve"><value>Waiting for counter payment</value></data>
+  <data name="drink.acidity" xml:space="preserve"><value>Acidity</value></data>
+  <data name="drink.caffeine" xml:space="preserve"><value>Caffeine</value></data>
+  <data name="drink.chooseTemperature" xml:space="preserve"><value>How would you like it?</value></data>
+  <data name="drink.composition" xml:space="preserve"><value>Composition</value></data>
+  <data name="drink.description" xml:space="preserve"><value>About</value></data>
+  <data name="drink.hot" xml:space="preserve"><value>Hot</value></data>
+  <data name="drink.iced" xml:space="preserve"><value>Iced</value></data>
+  <data name="drink.insideGlass" xml:space="preserve"><value>Inside the glass</value></data>
+  <data name="drink.loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="drink.moodHeading" xml:space="preserve"><value>Mood</value></data>
+  <data name="drink.onPalate" xml:space="preserve"><value>On the palate</value></data>
+  <data name="drink.openFullPage" xml:space="preserve"><value>Open full page</value></data>
+  <data name="drink.origin" xml:space="preserve"><value>Origin</value></data>
+  <data name="drink.related" xml:space="preserve"><value>You may also like</value></data>
+  <data name="drink.scaleHint" xml:space="preserve"><value>Subjective scale · 1 subtle — 5 vivid</value></data>
+  <data name="drink.sensoryProfile" xml:space="preserve"><value>Sensory profile</value></data>
+  <data name="drink.sourcedFrom" xml:space="preserve"><value>Sourced from</value></data>
+  <data name="drink.sweetness" xml:space="preserve"><value>Sweetness</value></data>
+  <data name="drink.tastingNotes" xml:space="preserve"><value>Tasting notes</value></data>
+  <data name="drink.unavailable" xml:space="preserve"><value>Unavailable right now.</value></data>
+  <data name="errors.403Lede" xml:space="preserve"><value>You cannot open this page.</value></data>
+  <data name="errors.403Title" xml:space="preserve"><value>Access denied</value></data>
+  <data name="errors.404Lede" xml:space="preserve"><value>The link may have changed or this table is not configured. Return to the menu to continue.</value></data>
+  <data name="errors.404Title" xml:space="preserve"><value>Page not found</value></data>
+  <data name="errors.503Lede" xml:space="preserve"><value>The shop is briefly maintaining systems. Please try again shortly.</value></data>
+  <data name="errors.503Title" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="errors.backToMenu" xml:space="preserve"><value>Back to menu</value></data>
+  <data name="errors.genericLede" xml:space="preserve"><value>We could not complete your request. Please try again or return to the menu.</value></data>
+  <data name="errors.genericTitle" xml:space="preserve"><value>Something went wrong</value></data>
+  <data name="errors.offlineLede" xml:space="preserve"><value>No network connection. Check Wi‑Fi and try again.</value></data>
+  <data name="errors.offlineTitle" xml:space="preserve"><value>You are offline</value></data>
+  <data name="errors.referenceId" xml:space="preserve"><value>Reference ID</value></data>
+  <data name="errors.retry" xml:space="preserve"><value>Try again</value></data>
+  <data name="errors.sommelierEmptyPrompt" xml:space="preserve"><value>Please share a few words about how you would like to feel.</value></data>
+  <data name="feedback.hapticToggle" xml:space="preserve"><value>Haptic feedback</value></data>
+  <data name="feedback.prefsLabel" xml:space="preserve"><value>Sound and haptics</value></data>
+  <data name="feedback.soundToggle" xml:space="preserve"><value>Sound feedback</value></data>
+  <data name="ge.arrival.beginTasting" xml:space="preserve"><value>Please come in</value></data>
+  <data name="ge.arrival.curatedEmptyTitle" xml:space="preserve"><value>Experience temporarily being curated.</value></data>
+  <data name="ge.arrival.inviteIn" xml:space="preserve"><value>Invite</value></data>
+  <data name="ge.arrival.menuWord" xml:space="preserve"><value>Menu</value></data>
+  <data name="ge.arrival.welcomeWord" xml:space="preserve"><value>Welcome.</value></data>
+  <data name="ge.arrival.secondaryDiscovery" xml:space="preserve"><value>Sealed surprise</value></data>
+  <data name="ge.arrival.secondaryGroup" xml:space="preserve"><value>Group ordering</value></data>
+  <data name="ge.arrival.secondaryMenu" xml:space="preserve"><value>Menu</value></data>
+  <data name="ge.arrival.secondarySommelier" xml:space="preserve"><value>Prefer a conversation</value></data>
+  <data name="ge.cupMoment.altKicker" xml:space="preserve"><value>Other options</value></data>
+  <data name="ge.cupMoment.altSectionTitle" xml:space="preserve"><value>If you want another direction</value></data>
+  <data name="ge.cupMoment.chosenBadge" xml:space="preserve"><value>Kits chooses for you</value></data>
+  <data name="ge.cupMoment.empty" xml:space="preserve"><value>The house could not name a cup just now.</value></data>
+  <data name="ge.cupMoment.hostKicker" xml:space="preserve"><value>Kits chooses for you</value></data>
+  <data name="ge.cupMoment.kicker" xml:space="preserve"><value>Kits chooses for you</value></data>
+  <data name="ge.cupMoment.namingKicker" xml:space="preserve"><value>Kits chooses for you</value></data>
+  <data name="ge.duckPost.blockedBody" xml:space="preserve"><value>This round has used every reroll. The house stands by the last pour.</value></data>
+  <data name="ge.duckPost.blockedDismiss" xml:space="preserve"><value>Understood</value></data>
+  <data name="ge.duckPost.blockedDismissAria" xml:space="preserve"><value>Close</value></data>
+  <data name="ge.duckPost.blockedDismissHint" xml:space="preserve"><value>Swipe down on this card once, tap the dimmed edge, or press Escape.</value></data>
+  <data name="ge.duckPost.blockedOwner" xml:space="preserve"><value>The house keeps the final recommendation.</value></data>
+  <data name="ge.duckPost.blockedTitle" xml:space="preserve"><value>No more changes for this round.</value></data>
+  <data name="ge.duckPost.deskCta" xml:space="preserve"><value>Let the house choose</value></data>
+  <data name="ge.duckPost.deskEyebrow" xml:space="preserve"><value>Your host is listening</value></data>
+  <data name="ge.duckPost.deskHint" xml:space="preserve"><value>Unhurried. One pour. No menu yet.</value></data>
+  <data name="ge.duckPost.deskNudge" xml:space="preserve"><value>Unhurried — one cup, chosen for this table.</value></data>
+  <data name="ge.duckPost.deskTitle" xml:space="preserve"><value>We will name one cup for this table.</value></data>
+  <data name="ge.duckPost.panelKicker" xml:space="preserve"><value>Tonight&apos;s tasting</value></data>
+  <data name="ge.duckPost.r1Dim" xml:space="preserve"><value>Preparing recommendation...</value></data>
+  <data name="ge.duckPost.r1Letter" xml:space="preserve"><value>Checking the first option.</value></data>
+  <data name="ge.duckPost.r1Open" xml:space="preserve"><value>Saved an option for this table.</value></data>
+  <data name="ge.duckPost.r2Dim" xml:space="preserve"><value>Checking another option...</value></data>
+  <data name="ge.duckPost.r2Letter" xml:space="preserve"><value>Comparing the second option.</value></data>
+  <data name="ge.duckPost.r2Open" xml:space="preserve"><value>Keeping the better match.</value></data>
+  <data name="ge.duckPost.r3Dim" xml:space="preserve"><value>Final review in progress...</value></data>
+  <data name="ge.duckPost.r3Letter" xml:space="preserve"><value>Finalizing the best option for this table.</value></data>
+  <data name="ge.duckPost.r3Open" xml:space="preserve"><value>Recommendation is ready.</value></data>
+  <data name="ge.duckPost.reducedLine" xml:space="preserve"><value>Preparing recommendation...</value></data>
+  <data name="ge.group.backAria" xml:space="preserve"><value>Back to arrival</value></data>
+  <data name="ge.group.backToGuests" xml:space="preserve"><value>Back to guests</value></data>
+  <data name="ge.group.countPromptFallback" xml:space="preserve"><value>How many guests?</value></data>
+  <data name="ge.group.cupOnTray" xml:space="preserve"><value>, cup on tray</value></data>
+  <data name="ge.group.doneBtn" xml:space="preserve"><value>Done</value></data>
+  <data name="ge.group.exploreMenu" xml:space="preserve"><value>Explore full menu</value></data>
+  <data name="ge.group.guestLabel" xml:space="preserve"><value>Guest {n}</value></data>
+  <data name="ge.group.guestTabsAria" xml:space="preserve"><value>Guests at this table</value></data>
+  <data name="ge.group.kicker" xml:space="preserve"><value>At the table</value></data>
+  <data name="ge.group.noGuest" xml:space="preserve"><value>No cups for this guest yet.</value></data>
+  <data name="ge.group.notServed" xml:space="preserve"><value>, not yet served</value></data>
+  <data name="ge.group.passingMenu" xml:space="preserve"><value>Passing the menu to {name}…</value></data>
+  <data name="ge.group.reviewSummary" xml:space="preserve"><value>Review table summary</value></data>
+  <data name="ge.group.seatGuests" xml:space="preserve"><value>Seat the guests</value></data>
+  <data name="ge.group.sigAddToTray" xml:space="preserve"><value>Send to my table</value></data>
+  <data name="ge.group.sigDetail" xml:space="preserve"><value>Detail</value></data>
+  <data name="ge.group.signatureDrinksAria" xml:space="preserve"><value>Signature drinks</value></data>
+  <data name="ge.group.signatureHeading" xml:space="preserve"><value>Signature cups for the table</value></data>
+  <data name="ge.group.summaryKickerFallback" xml:space="preserve"><value>Your table</value></data>
+  <data name="ge.group.summaryTitleFallback" xml:space="preserve"><value>Table summary</value></data>
+  <data name="ge.group.tableLabel" xml:space="preserve"><value>Table</value></data>
+  <data name="ge.group.tableTotal" xml:space="preserve"><value>Table total · </value></data>
+  <data name="ge.group.undoBtn" xml:space="preserve"><value>Undo</value></data>
+  <data name="ge.group.yourTurn" xml:space="preserve"><value>, your turn to choose</value></data>
+  <data name="ge.host.altKicker" xml:space="preserve"><value>Other options</value></data>
+  <data name="ge.host.altPour" xml:space="preserve"><value>Choose this cup</value></data>
+  <data name="ge.host.barPause" xml:space="preserve"><value>One moment at the bar…</value></data>
+  <data name="ge.host.deskSub" xml:space="preserve"><value>We&apos;ll read the room before we pour.</value></data>
+  <data name="ge.host.emptyCup" xml:space="preserve"><value>Not quite right — give me another moment.</value></data>
+  <data name="ge.host.evening.brighter" xml:space="preserve"><value>A little brighter</value></data>
+  <data name="ge.host.evening.curious" xml:space="preserve"><value>Curious, but calm</value></data>
+  <data name="ge.host.evening.quieter" xml:space="preserve"><value>Quieter tonight</value></data>
+  <data name="ge.host.evening.soft" xml:space="preserve"><value>Soft and unhurried</value></data>
+  <data name="ge.host.eveningAck" xml:space="preserve"><value>Understood — give me a moment.</value></data>
+  <data name="ge.host.eveningPrompt" xml:space="preserve"><value>What feeling should your cup carry today?</value></data>
+  <data name="ge.host.greet.afternoon" xml:space="preserve"><value>good afternoon</value></data>
+  <data name="ge.host.greet.evening" xml:space="preserve"><value>good evening</value></data>
+  <data name="ge.host.greet.morning" xml:space="preserve"><value>good morning</value></data>
+  <data name="ge.host.greet.night" xml:space="preserve"><value>good evening</value></data>
+  <data name="ge.host.invitation" xml:space="preserve"><value>We&apos;ll keep tonight unhurried.</value></data>
+  <data name="ge.host.loading" xml:space="preserve"><value>One moment — I&apos;m at the bar.</value></data>
+  <data name="ge.host.prepareForTable" xml:space="preserve"><value>Prepare for my table</value></data>
+  <data name="ge.host.readCup" xml:space="preserve"><value>Read the origin letter</value></data>
+  <data name="ge.host.readOriginLetter" xml:space="preserve"><value>Read the origin letter</value></data>
+  <data name="ge.host.reroll" xml:space="preserve"><value>Would you like me to reconsider?</value></data>
+  <data name="ge.host.rerollBlockedBody" xml:space="preserve"><value>I&apos;ll stand by the last cup I named for your table.</value></data>
+  <data name="ge.host.rerollBlockedOwner" xml:space="preserve"><value>The evening keeps its line.</value></data>
+  <data name="ge.host.rerollBlockedTitle" xml:space="preserve"><value>I&apos;ve considered enough for tonight.</value></data>
+  <data name="ge.host.revealLine" xml:space="preserve"><value>I think I know what belongs at this table.</value></data>
+  <data name="ge.host.ritualErr" xml:space="preserve"><value>Something interrupted us — try once more.</value></data>
+  <data name="ge.host.room.afternoon" xml:space="preserve"><value>The afternoon light is soft through the garden.</value></data>
+  <data name="ge.host.room.evening" xml:space="preserve"><value>The room is slowing down tonight.</value></data>
+  <data name="ge.host.room.morning" xml:space="preserve"><value>The morning is gentle today.</value></data>
+  <data name="ge.host.room.night" xml:space="preserve"><value>The street is quiet now.</value></data>
+  <data name="ge.host.roomDefault" xml:space="preserve"><value>The room is slowing down tonight.</value></data>
+  <data name="ge.host.serveLine" xml:space="preserve"><value>Kits chooses for you.</value></data>
+  <data name="ge.host.tableGreet" xml:space="preserve"><value>{table} — {greet}.</value></data>
+  <data name="ge.host.trayInvite" xml:space="preserve"><value>Add to tray</value></data>
+  <data name="ge.host.wait1" xml:space="preserve"><value>The bar goes quiet for a moment…</value></data>
+  <data name="ge.host.wait2" xml:space="preserve"><value>Steam rises from the pass.</value></data>
+  <data name="ge.host.wait3" xml:space="preserve"><value>I&apos;m choosing one cup for your table.</value></data>
+  <data name="ge.host.wait4" xml:space="preserve"><value>Let me look once more…</value></data>
+  <data name="ge.host.wait5" xml:space="preserve"><value>The room is still — no rush.</value></data>
+  <data name="ge.host.wait6" xml:space="preserve"><value>I want the quieter truth tonight.</value></data>
+  <data name="ge.host.wait7" xml:space="preserve"><value>One last read of the evening…</value></data>
+  <data name="ge.host.wait8" xml:space="preserve"><value>The street is hushed tonight.</value></data>
+  <data name="ge.host.wait9" xml:space="preserve"><value>This is the cup I&apos;d stand behind.</value></data>
+  <data name="ge.menuFirst.ctaSubtle" xml:space="preserve"><value>Open menu without the arrival steps</value></data>
+  <data name="ge.menuFirst.eyebrowSubtle" xml:space="preserve"><value>Counter path only</value></data>
+  <data name="ge.menuFirst.noteSubtle" xml:space="preserve"><value>The house prefers the three paths above; your table is still saved.</value></data>
+  <data name="ge.originLetter.failure" xml:space="preserve"><value>The cup letter did not arrive. Please try again.</value></data>
+  <data name="ge.originLetter.invite" xml:space="preserve"><value>When you are ready — the cup awaits.</value></data>
+  <data name="ge.originLetter.kicker" xml:space="preserve"><value>Origin letter</value></data>
+  <data name="ge.originLetter.loading" xml:space="preserve"><value>Preparing the cup letter…</value></data>
+  <data name="ge.originLetter.timeout" xml:space="preserve"><value>The cup letter is taking a quiet moment. Please try again.</value></data>
+  <data name="ge.originLetter.unavailable" xml:space="preserve"><value>This cup is resting for now.</value></data>
+  <data name="ge.ritual.ack.q1_alert" xml:space="preserve"><value>Alert and present — I hear you.</value></data>
+  <data name="ge.ritual.ack.q1_curious" xml:space="preserve"><value>A touch curious — I&apos;ve noted that.</value></data>
+  <data name="ge.ritual.ack.q1_light" xml:space="preserve"><value>Understood — we&apos;ll keep tonight gentle.</value></data>
+  <data name="ge.ritual.ack.q1_refresh" xml:space="preserve"><value>Sounds like an evening that wants a little brightness.</value></data>
+  <data name="ge.ritual.ack.q2_coffee" xml:space="preserve"><value>Coffee — I&apos;m beginning to see the direction.</value></data>
+  <data name="ge.ritual.ack.q2_fruit" xml:space="preserve"><value>Something fresh — noted.</value></data>
+  <data name="ge.ritual.ack.q2_juice" xml:space="preserve"><value>Juice — light and bright.</value></data>
+  <data name="ge.ritual.ack.q2_matcha" xml:space="preserve"><value>Matcha — calm and green.</value></data>
+  <data name="ge.ritual.ack.q2_signature" xml:space="preserve"><value>A house signature — I&apos;ve noted it.</value></data>
+  <data name="ge.ritual.ack.q2_smoothie" xml:space="preserve"><value>Soft and slow — understood.</value></data>
+  <data name="ge.ritual.ack.q2_tea" xml:space="preserve"><value>Tea will be softer for tonight.</value></data>
+  <data name="ge.ritual.ack.q3_low" xml:space="preserve"><value>Keeping it bright, less sweet.</value></data>
+  <data name="ge.ritual.ack.q3_medium" xml:space="preserve"><value>Balanced — noted.</value></data>
+  <data name="ge.ritual.ack.q3_semisweet" xml:space="preserve"><value>A touch sweeter.</value></data>
+  <data name="ge.ritual.ack.q3_sweet" xml:space="preserve"><value>To soften the evening — sweeter.</value></data>
+  <data name="ge.ritual.ack.q4_low" xml:space="preserve"><value>Just a little lift.</value></data>
+  <data name="ge.ritual.ack.q4_medium" xml:space="preserve"><value>Enough lift for tonight.</value></data>
+  <data name="ge.ritual.ack.q4_none" xml:space="preserve"><value>No caffeine — understood.</value></data>
+  <data name="ge.ritual.ack.q4_strong" xml:space="preserve"><value>Bold — I&apos;ve noted it.</value></data>
+  <data name="ge.ritual.deepen.2" xml:space="preserve"><value>Mình hiểu thêm một chút rồi…</value></data>
+  <data name="ge.ritual.deepen.3" xml:space="preserve"><value>Gần đến ly rồi…</value></data>
+  <data name="ge.ritual.eveningAck.bright_lift" xml:space="preserve"><value>Sáng hơn một chút — mình nghe thấy.</value></data>
+  <data name="ge.ritual.eveningAck.creamy_calm" xml:space="preserve"><value>Mềm và không vội — hiểu rồi.</value></data>
+  <data name="ge.ritual.eveningAck.curious_edge" xml:space="preserve"><value>Tò mò nhưng điềm — được.</value></data>
+  <data name="ge.ritual.eveningAck.slow_evening" xml:space="preserve"><value>Vậy mình sẽ giữ tối nay nhẹ lại.</value></data>
+  <data name="ge.ritual.finalPause" xml:space="preserve"><value>Để mình nghĩ thêm một chút…</value></data>
+  <data name="ge.ritual.reflectionKicker" xml:space="preserve"><value>Suggested for you</value></data>
+  <data name="ge.sommelier.addToTray" xml:space="preserve"><value>Add to tray</value></data>
+  <data name="ge.sommelier.beginAgain" xml:space="preserve"><value>Rewrite my taste</value></data>
+  <data name="ge.sommelier.connectErr" xml:space="preserve"><value>The room softened for a moment. You may try again shortly.</value></data>
+  <data name="ge.sommelier.entry.invite" xml:space="preserve"><value>Answer a few questions to get a recommendation.</value></data>
+  <data name="ge.sommelier.hostPause" xml:space="preserve"><value>One moment — choosing a cup for you.</value></data>
+  <data name="ge.sommelier.kicker" xml:space="preserve"><value>What feeling should your cup carry today?</value></data>
+  <data name="ge.sommelier.question.reading" xml:space="preserve"><value>Reading your taste</value></data>
+  <data name="ge.sommelier.question.step" xml:space="preserve"><value>Step {n} / {total}</value></data>
+  <data name="ge.sommelier.readCup" xml:space="preserve"><value>Read the origin letter</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.note1" xml:space="preserve"><value>Jasmine</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.note2" xml:space="preserve"><value>Tea</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_floral.title" xml:space="preserve"><value>Florals and tea</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.note1" xml:space="preserve"><value>Peach</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.note2" xml:space="preserve"><value>Honey</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_fruit.title" xml:space="preserve"><value>Sweet fruit</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.note1" xml:space="preserve"><value>Chocolate</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.note2" xml:space="preserve"><value>Nuts</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_chocolate.title" xml:space="preserve"><value>Chocolate and depth</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.note1" xml:space="preserve"><value>Blueberry</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.note2" xml:space="preserve"><value>Honey</value></data>
+  <data name="ge.sommelier.tasting.calibration.cards.q_sp_flavor_berry.title" xml:space="preserve"><value>Bright berries</value></data>
+  <data name="ge.sommelier.tasting.calibration.feel.question" xml:space="preserve"><value>How do you like the cup to feel?</value></data>
+  <data name="ge.sommelier.tasting.calibration.flavor.question" xml:space="preserve"><value>What should lead in the cup?</value></data>
+  <data name="ge.sommelier.tasting.error" xml:space="preserve"><value>The house could not name an origin just now.</value></data>
+  <data name="ge.sommelier.tasting.eyebrow" xml:space="preserve"><value>Your taste today</value></data>
+  <data name="ge.sommelier.tasting.helper" xml:space="preserve"><value>Just a few seconds.</value></data>
+  <data name="ge.sommelier.tasting.micro1" xml:space="preserve"><value>Reading your choices</value></data>
+  <data name="ge.sommelier.tasting.micro2" xml:space="preserve"><value>The bar reads the palate</value></data>
+  <data name="ge.sommelier.tasting.micro3" xml:space="preserve"><value>Naming tonight&apos;s origin</value></data>
+  <data name="ge.sommelier.tasting.note.base" xml:space="preserve"><value>Cup style</value></data>
+  <data name="ge.sommelier.tasting.note.caffeine" xml:space="preserve"><value>Temperature</value></data>
+  <data name="ge.sommelier.tasting.note.detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="ge.sommelier.tasting.note.direction" xml:space="preserve"><value>Direction</value></data>
+  <data name="ge.sommelier.tasting.note.experience" xml:space="preserve"><value>Experience</value></data>
+  <data name="ge.sommelier.tasting.note.finish" xml:space="preserve"><value>Finish</value></data>
+  <data name="ge.sommelier.tasting.note.flavor" xml:space="preserve"><value>Flavor</value></data>
+  <data name="ge.sommelier.tasting.note.mood" xml:space="preserve"><value>Feeling</value></data>
+  <data name="ge.sommelier.tasting.note.preference" xml:space="preserve"><value>Preference</value></data>
+  <data name="ge.sommelier.tasting.note.prepare" xml:space="preserve"><value>Preparing today&apos;s cup</value></data>
+  <data name="ge.sommelier.tasting.note.sweet" xml:space="preserve"><value>Milk tone</value></data>
+  <data name="ge.sommelier.tasting.note.title" xml:space="preserve"><value>Writing your tasting letter</value></data>
+  <data name="ge.sommelier.tasting.note.writing" xml:space="preserve"><value>Kits is choosing a cup to match this note.</value></data>
+  <data name="ge.sommelier.tasting.offline" xml:space="preserve"><value>The house could not name an origin just now.</value></data>
+  <data name="ge.sommelier.tasting.recognition.beat1" xml:space="preserve"><value>One moment.</value></data>
+  <data name="ge.sommelier.tasting.retry" xml:space="preserve"><value>Try again</value></data>
+  <data name="ge.sommelier.tasting.step1" xml:space="preserve"><value>Read the feeling</value></data>
+  <data name="ge.sommelier.tasting.step2" xml:space="preserve"><value>Balance the taste</value></data>
+  <data name="ge.sommelier.tasting.step3" xml:space="preserve"><value>Name the cup</value></data>
+  <data name="ge.sommelier.tasting.support" xml:space="preserve"><value>From your choices, Kits is finding a cup that fits this note.</value></data>
+  <data name="ge.sommelier.tasting.supportCurate" xml:space="preserve"><value>Kits is balancing the cup to match this note.</value></data>
+  <data name="ge.sommelier.tasting.supportWait" xml:space="preserve"><value>One moment — Kits is choosing your cup.</value></data>
+  <data name="ge.sommelier.tasting.title" xml:space="preserve"><value>Balancing the cup for you</value></data>
+  <data name="ge.sommelier.tasting.titleRitual" xml:space="preserve"><value>The bar is preparing something just for you</value></data>
+  <data name="ge.sommelier.whisper1" xml:space="preserve"><value>Answer based on your taste.</value></data>
+  <data name="ge.sommelier.whisper2" xml:space="preserve"><value>No coffee terms needed.</value></data>
+  <data name="ge.sommelier.whisper3" xml:space="preserve"><value>You can choose your sweetness level.</value></data>
+  <data name="ge.sommelier.whisper4" xml:space="preserve"><value>You can choose your caffeine level.</value></data>
+  <data name="guest.sommelierLite.added" xml:space="preserve"><value>Added</value></data>
+  <data name="guest.sommelierLite.addToTray" xml:space="preserve"><value>Add to tray</value></data>
+  <data name="guest.sommelierLite.caffeineLegend" xml:space="preserve"><value>Caffeine</value></data>
+  <data name="guest.sommelierLite.caffeineLow" xml:space="preserve"><value>Low</value></data>
+  <data name="guest.sommelierLite.caffeineNo" xml:space="preserve"><value>None</value></data>
+  <data name="guest.sommelierLite.caffeineYes" xml:space="preserve"><value>Yes</value></data>
+  <data name="guest.sommelierLite.empty" xml:space="preserve"><value>The house could not name a cup just now.</value></data>
+  <data name="guest.sommelierLite.error" xml:space="preserve"><value>Could not suggest a drink right now. Open the menu to browse.</value></data>
+  <data name="guest.sommelierLite.incompatibleSheet" xml:space="preserve"><value>I need a bit more data to suggest precisely. You can still open the menu or try again later.</value></data>
+  <data name="guest.sommelierLite.loading" xml:space="preserve"><value>Finding a cup for you…</value></data>
+  <data name="guest.sommelierLite.milkEither" xml:space="preserve"><value>Either</value></data>
+  <data name="guest.sommelierLite.milkLegend" xml:space="preserve"><value>Milk</value></data>
+  <data name="guest.sommelierLite.milkNo" xml:space="preserve"><value>No</value></data>
+  <data name="guest.sommelierLite.milkYes" xml:space="preserve"><value>Yes</value></data>
+  <data name="guest.sommelierLite.offline" xml:space="preserve"><value>Cannot reach the bar right now. Open the menu or try again.</value></data>
+  <data name="guest.sommelierLite.submit" xml:space="preserve"><value>Suggest for me</value></data>
+  <data name="guest.sommelierLite.tasteBalanced" xml:space="preserve"><value>Balanced</value></data>
+  <data name="guest.sommelierLite.tasteLegend" xml:space="preserve"><value>Taste</value></data>
+  <data name="guest.sommelierLite.tasteRefreshing" xml:space="preserve"><value>Refreshing</value></data>
+  <data name="guest.sommelierLite.tasteStrong" xml:space="preserve"><value>Bold</value></data>
+  <data name="guest.sommelierLite.tasteSweet" xml:space="preserve"><value>Sweet</value></data>
+  <data name="guest.sommelierLite.tempEither" xml:space="preserve"><value>Either</value></data>
+  <data name="guest.sommelierLite.tempHot" xml:space="preserve"><value>Hot</value></data>
+  <data name="guest.sommelierLite.tempIced" xml:space="preserve"><value>Iced</value></data>
+  <data name="guest.sommelierLite.tempLegend" xml:space="preserve"><value>Temperature</value></data>
+  <data name="guest.sommelierLite.title" xml:space="preserve"><value>AI suggestions</value></data>
+  <data name="guest.sommelierLite.trayUnavailable" xml:space="preserve"><value>Open the menu to add this drink.</value></data>
+  <data name="guest.sommelierLite.unavailable" xml:space="preserve"><value>AI suggestions are not ready right now. You can still open the menu to order.</value></data>
+  <data name="guest.sommelierLite.viewDrink" xml:space="preserve"><value>View drink</value></data>
+  <data name="guest.tableNotice.browseOnlyNote" xml:space="preserve"><value>You may browse the menu, but you need to scan the table QR to place an order.</value></data>
+  <data name="guest.tableNotice.handoffInvalidTitle" xml:space="preserve"><value>Table link expired</value></data>
+  <data name="guest.tableNotice.qrInvalidTitle" xml:space="preserve"><value>Table not recognized</value></data>
+  <data name="home.brand" xml:space="preserve"><value>Kits Coffee Atelier</value></data>
+  <data name="home.categoriesHint" xml:space="preserve"><value>Choose a direction. We&apos;ll keep it simple.</value></data>
+  <data name="home.devTableLink" xml:space="preserve"><value>Open table T12</value></data>
+  <data name="home.devTableSetup" xml:space="preserve"><value>Development:</value></data>
+  <data name="home.heroLead" xml:space="preserve"><value>Warm cups. Clean finishes. Long aftertaste.</value></data>
+  <data name="home.heroLine1" xml:space="preserve"><value>Espresso. Filter.</value></data>
+  <data name="home.heroLine2" xml:space="preserve"><value>Quiet sweetness.</value></data>
+  <data name="home.menuCta" xml:space="preserve"><value>Menu</value></data>
+  <data name="home.orderCta" xml:space="preserve"><value>Order</value></data>
+  <data name="home.postalFrom" xml:space="preserve"><value>From Kinini Village, Rwanda</value></data>
+  <data name="home.postalStamp" xml:space="preserve"><value>Farm to cup</value></data>
+  <data name="home.signatureCupBadge" xml:space="preserve"><value>Cup</value></data>
+  <data name="home.signatureHeading" xml:space="preserve"><value>Signature cups</value></data>
+  <data name="home.signatureSeeAll" xml:space="preserve"><value>See all</value></data>
+  <data name="home.signatureSub" xml:space="preserve"><value>Balanced sweetness. Clean structure. Long finish.</value></data>
+  <data name="home.signatureTastingLabel" xml:space="preserve"><value>Tasting notes</value></data>
+  <data name="home.statProfile" xml:space="preserve"><value>Profile</value></data>
+  <data name="home.statProfileValue" xml:space="preserve"><value>Citrus • cocoa</value></data>
+  <data name="home.statService" xml:space="preserve"><value>Service</value></data>
+  <data name="home.statServiceValue" xml:space="preserve"><value>Quiet • precise</value></data>
+  <data name="home.tapBrowse" xml:space="preserve"><value>Tap to browse</value></data>
+  <data name="home.unseatedHint" xml:space="preserve"><value>To order and follow your tray, please scan the QR at your table. For a quiet preview of the room, you may still browse the menu.</value></data>
+  <data name="houseSelection.afterAdd" xml:space="preserve"><value>You can add another drink or choose a pastry.</value></data>
+  <data name="houseSelection.altAdd" xml:space="preserve"><value>Choose this cup</value></data>
+  <data name="houseSelection.altKicker" xml:space="preserve"><value>Other options</value></data>
+  <data name="houseSelection.ambientListen" xml:space="preserve"><value>One moment — choosing a cup for you.</value></data>
+  <data name="houseSelection.ctaPrimary" xml:space="preserve"><value>Add to tray</value></data>
+  <data name="houseSelection.fitReference" xml:space="preserve"><value>for reference</value></data>
+  <data name="houseSelection.readCup" xml:space="preserve"><value>Cup details</value></data>
+  <data name="houseSelection.rerollBlocked" xml:space="preserve"><value>The house stands by this recommendation.</value></data>
+  <data name="houseSelection.rerollFirst" xml:space="preserve"><value>Not quite tonight?</value></data>
+  <data name="houseSelection.rerollSealed" xml:space="preserve"><value>We are keeping this recommendation for consistency.</value></data>
+  <data name="houseSelection.rerollSecond" xml:space="preserve"><value>One last change</value></data>
+  <data name="houseSelection.rerollWait" xml:space="preserve"><value>Please wait a moment and try again.</value></data>
+  <data name="langSwitcher.en" xml:space="preserve"><value>EN</value></data>
+  <data name="langSwitcher.label" xml:space="preserve"><value>Language</value></data>
+  <data name="langSwitcher.vi" xml:space="preserve"><value>VI</value></data>
+  <data name="letterRoom.ctaPrimary" xml:space="preserve"><value>Add to tray</value></data>
+  <data name="letterRoom.earnedKicker" xml:space="preserve"><value>The house names this cup for you.</value></data>
+  <data name="letterRoom.rerollCta" xml:space="preserve"><value>Another delivery</value></data>
+  <data name="menu.addedWithCare" xml:space="preserve"><value>Added with care</value></data>
+  <data name="menu.addToOrder" xml:space="preserve"><value>Prepare for my table</value></data>
+  <data name="menu.addToTray" xml:space="preserve"><value>Send to my table</value></data>
+  <data name="menu.aWordLabel" xml:space="preserve"><value>A word</value></data>
+  <data name="menu.back" xml:space="preserve"><value>Back</value></data>
+  <data name="menu.backHome" xml:space="preserve"><value>← Back to choices</value></data>
+  <data name="menu.backHomeAria" xml:space="preserve"><value>Return to the home screen to pick one of the three paths</value></data>
+  <data name="menu.backNav" xml:space="preserve"><value>← Menu</value></data>
+  <data name="menu.browseEyebrow" xml:space="preserve"><value>KITS</value></data>
+  <data name="menu.browseIntro" xml:space="preserve"><value></value></data>
+  <data name="menu.browseTitle" xml:space="preserve"><value>The house selection</value></data>
+  <data name="menu.categoriesNavAria" xml:space="preserve"><value>Menu categories</value></data>
+  <data name="menu.categorySeasonalNote" xml:space="preserve"><value>Seasonal rotation. Ask the barista for today&apos;s microlot.</value></data>
+  <data name="menu.curatedCup" xml:space="preserve"><value>Curated cup</value></data>
+  <data name="menu.detailActionsAria" xml:space="preserve"><value>Drink detail actions</value></data>
+  <data name="menu.discover" xml:space="preserve"><value>Discover</value></data>
+  <data name="menu.editorialBakery" xml:space="preserve"><value>Pastries to go with coffee or tea. Pick one when you want a light bite.</value></data>
+  <data name="menu.editorialBlack" xml:space="preserve"><value>Black coffee from the machine. Bold, balanced, and easy to drink.</value></data>
+  <data name="menu.editorialCoffee" xml:space="preserve"><value>Machine-brewed coffee, made daily. Bold, balanced, and easy to drink.</value></data>
+  <data name="menu.editorialColdBrew" xml:space="preserve"><value>Slow cold-brewed coffee. Smooth and less bitter — good iced all day.</value></data>
+  <data name="menu.editorialDefault" xml:space="preserve"><value>What's on the bar right now. Ask a barista if you need a recommendation.</value></data>
+  <data name="menu.editorialEspresso" xml:space="preserve"><value>Everyday espresso drinks. Bold, balanced, and easy to drink.</value></data>
+  <data name="menu.editorialFallback" xml:space="preserve"><value>Drinks in this group. Ask a barista if you need a recommendation.</value></data>
+  <data name="menu.editorialJuice" xml:space="preserve"><value>Fresh-pressed juices. Bright and clean — pick one when you want a quick refresh.</value></data>
+  <data name="menu.editorialMilk" xml:space="preserve"><value>Coffee with milk. Smooth and easy — pick one when you want a softer cup.</value></data>
+  <data name="menu.editorialSeasonal" xml:space="preserve"><value>Seasonal items, available for a limited time. Ask a barista what's on today.</value></data>
+  <data name="menu.editorialSignature" xml:space="preserve"><value>House signature drinks. Our own recipes — bold and easy to recognize.</value></data>
+  <data name="menu.editorialSmoothie" xml:space="preserve"><value>Fruit smoothies blended with milk. Thick and naturally sweet — pick one when you want something filling.</value></data>
+  <data name="menu.editorialSpark" xml:space="preserve"><value>Chilled fruit drinks. Pick one when you want something refreshing and bright.</value></data>
+  <data name="menu.editorialSpecialty" xml:space="preserve"><value>4 specialty coffee lots, carefully selected. Each lot has its own flavor and story.</value></data>
+  <data name="menu.editorialTea" xml:space="preserve"><value>Whole-leaf tea, brewed by the cup. Soft caffeine, clean finish.</value></data>
+  <data name="menu.editorialVietnamese" xml:space="preserve"><value>Vietnamese phin coffee. Bold and sweet with condensed milk — familiar and reliable.</value></data>
+  <data name="menu.pairingAdded" xml:space="preserve"><value>Added</value></data>
+  <data name="menu.pairingReceipt" xml:space="preserve"><value>Added {name} to tray</value></data>
+  <data name="menu.pairingReceiptShort" xml:space="preserve"><value>Added to tray</value></data>
+  <data name="menu.pairingsLead" xml:space="preserve"><value>We&apos;d pair this with</value></data>
+  <data name="menu.pairingTap" xml:space="preserve"><value>Tap to add</value></data>
+  <data name="menu.preparedPrefix" xml:space="preserve"><value>Prepared to order ·</value></data>
+  <data name="menu.prepareForTable" xml:space="preserve"><value>Prepare for my table</value></data>
+  <data name="menu.ribbonBright" xml:space="preserve"><value>Bright &amp; awake</value></data>
+  <data name="menu.ribbonEasy" xml:space="preserve"><value>Easy entry cup</value></data>
+  <data name="menu.ribbonFeatured" xml:space="preserve"><value>Guest favorite</value></data>
+  <data name="menu.ribbonSeasonal" xml:space="preserve"><value>Seasonal spotlight</value></data>
+  <data name="menu.ribbonSignature" xml:space="preserve"><value>House signature</value></data>
+  <data name="menu.ribbonSlow" xml:space="preserve"><value>Slow morning ease</value></data>
+  <data name="menu.stillLifeBadge" xml:space="preserve"><value>Still life</value></data>
+  <data name="menu.tastingCard" xml:space="preserve"><value>Kits Drink Card</value></data>
+  <data name="menu.tastingNotesLabel" xml:space="preserve"><value>Tasting notes</value></data>
+  <data name="menu.viewDetail" xml:space="preserve"><value>View details</value></data>
+  <data name="menuTray.ariaChip" xml:space="preserve"><value>Open order tray</value></data>
+  <data name="menuTray.chipCompleteBody" xml:space="preserve"><value>Thank you for visiting Kits.</value></data>
+  <data name="menuTray.chipCompleteTitle" xml:space="preserve"><value>Order complete</value></data>
+  <data name="menuTray.chipEmpty" xml:space="preserve"><value>Tray awaiting</value></data>
+  <data name="menuTray.chipEmptySomm" xml:space="preserve"><value>Tray awaiting</value></data>
+  <data name="menuTray.chipGuestPouring" xml:space="preserve"><value>Pouring for</value></data>
+  <data name="menuTray.chipKicker" xml:space="preserve"><value>Tray</value></data>
+  <data name="menuTray.chipMany" xml:space="preserve"><value>{n} cups on tray</value></data>
+  <data name="menuTray.chipManySomm" xml:space="preserve"><value>{n} items placed</value></data>
+  <data name="menuTray.chipOne" xml:space="preserve"><value>One cup on tray</value></data>
+  <data name="menuTray.chipPaidBody" xml:space="preserve"><value>Staff have confirmed your order. We are preparing your drinks.</value></data>
+  <data name="menuTray.chipPaidTitle" xml:space="preserve"><value>Payment successful</value></data>
+  <data name="menuTray.chipPreparingShort" xml:space="preserve"><value>Order in preparation</value></data>
+  <data name="menuTray.chipSubEmpty" xml:space="preserve"><value>Tap to view tray</value></data>
+  <data name="menuTray.chipSubFilled" xml:space="preserve"><value>Tap to view tray</value></data>
+  <data name="menuTray.chipSubFilledShort" xml:space="preserve"><value>Tap to open</value></data>
+  <data name="menuTray.chipSubmittedBody" xml:space="preserve"><value>Staff will come to confirm your order and help with payment.</value></data>
+  <data name="menuTray.chipSubmittedNote" xml:space="preserve"><value>You can keep this screen open for updates.</value></data>
+  <data name="menuTray.chipSubmittedTitle" xml:space="preserve"><value>Order sent</value></data>
+  <data name="menuTray.chipSubSomm" xml:space="preserve"><value>Choose a drink to begin.</value></data>
+  <data name="menuTray.chipTrackCta" xml:space="preserve"><value>Track order</value></data>
+  <data name="menuTray.clear" xml:space="preserve"><value>Clear tray</value></data>
+  <data name="menuTray.countMany" xml:space="preserve"><value>{n} cups on your tray.</value></data>
+  <data name="menuTray.countNone" xml:space="preserve"><value>No cups on your tray yet.</value></data>
+  <data name="menuTray.countOne" xml:space="preserve"><value>One cup on your tray.</value></data>
+  <data name="menuTray.eachSuffix" xml:space="preserve"><value>each</value></data>
+  <data name="menuTray.emptyBody" xml:space="preserve"><value>Add a cup from a suggestion or the menu — it will appear here.</value></data>
+  <data name="menuTray.emptyGuest" xml:space="preserve"><value>This guest has not chosen yet — tap a cup when ready.</value></data>
+  <data name="menuTray.emptyGuestSection" xml:space="preserve"><value></value></data>
+  <data name="menuTray.guestKicker" xml:space="preserve"><value>Guest tray</value></data>
+  <data name="menuTray.itemNoteAction" xml:space="preserve"><value>Note</value></data>
+  <data name="menuTray.itemNotePlaceholder" xml:space="preserve"><value>e.g. less ice, less sugar...</value></data>
+  <data name="menuTray.itemNotePreview" xml:space="preserve"><value>Note:</value></data>
+  <data name="menuTray.tempHot" xml:space="preserve"><value>Hot</value></data>
+  <data name="menuTray.tempIced" xml:space="preserve"><value>Iced</value></data>
+  <data name="menuTray.modalUnavailable" xml:space="preserve"><value>This cup is resting for now.</value></data>
+  <data name="menuTray.paymentSuccessCelebrationBody" xml:space="preserve"><value>Staff have confirmed your order. We are preparing your drinks.</value></data>
+  <data name="menuTray.paymentSuccessClose" xml:space="preserve"><value>Close</value></data>
+  <data name="menuTray.receivedThanks" xml:space="preserve"><value>Order received</value></data>
+  <data name="menuTray.remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="menuTray.requestPreparation" xml:space="preserve"><value>Send order to the bar</value></data>
+  <data name="menuTray.sheetSub" xml:space="preserve"><value>Tap to review and send your order</value></data>
+  <data name="menuTray.sheetTitle" xml:space="preserve"><value>Your tray</value></data>
+  <data name="menuTray.sheetTitleMany" xml:space="preserve"><value>Tray · {n} items</value></data>
+  <data name="menuTray.sheetTitleOne" xml:space="preserve"><value>Tray · 1 item</value></data>
+  <data name="menuTray.subtotal" xml:space="preserve"><value>This tasting</value></data>
+  <data name="menuTray.yourOrder" xml:space="preserve"><value>Your table selection</value></data>
+  <data name="moods.adventurous.caption" xml:space="preserve"><value>Good when you want bolder drinks with clear character.</value></data>
+  <data name="moods.adventurous.glimpse" xml:space="preserve"><value>For guests who want to try stronger or less familiar flavors.</value></data>
+  <data name="moods.adventurous.kicker" xml:space="preserve"><value>Brave</value></data>
+  <data name="moods.adventurous.line" xml:space="preserve"><value>More layered flavor with stronger intensity.</value></data>
+  <data name="moods.adventurous.prompt" xml:space="preserve"><value>adventurous bold daring spice unexpected layered</value></data>
+  <data name="moods.adventurous.tastingDirection" xml:space="preserve"><value>Prioritizes intensity and distinct flavor layers.</value></data>
+  <data name="moods.adventurous.title" xml:space="preserve"><value>Adventurous</value></data>
+  <data name="moods.bright.caption" xml:space="preserve"><value>Good when you want a fresh and clear taste.</value></data>
+  <data name="moods.bright.glimpse" xml:space="preserve"><value>For guests who prefer light, crisp drinks.</value></data>
+  <data name="moods.bright.kicker" xml:space="preserve"><value>Lifted</value></data>
+  <data name="moods.bright.line" xml:space="preserve"><value>Bright acidity with a clean finish.</value></data>
+  <data name="moods.bright.prompt" xml:space="preserve"><value>bright citrusy lifted crystalline yuzu refreshing luminous</value></data>
+  <data name="moods.bright.tastingDirection" xml:space="preserve"><value>Prioritizes citrus notes and lively acidity.</value></data>
+  <data name="moods.bright.title" xml:space="preserve"><value>Bright &amp; citrusy</value></data>
+  <data name="moods.floral.caption" xml:space="preserve"><value>Good when you want aroma-forward but gentle drinks.</value></data>
+  <data name="moods.floral.glimpse" xml:space="preserve"><value>For guests who like subtle aroma without high sweetness.</value></data>
+  <data name="moods.floral.kicker" xml:space="preserve"><value>Soft</value></data>
+  <data name="moods.floral.line" xml:space="preserve"><value>Light floral aroma with a clean taste.</value></data>
+  <data name="moods.floral.prompt" xml:space="preserve"><value>floral delicate jasmine honeysuckle blossom perfume</value></data>
+  <data name="moods.floral.tastingDirection" xml:space="preserve"><value>Prioritizes floral notes and clean finish.</value></data>
+  <data name="moods.floral.title" xml:space="preserve"><value>Floral &amp; delicate</value></data>
+  <data name="moods.focus.caption" xml:space="preserve"><value>Good when you want a gentle drink with low heaviness.</value></data>
+  <data name="moods.focus.glimpse" xml:space="preserve"><value>For guests who prefer light drinks they can sip for longer.</value></data>
+  <data name="moods.focus.kicker" xml:space="preserve"><value>Still</value></data>
+  <data name="moods.focus.line" xml:space="preserve"><value>Clean, light profile that is easy to focus with.</value></data>
+  <data name="moods.focus.prompt" xml:space="preserve"><value>quiet focus contemplative tea clean transparent filter pen</value></data>
+  <data name="moods.focus.tastingDirection" xml:space="preserve"><value>Prioritizes clarity and short, clean finish.</value></data>
+  <data name="moods.focus.title" xml:space="preserve"><value>Quiet focus</value></data>
+  <data name="moods.slow.caption" xml:space="preserve"><value>Good when you want a smooth, easy cup.</value></data>
+  <data name="moods.slow.glimpse" xml:space="preserve"><value>For guests who prefer low harshness and a softer taste.</value></data>
+  <data name="moods.slow.kicker" xml:space="preserve"><value>Held</value></data>
+  <data name="moods.slow.line" xml:space="preserve"><value>Gentle sweetness with a round body.</value></data>
+  <data name="moods.slow.prompt" xml:space="preserve"><value>slow comforting warm cozy sweet gentle velvet round</value></data>
+  <data name="moods.slow.tastingDirection" xml:space="preserve"><value>Prioritizes soft texture and mellow finish.</value></data>
+  <data name="moods.slow.title" xml:space="preserve"><value>Slow &amp; comforting</value></data>
+  <data name="nav.menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="nav.privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="nav.siteAria" xml:space="preserve"><value>Site</value></data>
+  <data name="nav.staff" xml:space="preserve"><value>Staff</value></data>
+  <data name="order.confirmBody" xml:space="preserve"><value>The bar has received your order.</value></data>
+  <data name="order.confirmKicker" xml:space="preserve"><value>Sent</value></data>
+  <data name="order.followLink" xml:space="preserve"><value>Track your order</value></data>
+  <data name="order.followPreparation" xml:space="preserve"><value>Follow preparation</value></data>
+  <data name="order.inProgressKicker" xml:space="preserve"><value>In progress</value></data>
+  <data name="order.inProgressLine" xml:space="preserve"><value>You have an open order from this table.</value></data>
+  <data name="order.menuChanged" xml:space="preserve"><value>The menu has shifted. Refresh the page and choose again.</value></data>
+  <data name="order.minOne" xml:space="preserve"><value>Choose at least one cup first.</value></data>
+  <data name="order.needTable" xml:space="preserve"><value>Please scan the table QR code to order.</value></data>
+  <data name="order.needTableScan" xml:space="preserve"><value>Please scan the table QR code to order.</value></data>
+  <data name="order.queuedSoft" xml:space="preserve"><value>The line softened for a moment — we will place this tray when the room is steady again.</value></data>
+  <data name="order.serverMaintenance" xml:space="preserve"><value>The system is being updated — please ask a staff member to place your order.</value></data>
+  <data name="order.submitFailed" xml:space="preserve"><value>We could not send the tray just now.</value></data>
+  <data name="order.submitFailedRetry" xml:space="preserve"><value>We could not send your order. Please try again or call staff.</value></data>
+  <data name="order.submitFailedStaff" xml:space="preserve"><value>We could not send your order — please ask a staff member.</value></data>
+  <data name="order.submitted" xml:space="preserve"><value>The bar has received your order.</value></data>
+  <data name="order.submitting" xml:space="preserve"><value>Sending…</value></data>
+  <data name="order.tableUnavailable" xml:space="preserve"><value>This table is not available just now. A host can help you find a seat.</value></data>
+  <data name="refine.brighter.label" xml:space="preserve"><value>Brighter acidity</value></data>
+  <data name="refine.brighter.snippet" xml:space="preserve"><value>wants brighter acidity and a fresher taste</value></data>
+  <data name="refine.less_sweet.label" xml:space="preserve"><value>Drier finish</value></data>
+  <data name="refine.less_sweet.snippet" xml:space="preserve"><value>wants less sweetness and a cleaner finish</value></data>
+  <data name="refine.low_caffeine.label" xml:space="preserve"><value>Lower caffeine</value></data>
+  <data name="refine.low_caffeine.snippet" xml:space="preserve"><value>wants lower caffeine</value></data>
+  <data name="refine.more_adventurous.label" xml:space="preserve"><value>Push further</value></data>
+  <data name="refine.more_adventurous.snippet" xml:space="preserve"><value>wants stronger flavor and more complexity</value></data>
+  <data name="refine.softer.label" xml:space="preserve"><value>Softer texture</value></data>
+  <data name="refine.softer.snippet" xml:space="preserve"><value>wants a softer cup with lower harshness</value></data>
+  <data name="ritual.beginWith" xml:space="preserve"><value>We&apos;d begin with</value></data>
+  <data name="ritual.catalogErr" xml:space="preserve"><value>The parchment did not reach us; the tasting will return when the room steadies.</value></data>
+  <data name="ritual.catalogOffline" xml:space="preserve"><value>Using the latest saved menu while connection is unstable.</value></data>
+  <data name="ritual.cupsInLight" xml:space="preserve"><value>Cups in this light</value></data>
+  <data name="ritual.fineAdjustments" xml:space="preserve"><value>Fine adjustments</value></data>
+  <data name="ritual.flavorPath" xml:space="preserve"><value>Flavor path</value></data>
+  <data name="ritual.fullMenu" xml:space="preserve"><value>Full menu</value></data>
+  <data name="ritual.heading" xml:space="preserve"><value>Choose a taste profile to get a matching recommendation.</value></data>
+  <data name="ritual.hold" xml:space="preserve"><value>Hold</value></data>
+  <data name="ritual.inTheCup" xml:space="preserve"><value>In the cup</value></data>
+  <data name="ritual.intro" xml:space="preserve"><value>Answer a few short questions so we can suggest a drink that fits your preference.</value></data>
+  <data name="ritual.kicker" xml:space="preserve"><value>House tasting</value></data>
+  <data name="ritual.moodAria" xml:space="preserve"><value>How you wish to arrive</value></data>
+  <data name="ritual.otherDirections" xml:space="preserve"><value>Other directions</value></data>
+  <data name="ritual.otherDirectionsHint" xml:space="preserve"><value>Choose another option if needed.</value></data>
+  <data name="ritual.pairingClose" xml:space="preserve"><value>Exceptionally close in this light</value></data>
+  <data name="ritual.pairingEcho" xml:space="preserve"><value>Similar profile</value></data>
+  <data name="ritual.pairingLine" xml:space="preserve"><value>Close to your selected profile</value></data>
+  <data name="ritual.pairingNeighbor" xml:space="preserve"><value>A softer neighbor on the tray</value></data>
+  <data name="ritual.placeTray" xml:space="preserve"><value>Place on your tray</value></data>
+  <data name="ritual.readCup" xml:space="preserve"><value>Read the cup</value></data>
+  <data name="ritual.readingRite1" xml:space="preserve"><value>Analyzing your choices...</value></data>
+  <data name="ritual.readingRite2" xml:space="preserve"><value>Matching suitable drinks...</value></data>
+  <data name="ritual.readingRite3" xml:space="preserve"><value>Finalizing recommendation...</value></data>
+  <data name="ritual.refinementGroupAria" xml:space="preserve"><value>Fine adjustments to the line</value></data>
+  <data name="ritual.reserve" xml:space="preserve"><value>Reserve</value></data>
+  <data name="ritual.roomBriefly" xml:space="preserve"><value>The room, briefly</value></data>
+  <data name="ritual.secondGesture" xml:space="preserve"><value>A second gesture</value></data>
+  <data name="ritual.shroudBody" xml:space="preserve"><value>Analyzing your choices to suggest a drink.</value></data>
+  <data name="ritual.shroudKicker" xml:space="preserve"><value>House guide</value></data>
+  <data name="ritual.sommelierDefaultOpening" xml:space="preserve"><value>Current recommendation: {name}.</value></data>
+  <data name="ritual.sommelierFallbackOpen" xml:space="preserve"><value>Automatic recommendation is unavailable. You can pick directly from the list on the right.</value></data>
+  <data name="ritual.sommelierFallbackReason" xml:space="preserve"><value>We keep the tray composed until the line returns.</value></data>
+  <data name="ritual.sommelierFallbackTasting" xml:space="preserve"><value>Choose the line that speaks first; your host will return when the connection steadies.</value></data>
+  <data name="ritual.sommelierFallbackTone" xml:space="preserve"><value>Patient · Unhurried</value></data>
+  <data name="ritual.study" xml:space="preserve"><value>Study</value></data>
+  <data name="ritual.tastingDirection" xml:space="preserve"><value>Tasting direction</value></data>
+  <data name="ritual.whyBelongs" xml:space="preserve"><value>Why it belongs</value></data>
+  <data name="toast.addedLong" xml:space="preserve"><value>Added with care.</value></data>
+  <data name="toast.addedShort" xml:space="preserve"><value>On your tray.</value></data>
+  <data name="toast.ceremonyPlaced" xml:space="preserve"><value>Placed on your Kits tray</value></data>
+  <data name="toast.ceremonySaved" xml:space="preserve"><value>Saved for this round</value></data>
+  <data name="toast.ceremonyWaiting" xml:space="preserve"><value>Waiting beside the Kits bar</value></data>
+  <data name="toast.viewOpen" xml:space="preserve"><value>View tray</value></data>
+  <data name="track.billBrand" xml:space="preserve"><value>Kits Coffee Atelier</value></data>
+  <data name="track.billEyebrow" xml:space="preserve"><value>Electronic receipt</value></data>
+  <data name="track.billMetaPaid" xml:space="preserve"><value>Paid at</value></data>
+  <data name="track.billMetaSent" xml:space="preserve"><value>Sent at</value></data>
+  <data name="track.billMetaStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="track.billMetaTable" xml:space="preserve"><value>Table</value></data>
+  <data name="track.billPaidLabel" xml:space="preserve"><value>Paid</value></data>
+  <data name="track.billPending" xml:space="preserve"><value>Waiting for staff to confirm payment.</value></data>
+  <data name="track.billSection" xml:space="preserve"><value>Electronic receipt</value></data>
+  <data name="track.billThanks" xml:space="preserve"><value>Thank you for visiting Kits.</value></data>
+  <data name="track.billTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="track.cancelledFallback" xml:space="preserve"><value>This order is no longer active.</value></data>
+  <data name="track.detailsUnavailable" xml:space="preserve"><value>Details unavailable.</value></data>
+  <data name="track.err404" xml:space="preserve"><value>We could not find this order.</value></data>
+  <data name="track.errSoft" xml:space="preserve"><value>Connection is weak. We&apos;ll try again shortly.</value></data>
+  <data name="track.footnote" xml:space="preserve"><value>This page updates as the bar processes your order.</value></data>
+  <data name="track.keepOpenNote" xml:space="preserve"><value>You can keep this screen open to receive updates.</value></data>
+  <data name="track.orderRefLabel" xml:space="preserve"><value>Order ref</value></data>
+  <data name="track.pageEyebrow" xml:space="preserve"><value>Order status</value></data>
+  <data name="track.progressAria" xml:space="preserve"><value>Order progress</value></data>
+  <data name="track.selectionSection" xml:space="preserve"><value>Your selection</value></data>
+  <data name="track.statusComplete" xml:space="preserve"><value>Complete</value></data>
+  <data name="track.statusPaid" xml:space="preserve"><value>Preparing</value></data>
+  <data name="track.statusPending" xml:space="preserve"><value>Awaiting payment</value></data>
+  <data name="track.step1" xml:space="preserve"><value>Order sent</value></data>
+  <data name="track.step2" xml:space="preserve"><value>Paid</value></data>
+  <data name="track.step3" xml:space="preserve"><value>Preparing</value></data>
+  <data name="track.step4" xml:space="preserve"><value>Complete</value></data>
+  <data name="track.tableEyebrow" xml:space="preserve"><value>Table</value></data>
+  <data name="track.thankYou" xml:space="preserve"><value>Thank you for visiting Kits.</value></data>
+  <data name="track.untilNext" xml:space="preserve"><value>Until next time.</value></data>
+</root>

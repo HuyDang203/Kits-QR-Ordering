@@ -1,0 +1,55 @@
+@page "/admin/system/network"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Connectivity.NetworkModel
+@{
+    ViewData["Title"] = "Địa chỉ mạng";
+    ViewData["AdminNavSection"] = "system-network";
+    ViewData["AdminEyebrow"] = "Hệ thống";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="ah ah-wrap max-w-3xl">
+    <header class="ah-hero">
+        <div>
+            <p class="ah-hero__kicker">Hệ thống</p>
+            <h1 class="ah-hero__title">Địa chỉ mạng công khai</h1>
+            <p class="ah-hero__lede">
+                Mã QR và liên kết khách tuyệt đối dùng địa chỉ này. API và SignalR luôn dùng cùng host trang (đường dẫn tương đối). Để trống để tự động dùng host của từng yêu cầu — trên Render đó là hostname dịch vụ hiện tại.
+            </p>
+        </div>
+    </header>
+
+    <form method="post" class="mt-10 space-y-6">
+        <div class="exp-card space-y-4 p-6">
+            <div>
+                <label class="exp-muted text-xs tracking-wide" for="PublicBaseUrl">Địa chỉ mạng công khai</label>
+                <input class="exp-input mt-1 w-full font-mono text-sm" asp-for="PublicBaseUrl" maxlength="2000" placeholder="https://ten-mien.com hoac http://may-nay:port" autocomplete="off" />
+                <p class="exp-muted mt-2 text-xs">Ví dụ: <code class="text-[rgb(var(--fg))]/90">https://mydomain.com</code> · <code class="text-[rgb(var(--fg))]/90">http://10.0.0.12:8080</code></p>
+            </div>
+
+            @if (Model.TrailingSlashWarning && !string.IsNullOrWhiteSpace(Model.PublicBaseUrl))
+            {
+                <p class="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-100/95">
+                    Dấu gạch chéo cuối sẽ bị xóa khi lưu. Nên dùng địa chỉ không có <code>/</code> ở cuối.
+                </p>
+            }
+
+            <div class="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-3 text-sm text-[rgb(var(--muted))]">
+                <p class="text-[10px] font-medium tracking-[0.22em] uppercase text-[rgb(var(--muted-2))]">Yêu cầu hiện tại (tự động nhận diện)</p>
+                <p class="mt-1 break-all font-mono text-xs text-[rgb(var(--fg))]">@Model.RequestDerivedBaseUrl</p>
+            </div>
+
+            <div asp-validation-summary="All" class="text-sm text-rose-200/95"></div>
+
+            <div class="flex flex-wrap gap-3">
+                <button type="submit" asp-page-handler="Save" class="admin-btn admin-btn--gold min-h-11 rounded-full px-6 text-xs font-medium tracking-wide">
+                    Lưu
+                </button>
+                <button type="submit" asp-page-handler="Reset" class="admin-btn admin-btn--quiet min-h-11 rounded-full px-6 text-xs font-medium tracking-wide ring-1 ring-white/[0.12]">
+                    Đặt lại về tự động
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,59 @@
+@page "/admin/operations"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Operations.IndexModel
+@{
+    ViewData["Title"] = "Nhịp quán";
+    ViewData["AdminNavSection"] = "operations";
+    ViewData["AdminEyebrow"] = "Hệ thống";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="admin-stack-8">
+    <header class="max-w-3xl">
+        <p class="text-[10px] font-medium tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]">Nội bộ</p>
+        <h1 class="mt-4 font-display text-3xl font-normal tracking-tight text-[rgb(var(--fg))] sm:text-4xl">Nhịp quán</h1>
+        <p class="admin-prose-quiet mt-5">
+            Tổng quan yên tĩnh về tình trạng hoạt động — không phải bảng giám sát DevOps. Không có gì ở đây là công khai.
+        </p>
+    </header>
+
+    <article class="admin-card max-w-3xl">
+        <div class="admin-card__body space-y-4">
+            <p class="admin-kpi-label">Tín hiệu trực tiếp</p>
+            <div id="opsPulseHost" class="space-y-3 text-sm text-[rgb(var(--muted))]">
+                <p class="text-[rgb(var(--muted-2))]">Đang thu thập thông tin…</p>
+            </div>
+            <p class="text-xs text-[rgb(var(--muted-2))]">Tự làm mới khi bạn mở trang này. Để theo dõi liên tục, hãy làm mới nhẹ nhàng trong ca phục vụ.</p>
+        </div>
+    </article>
+</section>
+
+<script>
+    (function () {
+        const host = document.getElementById("opsPulseHost");
+        if (!host) return;
+        fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/operations/room-pulse") : "/api/operations/room-pulse", { credentials: "same-origin", headers: { Accept: "application/json" } })
+            .then((r) => (r.ok ? r.json() : Promise.reject()))
+            .then((d) => {
+                const m = d.migrationsPending > 0 ? "Vẫn còn migration chờ áp dụng." : "Schema đã đồng bộ với danh sách quán.";
+                host.innerHTML = `
+                    <p><span class="text-[rgb(var(--fg))]">Cơ sở dữ liệu</span> · ${escapeHtml(String(d.database))}</p>
+                    <p><span class="text-[rgb(var(--fg))]">Kết nối trực tiếp</span> · ${d.hub.guestFollowers} khách theo dõi · ${d.hub.staffBoard} bảng nhân viên</p>
+                    <p><span class="text-[rgb(var(--fg))]">Migration</span> · ${d.migrationsPending} chờ — ${escapeHtml(m)}</p>
+                    <p><span class="text-[rgb(var(--fg))]">Kho</span> · ${d.pantry.lowOrHeldLines} dòng gần hết · ${d.pantry.menuCupsPaused} ly tạm ngưng</p>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--muted-2))]">Nhịp ${escapeHtml(String(d.pulseUtc || ""))}</p>`;
+            })
+            .catch(() => {
+                host.innerHTML =
+                    '<p class="text-[rgb(var(--muted))]">Không thể kết nối đến dịch vụ — thử lại khi mạng ổn định.</p>';
+            });
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+    })();
+</script>

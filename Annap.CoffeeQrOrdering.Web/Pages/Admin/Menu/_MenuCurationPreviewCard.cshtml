@@ -1,0 +1,32 @@
+@model MenuCurationPreviewVm
+@{
+    var imgSrc = string.IsNullOrWhiteSpace(Model.ImageUrl) ? Model.FallbackImageUrl : Model.ImageUrl!;
+}
+<article class="menu-curation-preview-card" id="menu-curation-preview-root" data-preview-card>
+    <div class="menu-curation-preview-card__frame">
+        <img id="menu-preview-img"
+             src="@imgSrc"
+             alt=""
+             class="menu-curation-preview-card__img"
+             width="720"
+             height="900"
+             loading="lazy"
+             decoding="async"
+             referrerpolicy="no-referrer"
+             data-fallback="@Model.FallbackImageUrl"
+             onerror="var f=this.dataset.fallback; if(f){this.onerror=null;this.src=f;}" />
+    </div>
+    <div class="menu-curation-preview-card__body">
+        <p class="menu-curation-preview-card__eyebrow" id="menu-preview-eyebrow">@Model.CategoryName</p>
+        <h2 class="menu-curation-preview-card__name" id="menu-preview-name">@Model.Name</h2>
+        <p class="menu-curation-preview-card__subtitle" id="menu-preview-subtitle">@(Model.Subtitle ?? "—")</p>
+        <p class="menu-curation-preview-card__tasting" id="menu-preview-tasting">Mô tả dài sẽ hiện ở đây.</p>
+        <div class="menu-curation-preview-card__foot">
+            <p class="menu-curation-preview-card__price tabular-nums" id="menu-preview-price">@VndMoneyFormatter.Format(Model.Price)</p>
+            <span class="admin-badge @(Model.IsAvailable ? "admin-badge--sage" : "admin-badge--mist")" id="menu-preview-avail">
+                @(Model.IsAvailable ? "Đang bán" : "Tạm hết")
+            </span>
+        </div>
+    </div>
+    <p class="menu-curation-preview-card__caption">Khách sẽ thấy — khoảng 390px</p>
+</article>

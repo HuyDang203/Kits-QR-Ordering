@@ -1,0 +1,336 @@
+/**
+ * ANNAP Menu Browse — Physical Interaction Language (Phase 2)
+ * Tactile correspondence cards: drift, compression, lift, atmosphere.
+ * Transform + opacity on layers only. No blur stacks. Mobile-safe.
+ */
+
+/* ── Motion tokens (menu scope) ───────────────────────────────────────────── */
+
+.menu-browse {
+  --mb-ease-unfold: cubic-bezier(0.16, 1, 0.3, 1);
+  --mb-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --mb-ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --mb-duration-ink: 140ms;
+  --mb-duration-rustle: 280ms;
+  --mb-duration-turn: 480ms;
+  position: relative;
+  isolation: isolate;
+}
+
+/* ── Atmospheric layering (ambient, always present) ─────────────────────────── */
+
+.menu-browse-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.menu-browse-atmosphere__grain,
+.menu-browse-atmosphere__fog,
+.menu-browse-atmosphere__light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.menu-browse-atmosphere__grain {
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: multiply;
+  animation: menuBrowseGrainDrift 48s linear infinite;
+}
+
+.menu-browse-atmosphere__fog {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, rgba(196, 168, 130, 0.07), transparent 68%),
+    radial-gradient(ellipse 70% 40% at 12% 88%, rgba(61, 43, 26, 0.04), transparent 72%),
+    radial-gradient(ellipse 60% 38% at 92% 72%, rgba(196, 168, 130, 0.05), transparent 70%);
+  animation: menuBrowseFogBreathe 22s ease-in-out infinite alternate;
+}
+
+.menu-browse-atmosphere__light {
+  background: radial-gradient(ellipse 55% 42% at 68% 18%, rgba(255, 248, 232, 0.14), transparent 72%);
+  animation: menuBrowseLightDrift 18s ease-in-out infinite alternate;
+}
+
+/* Correspondence menu — static print atmosphere (no drift; material only) */
+html.annap-correspond-ui .menu-browse-atmosphere__grain,
+html.annap-correspond-ui .menu-browse-atmosphere__fog,
+html.annap-correspond-ui .menu-browse-atmosphere__light {
+  animation: none;
+}
+
+html.annap-correspond-ui .menu-browse-atmosphere__grain {
+  opacity: 0.04;
+}
+
+html.annap-correspond-ui .menu-browse-atmosphere__fog {
+  opacity: 0.82;
+}
+
+html.annap-correspond-ui .menu-browse-atmosphere__light {
+  opacity: 0.62;
+}
+
+/* MENU-BRIGHTEN-SAFE-1 — catalogue: remove stacked JS atmosphere (no new layers) */
+.menu-browse--catalogue .menu-browse-atmosphere {
+  display: none;
+}
+
+@keyframes menuBrowseGrainDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 180px 120px; }
+}
+
+@keyframes menuBrowseFogBreathe {
+  from { opacity: 0.72; transform: translate3d(0, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, -6px, 0); }
+}
+
+@keyframes menuBrowseLightDrift {
+  from { opacity: 0.55; transform: translate3d(-2%, 0, 0); }
+  to   { opacity: 0.85; transform: translate3d(3%, 1%, 0); }
+}
+
+.menu-browse > *:not(.menu-browse-atmosphere) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Local atmosphere shift when a card departs for tray */
+.menu-browse.annap-menu-atmosphere-shift .menu-browse-atmosphere__fog {
+  opacity: 1;
+  transition: opacity 520ms var(--mb-ease-unfold);
+}
+
+.menu-browse.annap-menu-atmosphere-shift .menu-browse-atmosphere__light {
+  opacity: 0.45;
+  transition: opacity 520ms var(--mb-ease-unfold);
+}
+
+/* ── Editorial rhythm — hierarchy via chapter layout (menu-browse.css) ───────── */
+
+.menu-editorial-card {
+  position: relative;
+  --card-drift-x: 0px;
+  --card-drift-y: 0px;
+  --card-tilt-x: 0deg;
+  --card-tilt-y: 0deg;
+}
+
+/* ── Paper depth stack on frame ───────────────────────────────────────────── */
+
+.menu-editorial-card__frame {
+  will-change: transform;
+  transition: transform var(--mb-duration-turn) var(--mb-ease-unfold);
+}
+
+.menu-editorial-card--support.is-tactile .menu-editorial-card__img {
+  filter: none;
+  transform: none;
+}
+
+/* ── Proximity drift (pointer-fine only) ───────────────────────────────────── */
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-editorial-card.is-tactile .menu-editorial-card__frame {
+    animation: none;
+    transform:
+      translate3d(var(--card-drift-x, 0), var(--card-drift-y, 0), 0)
+      rotateX(var(--card-tilt-x, 0deg))
+      rotateY(var(--card-tilt-y, 0deg));
+    transition: transform 0.58s var(--mb-ease-unfold);
+  }
+
+  .menu-editorial-card.is-tactile .menu-editorial-card__img {
+    filter: drop-shadow(0 8px 20px rgba(42, 32, 20, 0.11));
+    transform: translate3d(0, -1px, 0);
+    transition:
+      filter var(--mb-duration-turn) var(--mb-ease-unfold),
+      transform var(--mb-duration-turn) var(--mb-ease-unfold);
+  }
+
+  .menu-editorial-card.is-tactile .menu-editorial-card__name {
+    color: rgba(26, 18, 9, 0.88);
+    transform: translate3d(0, -1px, 0);
+    transition:
+      color var(--mb-duration-rustle) var(--mb-ease-unfold),
+      transform var(--mb-duration-rustle) var(--mb-ease-unfold);
+  }
+}
+
+/* Remove dead generic hovers from base sheet */
+.menu-editorial-card:hover .menu-editorial-card__name {
+  color: inherit;
+}
+
+/* ── Touch / press compression ─────────────────────────────────────────────── */
+
+.menu-editorial-card.menu-card-reveal--pressed .menu-editorial-card__frame {
+  animation: none;
+  transform: scale(0.972) translate3d(0, 2px, 0);
+  transition: transform var(--mb-duration-ink) var(--mb-ease-press);
+}
+
+.menu-editorial-card.menu-card-reveal--pressed .menu-editorial-card__img {
+  transform: scale(0.986);
+  filter: drop-shadow(0 2px 8px rgba(42, 32, 20, 0.12));
+  transition:
+    transform 120ms var(--mb-ease-press),
+    filter 120ms var(--mb-ease-unfold);
+}
+
+.menu-editorial-card.menu-card-reveal--pressed .menu-editorial-card__name {
+  transform: translate3d(0, 2px, 0) scale(0.994);
+  transition: transform 150ms var(--mb-ease-press);
+}
+
+/* Release overshoot */
+.menu-editorial-card.menu-card--release .menu-editorial-card__frame {
+  animation: menuCardReleaseOvershoot 420ms var(--mb-ease-press) both;
+}
+
+@keyframes menuCardReleaseOvershoot {
+  0%   { transform: scale(0.972) translate3d(0, 2px, 0); }
+  52%  { transform: scale(1.005) translate3d(0, -1px, 0); }
+  100% { transform: scale(1) translate3d(0, 0, 0); }
+}
+
+/* ── Ceremonial lift before fly ────────────────────────────────────────────── */
+
+.menu-editorial-card.menu-card--ceremonial-depart {
+  z-index: 12;
+  position: relative;
+}
+
+.menu-editorial-card.menu-card--ceremonial-depart .menu-editorial-card__frame {
+  animation: menuCardCeremonialLift 780ms var(--mb-ease-unfold) both;
+}
+
+@keyframes menuCardCeremonialLift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  28%  { transform: translate3d(0, -6px, 0) scale(1.012); }
+  58%  { transform: translate3d(0, -16px, 0) scale(1.024); filter: brightness(1.03); }
+  100% { transform: translate3d(0, -10px, 0) scale(1.018); }
+}
+
+.menu-editorial-card.menu-card--ceremonial-depart .menu-editorial-card__img {
+  box-shadow:
+    0 24px 52px rgba(26, 18, 9, 0.16),
+    0 8px 22px rgba(196, 168, 130, 0.18);
+}
+
+.menu-editorial-card.menu-card--neighbor-yield {
+  transition:
+    transform 520ms var(--mb-ease-unfold),
+    opacity 520ms var(--mb-ease-unfold);
+  transform: scale(0.988) translate3d(0, 3px, 0);
+  opacity: 0.82;
+}
+
+.menu-editorial-card.menu-card--neighbor-yield .menu-editorial-card__frame {
+  animation: none;
+}
+
+/* ── Physical reveal (transform only — no opacity fade) ───────────────────── */
+
+@keyframes menuCardPhysicalReveal {
+  0%   { transform: translate3d(0, 16px, 0) scale(0.982); }
+  62%  { transform: translate3d(0, -2px, 0) scale(1.003); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+html.annap-correspond-ui .menu-card-reveal.is-visible,
+.menu-card-reveal.is-visible {
+  animation: menuCardPhysicalReveal 620ms var(--mb-ease-unfold) both;
+  animation-delay: var(--reveal-delay, 0ms);
+  opacity: 1 !important;
+}
+
+html.annap-correspond-ui .menu-card-reveal:not(.is-visible),
+.menu-card-reveal:not(.is-visible) {
+  opacity: 1 !important;
+  transform: translate3d(0, 18px, 0) scale(0.98);
+  animation: none;
+}
+
+/* Image load — physical settle, not opacity fade */
+.menu-editorial-card__img {
+  transition:
+    transform var(--mb-duration-turn) var(--mb-ease-unfold),
+    filter var(--mb-duration-turn) var(--mb-ease-unfold);
+}
+
+.menu-editorial-card__frame.img-loaded .menu-editorial-card__img {
+  animation: menuImgPhysicalSettle 520ms var(--mb-ease-unfold) both;
+}
+
+@keyframes menuImgPhysicalSettle {
+  0%   { transform: scale(0.992); }
+  62%  { transform: scale(1.003); }
+  100% { transform: scale(1); }
+}
+
+/* ── Correspondence UI overrides ───────────────────────────────────────────── */
+
+html.annap-correspond-ui .menu-editorial-card__frame::before {
+  background: radial-gradient(
+    circle at var(--menu-card-glow-x) var(--menu-card-glow-y),
+    rgba(255, 244, 216, 0.14),
+    transparent 58%
+  );
+  transition: opacity var(--mb-duration-rustle) var(--mb-ease-unfold);
+}
+
+html.annap-correspond-ui .menu-editorial-card.is-tactile .menu-editorial-card__frame::before {
+  opacity: 0.85;
+}
+
+html.annap-correspond-ui .menu-editorial-card__name {
+  transition:
+    color var(--mb-duration-rustle) var(--mb-ease-unfold),
+    transform var(--mb-duration-rustle) var(--mb-ease-unfold);
+}
+
+/* ── Mobile / coarse pointer: compression only, no hover drift ─────────────── */
+
+@media (hover: none), (pointer: coarse) {
+  .menu-browse-atmosphere__grain,
+  .menu-browse-atmosphere__fog,
+  .menu-browse-atmosphere__light {
+    display: none;
+  }
+
+  .menu-editorial-card.menu-card-reveal--pressed .menu-editorial-card__frame {
+    transform: scale(0.976) translate3d(0, 1px, 0);
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-browse-atmosphere__grain,
+  .menu-browse-atmosphere__fog,
+  .menu-browse-atmosphere__light,
+  .menu-editorial-card__frame,
+  .menu-editorial-card__frame.img-loaded .menu-editorial-card__img,
+  .menu-card-reveal.is-visible {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .menu-card-reveal:not(.is-visible) {
+    transform: none !important;
+  }
+}
+
+html.annap-guest-no-motion .menu-browse-atmosphere__grain,
+html.annap-guest-no-motion .menu-browse-atmosphere__fog,
+html.annap-guest-no-motion .menu-browse-atmosphere__light,
+html.annap-guest-no-motion .menu-editorial-card__frame,
+html.annap-guest-no-motion .menu-card-reveal.is-visible {
+  animation: none !important;
+}

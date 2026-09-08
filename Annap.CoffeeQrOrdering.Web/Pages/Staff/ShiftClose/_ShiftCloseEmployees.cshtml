@@ -1,0 +1,60 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.Staff.ShiftClose.IndexModel
+
+<section class="staff-shift-close__section" aria-labelledby="shift-emp-heading">
+    <h2 class="staff-shift-close__section-title" id="shift-emp-heading">Nhân viên xác nhận</h2>
+
+    @if (Model.Preview.Employees.Count == 0)
+    {
+        <p class="staff-shift-close__section-empty">Chưa có nhân viên xác nhận bill trong ca này.</p>
+    }
+    else
+    {
+        <div class="staff-shift-close__emp-cards" aria-label="Nhân viên xác nhận">
+            @foreach (var row in Model.Preview.Employees)
+            {
+                <article class="staff-shift-close__emp-card">
+                    <p class="staff-shift-close__emp-name">@row.DisplayName</p>
+                    <p class="staff-shift-close__emp-total">@Model.Money(row.TotalAmount)</p>
+                    <dl class="staff-shift-close__emp-meta">
+                        <div><dt>Số bill</dt><dd>@row.OrderCount</dd></div>
+                        <div><dt>Tiền mặt</dt><dd>@Model.Money(row.CashAmount)</dd></div>
+                        <div><dt>Thẻ</dt><dd>@Model.Money(row.CardAmount)</dd></div>
+                        <div><dt>CK</dt><dd>@Model.Money(row.BankTransferAmount)</dd></div>
+                        @if (row.LegacyCashOrCardAmount > 0)
+                        {
+                            <div><dt>TM/Thẻ cũ</dt><dd>@Model.Money(row.LegacyCashOrCardAmount)</dd></div>
+                        }
+                    </dl>
+                </article>
+            }
+        </div>
+
+        <div class="staff-shift-close__table-wrap staff-shift-close__table-wrap--desktop">
+            <table class="staff-shift-close__table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nhân viên</th>
+                        <th scope="col" class="is-num">Số bill</th>
+                        <th scope="col" class="is-num">Tiền mặt</th>
+                        <th scope="col" class="is-num">Thẻ</th>
+                        <th scope="col" class="is-num">CK</th>
+                        <th scope="col" class="is-num">Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Preview.Employees)
+                    {
+                        <tr>
+                            <td>@row.DisplayName</td>
+                            <td class="is-num">@row.OrderCount</td>
+                            <td class="is-num">@Model.Money(row.CashAmount)</td>
+                            <td class="is-num">@Model.Money(row.CardAmount)</td>
+                            <td class="is-num">@Model.Money(row.BankTransferAmount)</td>
+                            <td class="is-num">@Model.Money(row.TotalAmount)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

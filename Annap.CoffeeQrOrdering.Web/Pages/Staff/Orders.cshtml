@@ -1,0 +1,198 @@
+@page "/staff/orders"
+@model OrdersModel
+@{
+    Layout = "_StaffLayout";
+}
+
+<div class="staff-dash"
+     data-staff-default-tab="@Model.DefaultMobileTab"
+     data-staff-can-close-shift="@(Model.CanCloseShift ? "true" : "false")">
+
+    <header class="staff-mobile-header" aria-label="Sàn phục vụ">
+        <div class="staff-mobile-header__row">
+            <div class="staff-mobile-header__titles">
+                <h2 class="staff-mobile-header__title">Sàn phục vụ</h2>
+                @if (!string.IsNullOrEmpty(Model.MobileIdentityLine))
+                {
+                    <p class="staff-mobile-header__identity">@Model.MobileIdentityLine</p>
+                }
+            </div>
+            <div class="staff-mobile-header__live" id="staff-mobile-sync">
+                <span class="staff-pulse-dot staff-sync-dot" aria-hidden="true"></span>
+                <span class="staff-mobile-header__live-text">
+                    <span id="staff-mobile-sync-label">Đang kết nối…</span>
+                    <span class="staff-mobile-header__live-sep" aria-hidden="true">·</span>
+                    <span id="staff-mobile-sync-time">—</span>
+                </span>
+            </div>
+        </div>
+        <div class="staff-mobile-header__actions">
+            <form method="post" asp-page="/Staff/Logout" asp-route-returnToLogin="true" asp-route-returnUrl="/staff/orders" class="staff-mobile-header__form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="staff-mobile-header__btn">Đổi nhân viên</button>
+            </form>
+            <button type="button" id="staff-mobile-refresh-btn" class="staff-mobile-header__btn">Làm mới</button>
+            @if (Model.CanCloseShift)
+            {
+                <a asp-page="/Staff/ShiftClose/Index" class="staff-mobile-header__btn staff-mobile-header__btn--shift">Kết ca</a>
+            }
+        </div>
+    </header>
+
+    <div class="staff-floor-toolbar staff-floor-toolbar--desktop">
+        <div class="staff-floor-toolbar__live" id="staff-sync-state">
+            <div class="staff-floor-toolbar__live-row">
+                <span class="staff-pulse-dot staff-sync-dot" aria-hidden="true"></span>
+                <span id="staff-last-sync" class="staff-floor-toolbar__live-label">Đang kết nối…</span>
+            </div>
+            <p class="staff-floor-toolbar__sync-time">
+                Đồng bộ lúc <span id="staff-last-updated">—</span>
+            </p>
+        </div>
+
+        <div class="staff-floor-toolbar__controls">
+            @if (Model.CanCloseShift)
+            {
+                <a asp-page="/Staff/ShiftClose/Index"
+                   class="staff-floor-toolbar__shift-close"
+                   title="Tổng hợp bill đã thanh toán">
+                    <span class="staff-floor-toolbar__shift-close-label">Kết ca</span>
+                    <span class="staff-floor-toolbar__shift-close-hint">Tổng hợp bill đã thanh toán</span>
+                </a>
+            }
+            <button type="button"
+                    id="staff-refresh-btn"
+                    class="staff-floor-toolbar__refresh">
+                Làm mới
+            </button>
+            <label class="staff-floor-toolbar__quiet">
+                <input id="staff-backup-poll" type="checkbox" />
+                <span>Yên tĩnh 60s</span>
+            </label>
+        </div>
+    </div>
+
+    <nav class="staff-mobile-tabs" role="tablist" aria-label="Giai đoạn đơn hàng">
+        <button type="button"
+                class="staff-mobile-tabs__btn @(Model.DefaultMobileTab == "submitted" ? "is-active" : "")"
+                role="tab"
+                data-staff-mobile-tab="submitted"
+                aria-selected="@(Model.DefaultMobileTab == "submitted" ? "true" : "false")"
+                aria-controls="staff-col-submitted">
+            <span class="staff-mobile-tabs__label">Chờ TT</span>
+            <span class="staff-mobile-tabs__count" data-staff-tab-count="submitted">0</span>
+        </button>
+        <button type="button"
+                class="staff-mobile-tabs__btn @(Model.DefaultMobileTab == "paid" ? "is-active" : "")"
+                role="tab"
+                data-staff-mobile-tab="paid"
+                aria-selected="@(Model.DefaultMobileTab == "paid" ? "true" : "false")"
+                aria-controls="staff-col-paid">
+            <span class="staff-mobile-tabs__label">Pha chế</span>
+            <span class="staff-mobile-tabs__count" data-staff-tab-count="paid">0</span>
+        </button>
+        <button type="button"
+                class="staff-mobile-tabs__btn @(Model.DefaultMobileTab == "completed" ? "is-active" : "")"
+                role="tab"
+                data-staff-mobile-tab="completed"
+                aria-selected="@(Model.DefaultMobileTab == "completed" ? "true" : "false")"
+                aria-controls="staff-col-completed">
+            <span class="staff-mobile-tabs__label">Xong</span>
+            <span class="staff-mobile-tabs__count" data-staff-tab-count="completed">0</span>
+        </button>
+    </nav>
+
+    <div class="staff-floor-kpi" aria-label="Tóm tắt sàn phục vụ">
+        <div class="staff-floor-kpi__chip">
+            <span class="staff-floor-kpi__label">Chờ TT</span>
+            <strong class="staff-floor-kpi__value" data-staff-kpi="submitted">0</strong>
+        </div>
+        <div class="staff-floor-kpi__chip">
+            <span class="staff-floor-kpi__label">Pha chế</span>
+            <strong class="staff-floor-kpi__value" data-staff-kpi="paid">0</strong>
+        </div>
+        <div class="staff-floor-kpi__chip staff-floor-kpi__chip--completed" data-staff-kpi-chip="completed">
+            <span class="staff-floor-kpi__label staff-floor-kpi__label--long">Hoàn thành gần đây</span>
+            <span class="staff-floor-kpi__label staff-floor-kpi__label--short">Xong</span>
+            <strong class="staff-floor-kpi__value" data-staff-kpi="completed">0</strong>
+        </div>
+        <div class="staff-floor-kpi__chip staff-floor-kpi__chip--bank">
+            <span class="staff-floor-kpi__label">CK chờ</span>
+            <strong class="staff-floor-kpi__value" data-staff-kpi="bank-pending">0</strong>
+        </div>
+        <div class="staff-floor-kpi__chip staff-floor-kpi__chip--amount">
+            <span class="staff-floor-kpi__label">Chờ thu</span>
+            <strong class="staff-floor-kpi__value staff-floor-kpi__value--money" data-staff-kpi="awaiting-amount">0&nbsp;₫</strong>
+        </div>
+    </div>
+
+    <div id="staff-error" class="staff-floor-error hidden" role="alert"></div>
+
+    <div class="staff-board-wrap">
+        <div class="staff-board staff-board--checkout" data-staff-board>
+            <section class="staff-col staff-col--submitted @(Model.DefaultMobileTab == "submitted" ? "staff-col--active" : "")" id="staff-col-submitted" data-staff-column="submitted" @(Model.DefaultMobileTab != "submitted" ? "hidden" : null)>
+                <header class="staff-col__head">
+                    <div class="staff-col__title-row">
+                        <h2 class="staff-col__title">Chờ thanh toán</h2>
+                        <span class="staff-col-count" data-staff-col-count="submitted" aria-label="Số đơn">0</span>
+                    </div>
+                    <p class="staff-col__subtitle">Khách đã gửi đơn</p>
+                </header>
+                <div class="staff-col-body" data-staff-drop="submitted">
+                    <div class="staff-col-skeleton is-visible" aria-hidden="true">
+                        <div class="staff-col-skeleton__line"></div>
+                        <div class="staff-col-skeleton__line staff-col-skeleton__line--short"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="staff-col staff-col--paid @(Model.DefaultMobileTab == "paid" ? "staff-col--active" : "")" id="staff-col-paid" data-staff-column="paid" @(Model.DefaultMobileTab != "paid" ? "hidden" : null)>
+                <header class="staff-col__head">
+                    <div class="staff-col__title-row">
+                        <h2 class="staff-col__title">Đang pha chế</h2>
+                        <span class="staff-col-count" data-staff-col-count="paid" aria-label="Số đơn">0</span>
+                    </div>
+                    <p class="staff-col__subtitle">Đã thanh toán</p>
+                </header>
+                <div class="staff-col-body" data-staff-drop="paid">
+                    <div class="staff-col-skeleton is-visible" aria-hidden="true">
+                        <div class="staff-col-skeleton__line"></div>
+                        <div class="staff-col-skeleton__line staff-col-skeleton__line--short"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="staff-col staff-col--completed @(Model.DefaultMobileTab == "completed" ? "staff-col--active" : "")" id="staff-col-completed" data-staff-column="completed" @(Model.DefaultMobileTab != "completed" ? "hidden" : null)>
+                <header class="staff-col__head">
+                    <div class="staff-col__title-row">
+                        <h2 class="staff-col__title staff-col__title--muted">Hoàn thành</h2>
+                        <span class="staff-col-count" data-staff-col-count="completed" aria-label="Số đơn">0</span>
+                    </div>
+                    <p class="staff-col__subtitle">Vừa xong</p>
+                </header>
+                <div class="staff-col-body" data-staff-drop="completed">
+                    <div class="staff-col-skeleton is-visible" aria-hidden="true">
+                        <div class="staff-col-skeleton__line"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="staff-bill-sheet" class="staff-bill-sheet hidden" role="dialog" aria-modal="true" aria-labelledby="staff-bill-title" hidden>
+    <div class="staff-bill-sheet__backdrop" data-staff-bill-close tabindex="-1" aria-hidden="true"></div>
+    <div class="staff-bill-sheet__panel" role="document">
+        <header class="staff-bill-sheet__head">
+            <p class="staff-bill-sheet__eyebrow">Hóa đơn điện tử</p>
+            <h2 id="staff-bill-title" class="staff-bill-sheet__brand">Kits Coffee Atelier</h2>
+            <button type="button" class="staff-bill-sheet__close guest-hit" data-staff-bill-close aria-label="Đóng">×</button>
+        </header>
+        <div id="staff-bill-body" class="staff-bill-sheet__body"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js" asp-append-version="true"></script>
+    <script src="~/js/staff-orders-board.js" asp-append-version="true"></script>
+}

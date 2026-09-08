@@ -1,0 +1,91 @@
+@page "/admin/inventory"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Inventory.IndexModel
+@{
+    ViewData["Title"] = "Kho nguyên liệu";
+    ViewData["AdminNavSection"] = "inventory";
+    ViewData["AdminEyebrow"] = "Sàn quán";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="admin-stack-8">
+    <header class="max-w-3xl">
+        <p class="text-[10px] font-medium tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]">Kho &amp; nhịp độ</p>
+        <h1 class="mt-4 font-display text-3xl font-normal tracking-tight text-[rgb(var(--fg))] sm:text-4xl">Tồn kho yên tĩnh</h1>
+        <p class="admin-prose-quiet mt-5">
+            Không có cảnh báo đỏ — chỉ tín hiệu nhẹ khi nguyên liệu gần hết, và những ly nào tạm ngưng cho đến khi kho bổ sung.
+        </p>
+    </header>
+
+    @if (TempData["InventoryToast"] is string toast)
+    {
+        <div class="menu-curation-toast" role="status">@toast</div>
+    }
+
+    <div class="admin-grid-kpi">
+        <article class="admin-card">
+            <div class="admin-card__body">
+                <p class="admin-kpi-label">Ly đang chờ</p>
+                <p class="admin-kpi-value">@Model.CupsHeldByPantry.Count</p>
+                <p class="admin-kpi-hint">Tạm giữ cho đến khi nguyên liệu được bổ sung</p>
+            </div>
+        </article>
+        <article class="admin-card">
+            <div class="admin-card__body">
+                <p class="admin-kpi-label">Món tạm ngưng</p>
+                <p class="admin-kpi-value">@Model.CupsPausedOnLine.Count</p>
+                <p class="admin-kpi-hint">Nhân viên tạm tắt — vẫn hiển thị trong quản lý</p>
+            </div>
+        </article>
+    </div>
+
+    @if (Model.CupsHeldByPantry.Count > 0)
+    {
+        <div class="admin-panel max-w-3xl">
+            <p class="admin-kpi-label">Đang chờ kho</p>
+            <p class="mt-3 text-sm leading-relaxed text-[rgb(var(--muted))]">@string.Join(" · ", Model.CupsHeldByPantry)</p>
+        </div>
+    }
+
+    @if (Model.Ingredients.Count == 0)
+    {
+        <p class="text-sm text-[rgb(var(--muted))]">Chưa có nguyên liệu nào — thêm vào cơ sở dữ liệu hoặc chạy seed dữ liệu mẫu.</p>
+    }
+    else
+    {
+        <div class="admin-panel max-w-4xl space-y-6">
+            <p class="admin-kpi-label">Nguyên liệu</p>
+            <div class="divide-y divide-white/[0.06]">
+                @foreach (var row in Model.Ingredients)
+                {
+                    <div class="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="font-display text-lg text-[rgb(var(--fg))]">@row.Name</p>
+                            <p class="mt-1 text-xs text-[rgb(var(--muted))]">Đơn vị @row.Unit · ngưỡng @row.LowStockThreshold.ToString("0.##")</p>
+                            @if (row.IsLow)
+                            {
+                                <p class="mt-2 text-xs text-[rgb(var(--accent))]">Gần hết — hãy lên kế hoạch nhập hàng, không cần vội.</p>
+                            }
+                            @if (!row.IsActive)
+                            {
+                                <p class="mt-2 text-xs text-[rgb(var(--muted-2))]">Không hoạt động — không trừ vào công thức.</p>
+                            }
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <p class="text-sm tabular-nums text-[rgb(var(--fg))]">@row.CurrentStock.ToString("0.##")</p>
+                            <form method="post" asp-page="/Admin/Inventory/Index" asp-page-handler="AdjustStock" asp-route-id="@row.Id" class="inline-flex gap-2">
+                                <input type="hidden" name="delta" value="-50" />
+                                <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-10 px-4 text-xs">−50</button>
+                            </form>
+                            <form method="post" asp-page="/Admin/Inventory/Index" asp-page-handler="AdjustStock" asp-route-id="@row.Id" class="inline-flex gap-2">
+                                <input type="hidden" name="delta" value="50" />
+                                <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-10 px-4 text-xs">+50</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</section>

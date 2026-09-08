@@ -1,0 +1,18 @@
+@model bool
+@inject Annap.CoffeeQrOrdering.Web.Services.IAppUrlService AppUrlService
+@using System.Text.Json
+@{
+    // PublicBaseUrl is for QR codes and external links only — never for in-app API or SignalR routing.
+    var publicBase = AppUrlService.GetBaseUrl();
+    var dict = new Dictionary<string, string?>
+    {
+        ["publicBaseUrl"] = string.IsNullOrEmpty(publicBase) ? null : publicBase
+    };
+    var runtimeJson = JsonSerializer.Serialize(dict);
+}
+<script>
+window.__ANNAP_DEV_MODE = @(Model ? "true" : "false");
+window.__annapRuntime = @Html.Raw(runtimeJson);
+if (typeof window.__annapRuntime !== "object" || window.__annapRuntime === null) { window.__annapRuntime = {}; }
+</script>
+<script src="~/js/annap-runtime-api.js" asp-append-version="true"></script>

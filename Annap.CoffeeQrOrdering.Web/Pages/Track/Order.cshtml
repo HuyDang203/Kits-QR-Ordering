@@ -1,0 +1,1402 @@
+@page "/track/{orderId:guid}"
+
+@model OrderModel
+
+@{
+
+    Layout = "_Layout";
+
+}
+
+
+
+<link rel="stylesheet" href="~/css/guest-track.css" asp-append-version="true" />
+
+
+
+<div id="track-root"
+
+     class="track-root mx-auto px-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 leading-relaxed md:px-0 md:pt-6"
+
+     data-order-id="@Model.OrderId"
+
+     data-track-token="@Model.TrackToken">
+
+    <p class="text-center text-[10px] font-medium tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]" data-i18n="track.pageEyebrow">Order status</p>
+
+
+
+    <div id="track-state-wrap" class="mt-6">
+
+        <div id="track-cancelled" class="hidden rounded-2xl border border-[rgba(212,184,150,0.55)] bg-[rgba(253,249,244,0.65)] px-5 py-8 text-center">
+
+            <p id="track-cancelled-msg" class="text-sm leading-relaxed text-[rgb(var(--muted))]"></p>
+
+        </div>
+
+
+
+        <div id="track-live" class="space-y-6">
+
+            <header class="text-center">
+
+                <p class="text-[10px] font-medium tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]" data-i18n="track.tableEyebrow">Table</p>
+
+                <p id="track-table" class="mt-1.5 text-3xl tracking-tight text-[rgb(var(--fg))] sm:text-4xl">—</p>
+
+
+
+                <div class="track-root__status">
+
+                    <span id="track-status-pill" class="track-status-pill hidden" aria-live="polite">
+
+                        <span class="track-status-pill__dot" aria-hidden="true"></span>
+
+                        <span id="track-status-pill-text"></span>
+
+                    </span>
+
+                </div>
+
+
+
+                <p id="track-order-ref" class="track-order-ref hidden">
+
+                    <span data-i18n="track.orderRefLabel">Order ref</span>
+
+                    <span id="track-order-ref-value"></span>
+
+                </p>
+
+
+
+                <h1 id="track-hero-title" class="mt-5 font-display text-xl font-normal leading-snug text-[rgb(var(--fg))] sm:text-2xl"></h1>
+
+                <p id="track-hero-line" class="mx-auto mt-3 max-w-sm text-sm leading-[1.55] text-[rgb(var(--muted))]"></p>
+
+            </header>
+
+
+
+            <div id="track-milestones" class="track-milestones relative pl-1" data-i18n-aria="track.progressAria" aria-label="Progress"></div>
+
+
+
+            <section id="track-selection-wrap" class="track-selection-wrap">
+
+                <p class="text-[10px] font-medium tracking-[0.26em] uppercase text-[rgb(var(--muted-2))]" data-i18n="track.selectionSection">Your selection</p>
+
+                <ul id="track-items" class="mt-3 space-y-2 text-sm text-[rgb(var(--muted))]"></ul>
+
+            </section>
+
+
+
+            <section id="track-check-bill-wrap" class="hidden" aria-labelledby="track-check-bill-heading">
+
+                <h2 id="track-check-bill-heading" class="sr-only" data-i18n="checkout.checkBillTitle">Phiếu kiểm đơn</h2>
+
+                <div id="track-check-bill"></div>
+
+            </section>
+
+
+
+            <section id="track-transfer-wrap" class="hidden" aria-labelledby="track-transfer-heading">
+
+                <h2 id="track-transfer-heading" class="sr-only" data-i18n="checkout.bankTransfer">Chuyển khoản</h2>
+
+                <div id="track-transfer-host"></div>
+
+            </section>
+
+
+
+            <section id="track-bill-wrap" class="hidden" aria-labelledby="track-bill-heading">
+
+                <h2 id="track-bill-heading" class="sr-only" data-i18n="track.billSection">Electronic receipt</h2>
+
+                <div id="track-bill"></div>
+
+            </section>
+
+
+
+            <p id="track-pending-note" class="track-keep-open hidden text-center"></p>
+
+
+
+            <p id="track-footnote" class="text-center text-[11px] leading-relaxed text-[rgb(var(--muted-2))]" data-i18n="track.footnote">
+
+                This page updates as the bar processes your order.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <p id="track-error" class="mt-6 hidden text-center text-sm text-red-700/90" role="status"></p>
+
+</div>
+
+
+
+@section Scripts {
+
+    <script src="~/js/guest-bank-transfer.js" asp-append-version="true"></script>
+
+    <script src="~/lib/signalr/signalr.min.js" asp-append-version="true"></script>
+
+    <script>
+
+        const POLL_MS = 12000;
+        const MILESTONE_COUNT = 4;
+
+
+
+        const root = document.getElementById("track-root");
+
+        const orderId = root && root.dataset ? root.dataset.orderId : void 0;
+
+        const trackToken = (root && root.dataset && root.dataset.trackToken) || "";
+
+        function annapTrackDbgHub(msg) {
+
+            var d = window.AnnapGuestLanDebug;
+
+            if (d && typeof d.setHub === "function") d.setHub(msg);
+
+        }
+
+        function __annapTrackDevOn() {
+
+            var adb = typeof window.AnnapGuestBoot !== "undefined" ? window.AnnapGuestBoot : {};
+
+            return window.__ANNAP_DEV_MODE === true && (window.__ANNAP_DEBUG === true || adb.showBootChecklist === true);
+
+        }
+
+        function __annapTrackLog() {
+
+            if (!__annapTrackDevOn()) return;
+
+            try {
+
+                window.console.log.apply(window.console, arguments);
+
+            } catch (_e) {}
+
+        }
+
+        function __annapTrackInfo() {
+
+            if (!__annapTrackDevOn()) return;
+
+            try {
+
+                window.console.info.apply(window.console, arguments);
+
+            } catch (_e2) {}
+
+        }
+
+        function __annapTrackWarn() {
+
+            if (!__annapTrackDevOn()) return;
+
+            try {
+
+                window.console.warn.apply(window.console, arguments);
+
+            } catch (_e3) {}
+
+        }
+
+        let pollTimer = null;
+
+        let lastStep = null;
+
+        let pollInFlight = false;
+
+        let trackPollFailures = 0;
+
+        let hubConnection = null;
+
+        let lastTrackPayload = null;
+
+        let lastOrderHubPulseMs = null;
+
+        let hubPollDebounce = null;
+
+
+
+        function scheduleHubPoll() {
+
+            if (hubPollDebounce) window.clearTimeout(hubPollDebounce);
+
+            hubPollDebounce = window.setTimeout(() => {
+
+                hubPollDebounce = null;
+
+                trackPollFailures = 0;
+
+                poll();
+
+            }, 420);
+
+        }
+
+
+
+        function trackT(k) {
+
+            try {
+
+                if (window.LuxuryI18n && LuxuryI18n.t) {
+
+                    const v = LuxuryI18n.t(k);
+
+                    if (v) return v;
+
+                }
+
+            } catch (e) {
+
+                /* ignore */
+
+            }
+
+            return "";
+
+        }
+
+
+
+        function trackLang() {
+
+            try {
+
+                if (window.LuxuryI18n && LuxuryI18n.lang) return LuxuryI18n.lang();
+
+            } catch (_e) {}
+
+            return "vi";
+
+        }
+
+
+
+        function milestoneLabel(step) {
+
+            const s = trackT("track.step" + step);
+
+            if (s) return s;
+
+            return "";
+
+        }
+
+
+
+        function trackLocaleTitle(data) {
+
+            try {
+
+                const lang = trackLang();
+
+                if (lang === "en" && data.titleEn) return data.titleEn;
+
+                if (data.titleVi) return data.titleVi;
+
+            } catch (_e) {}
+
+            return data.title || "";
+
+        }
+
+
+
+        function trackLocaleLine(data) {
+
+            try {
+
+                const lang = trackLang();
+
+                if (lang === "en" && data.lineEn) return data.lineEn;
+
+                if (data.lineVi) return data.lineVi;
+
+            } catch (_e2) {}
+
+            return data.line || "";
+
+        }
+
+
+
+        function moneyFmt(v) {
+            if (window.AnnapMoney && typeof window.AnnapMoney.format === "function") {
+                return window.AnnapMoney.format(v);
+            }
+            return String(v);
+        }
+
+
+
+        function fmtClock(iso) {
+
+            if (!iso) return "—";
+
+            try {
+
+                const d = new Date(iso);
+
+                return new Intl.DateTimeFormat("vi-VN", {
+
+                    hour: "2-digit",
+
+                    minute: "2-digit",
+
+                    day: "2-digit",
+
+                    month: "2-digit"
+
+                }).format(d);
+
+            } catch (_e) {
+
+                return "—";
+
+            }
+
+        }
+
+
+
+        function billStatusLabel(bill) {
+
+            if (!bill) return trackT("track.statusPending");
+
+            const provisional = bill.billKind === "provisional" || bill.BillKind === "provisional";
+
+            if (provisional) {
+
+                if (trackLang() === "en" && bill.paymentStatusLabelEn) return bill.paymentStatusLabelEn;
+
+                return bill.paymentStatusLabelVi || trackT("track.statusPending");
+
+            }
+
+            if (trackLang() === "en" && bill.paymentStatusLabelEn) return bill.paymentStatusLabelEn;
+
+            return bill.paymentStatusLabelVi || trackT("checkout.paidReceiptTitle");
+
+        }
+
+
+
+        function billThanks(bill) {
+
+            if (!bill) return trackT("track.billThanks");
+
+            if (trackLang() === "en" && bill.thankYouMessageEn) return bill.thankYouMessageEn;
+
+            return bill.thankYouMessageVi || trackT("track.billThanks");
+
+        }
+
+
+
+        function formatOrderRef(data) {
+
+            if (data.bill && data.bill.billNumber) return data.bill.billNumber;
+
+            if (data.checkBill && data.checkBill.billNumber) return data.checkBill.billNumber;
+
+            if (data.orderNumber) return data.orderNumber;
+
+            return "";
+
+        }
+
+
+
+        function billTitle(bill, fallbackKey) {
+
+            if (!bill) return trackT(fallbackKey);
+
+            if (trackLang() === "en" && bill.titleEn) return bill.titleEn;
+
+            if (bill.titleVi) return bill.titleVi;
+
+            return trackT(fallbackKey);
+
+        }
+
+
+
+        function billTotalLabel(bill, provisional) {
+
+            if (bill) {
+
+                if (trackLang() === "en" && bill.totalLabelEn) return bill.totalLabelEn;
+
+                if (bill.totalLabelVi) return bill.totalLabelVi;
+
+            }
+
+            if (provisional) return trackT("checkout.estimatedTotal");
+
+            return trackT("track.billTotal");
+
+        }
+
+
+
+        function paymentMethodLabel(data, bill) {
+
+            if (trackLang() === "en") {
+
+                if (data.paymentMethodLabelEn) return data.paymentMethodLabelEn;
+
+                if (bill && bill.paymentMethodLabelEn) return bill.paymentMethodLabelEn;
+
+            }
+
+            if (data.paymentMethodLabelVi) return data.paymentMethodLabelVi;
+
+            if (bill && bill.paymentMethodLabelVi) return bill.paymentMethodLabelVi;
+
+            return "";
+
+        }
+
+
+
+        function resolveMilestoneCurrent(data) {
+
+            if (data.isComplete) return MILESTONE_COUNT + 1;
+
+            if (data.pendingPayment || data.phaseKey === "awaiting_payment" || Number(data.step) === 1) return 1;
+
+            return 3;
+
+        }
+
+
+
+        function updateStatusPill(data) {
+
+            const pill = el("track-status-pill");
+
+            const text = el("track-status-pill-text");
+
+            if (!pill || !text) return;
+
+            let label = "";
+
+            if (data.pendingPayment) {
+
+                if (data.pendingStatusLabelVi || data.pendingStatusLabelEn) {
+
+                    label = trackLang() === "en" && data.pendingStatusLabelEn
+
+                        ? data.pendingStatusLabelEn
+
+                        : data.pendingStatusLabelVi || trackT("track.statusPending");
+
+                } else label = trackT("track.statusPending");
+
+            else if (data.isComplete) label = trackT("track.statusComplete");
+
+            else label = trackT("track.statusPaid");
+
+            text.textContent = label;
+
+            pill.classList.remove("hidden");
+
+        }
+
+
+
+        function updateOrderRef(data) {
+
+            const wrap = el("track-order-ref");
+
+            const val = el("track-order-ref-value");
+
+            if (!wrap || !val) return;
+
+            const ref = formatOrderRef(data);
+
+            if (ref) {
+
+                val.textContent = ref;
+
+                wrap.classList.remove("hidden");
+
+            } else {
+
+                wrap.classList.add("hidden");
+
+            }
+
+        }
+
+
+
+        function renderBillDocument(bill, opts) {
+
+            opts = opts || {};
+
+            const provisional = !!opts.provisional;
+
+            const wrap = el(provisional ? "track-check-bill-wrap" : "track-bill-wrap");
+
+            const host = el(provisional ? "track-check-bill" : "track-bill");
+
+            if (!wrap || !host || !bill) return;
+
+            const items = bill.items || bill.Items || [];
+
+            const lines = items
+
+                .map((it) => {
+
+                    const qty = it.quantity ?? it.Quantity ?? 1;
+
+                    const unit = it.unitPrice ?? it.UnitPrice;
+
+                    const lineTotal = it.lineTotal ?? it.LineTotal ?? (unit != null ? unit * qty : null);
+
+                    return `<li class="guest-track-bill__line">
+
+                        <div class="guest-track-bill__line-main">
+
+                            <span>${escapeHtml(it.name || it.Name)}</span>
+
+                            <span>×${qty}</span>
+
+                        </div>
+
+                        <div class="guest-track-bill__line-meta">
+
+                            ${unit != null ? `<span>${moneyFmt(unit)}</span>` : ""}
+
+                            ${lineTotal != null ? `<span class="guest-track-bill__line-total">${moneyFmt(lineTotal)}</span>` : ""}
+
+                        </div>
+
+                    </li>`;
+
+                })
+
+                .join("");
+
+            const paidAt = bill.paidAtUtc ? fmtClock(bill.paidAtUtc) : "—";
+
+            const eyebrow = provisional
+
+                ? billTitle(bill, "checkout.checkBillTitle")
+
+                : billTitle(bill, "checkout.paidReceiptTitle");
+
+            const brand = bill.shopName || trackT("track.billBrand");
+
+            const metaSent = trackT("track.billMetaSent");
+
+            const metaPaid = trackT("track.billMetaPaid");
+
+            const metaStatus = trackT("track.billMetaStatus");
+
+            const metaMethod = trackT("checkout.paymentMethodLabel");
+
+            const totalLabel = billTotalLabel(bill, provisional);
+
+            const methodLabel = opts.paymentMethodLabel || paymentMethodLabel(opts.data || {}, bill);
+
+            const note = provisional
+
+                ? trackLang() === "en" && bill.provisionalNoteEn
+
+                    ? bill.provisionalNoteEn
+
+                    : bill.provisionalNoteVi || trackT("checkout.provisionalBillBody")
+
+                : billThanks(bill);
+
+            const methodRow = provisional && methodLabel
+
+                ? `<div><dt>${escapeHtml(metaMethod)}</dt><dd>${escapeHtml(methodLabel)}</dd></div>`
+
+                : "";
+
+            const paidRow = provisional
+
+                ? ""
+
+                : `<div><dt>${escapeHtml(metaPaid)}</dt><dd>${paidAt}</dd></div>`;
+
+            host.innerHTML = `<article class="guest-track-bill${provisional ? " guest-track-bill--provisional" : ""}">
+
+                <header class="guest-track-bill__hero">
+
+                    <p class="guest-track-bill__eyebrow">${escapeHtml(eyebrow)}</p>
+
+                    <p class="guest-track-bill__brand">${escapeHtml(brand)}</p>
+
+                    <p class="guest-track-bill__bill-label">${escapeHtml(eyebrow)}</p>
+
+                    <p class="guest-track-bill__bill-no">#${escapeHtml(bill.billNumber || "—")}</p>
+
+                    <p class="guest-track-bill__table-code">${escapeHtml(bill.tableCode || "—")}</p>
+
+                </header>
+
+                <dl class="guest-track-bill__meta">
+
+                    <div><dt>${escapeHtml(metaSent)}</dt><dd>${fmtClock(bill.submittedAtUtc)}</dd></div>
+
+                    ${paidRow}
+
+                    <div><dt>${escapeHtml(metaStatus)}</dt><dd>${escapeHtml(billStatusLabel(bill))}</dd></div>
+
+                    ${methodRow}
+
+                </dl>
+
+                <ul class="guest-track-bill__items">${lines}</ul>
+
+                <p class="guest-track-bill__total">
+
+                    <span>${escapeHtml(totalLabel)}</span>
+
+                    <strong>${moneyFmt(bill.totalAmount)}</strong>
+
+                </p>
+
+                <p class="guest-track-bill__thanks">${escapeHtml(note)}</p>
+
+            </article>`;
+
+            wrap.classList.remove("hidden");
+
+        }
+
+
+
+        function renderCheckBill(data) {
+
+            const bill = data.checkBill || data.summary;
+
+            if (!bill) return;
+
+            renderBillDocument(bill, { provisional: true, data: data, paymentMethodLabel: paymentMethodLabel(data, bill) });
+
+        }
+
+
+
+        function renderBill(bill) {
+
+            renderBillDocument(bill, { provisional: false });
+
+        }
+
+
+
+        function schedulePoll(delay) {
+
+            if (pollTimer) window.clearTimeout(pollTimer);
+
+            pollTimer = window.setTimeout(() => {
+
+                pollTimer = null;
+
+                poll();
+
+            }, delay);
+
+        }
+
+
+
+        function el(id) {
+
+            return document.getElementById(id);
+
+        }
+
+
+
+        function renderMilestones(data) {
+
+            const host = el("track-milestones");
+
+            if (!host) return;
+
+            const currentIdx = resolveMilestoneCurrent(data);
+
+            const isComplete = !!data.isComplete;
+
+            host.innerHTML = Array.from({ length: MILESTONE_COUNT }, (_, i) => i + 1)
+
+                .map((mstep) => {
+
+                    const label = milestoneLabel(mstep);
+
+                    const past = isComplete ? true : mstep < currentIdx;
+
+                    const current = !isComplete && mstep === currentIdx;
+
+                    let cls = "track-mile";
+
+                    if (past) cls += " is-past";
+
+                    else if (current) cls += " is-current";
+
+                    else cls += " is-future";
+
+                    const mark = past
+
+                        ? `<span class="track-mile-dot track-mile-dot--done" aria-hidden="true"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>`
+
+                        : `<span class="track-mile-dot" aria-hidden="true"></span>`;
+
+                    return `<div class="${cls}" data-step="${mstep}">
+
+                        <div class="track-mile-rail" aria-hidden="true"></div>
+
+                        ${mark}
+
+                        <div class="track-mile-body">
+
+                            <p class="track-mile-label">${escapeHtml(label)}</p>
+
+                        </div>
+
+                    </div>`;
+
+                })
+
+                .join("");
+
+        }
+
+
+
+        function renderItems(items) {
+
+            const ul = el("track-items");
+
+            if (!ul) return;
+
+            if (!items || !items.length) {
+
+                const d = trackT("track.detailsUnavailable");
+
+                ul.innerHTML = `<li class="text-[rgb(var(--muted-2))]">${escapeHtml(d)}</li>`;
+
+                return;
+
+            }
+
+            ul.innerHTML = items
+
+                .map(
+
+                    (it) =>
+
+                        `<li class="flex justify-between gap-3 border-b border-[rgba(139,110,72,0.12)] py-2 last:border-0"><span class="min-w-0 truncate text-[rgb(var(--fg))]">${escapeHtml(it.name)}</span><span class="shrink-0 tabular-nums text-[rgb(var(--muted))]">×${it.quantity}</span></li>`
+
+                )
+
+                .join("");
+
+        }
+
+
+
+        function escapeHtml(s) {
+
+            return String(s)
+
+                .replace(/&/g, "&amp;")
+
+                .replace(/</g, "&lt;")
+
+                .replace(/>/g, "&gt;")
+
+                .replace(/"/g, "&quot;");
+
+        }
+
+
+
+        function applyPayload(data) {
+
+            var te = el("track-error");
+
+            if (te) te.classList.add("hidden");
+
+            if (data.isCancelled) {
+
+                var tl = el("track-live");
+
+                if (tl) tl.classList.add("hidden");
+
+                var tc = el("track-cancelled");
+
+                if (tc) tc.classList.remove("hidden");
+
+                const msg = el("track-cancelled-msg");
+
+                if (msg) msg.textContent = data.message || trackT("track.cancelledFallback");
+
+                lastTrackPayload = null;
+
+                return;
+
+            }
+
+            var tc2 = el("track-cancelled");
+
+            if (tc2) tc2.classList.add("hidden");
+
+            var tl2 = el("track-live");
+
+            if (tl2) tl2.classList.remove("hidden");
+
+
+
+            const t = el("track-table");
+
+            if (t) t.textContent = data.tableCode || "—";
+
+            const hero = el("track-hero-title");
+
+            const line = el("track-hero-line");
+
+            if (hero) hero.textContent = trackLocaleTitle(data);
+
+            if (line) line.textContent = trackLocaleLine(data);
+
+
+
+            const step = Number(data.step) || 1;
+
+            const isComplete = !!data.isComplete;
+
+            if (lastStep !== null && step > lastStep && root) root.classList.add("track-root--pulse");
+
+            window.setTimeout(function () {
+
+                if (root) root.classList.remove("track-root--pulse");
+
+            }, 900);
+
+            lastStep = step;
+
+
+
+            if (root) {
+
+                root.classList.toggle("track-root--pending", !!data.pendingPayment);
+
+                root.classList.toggle("track-root--paid", !data.pendingPayment && !isComplete);
+
+                root.classList.toggle("track-root--complete", isComplete);
+
+            }
+
+
+
+            updateStatusPill(data);
+
+            updateOrderRef(data);
+
+            renderMilestones(data);
+
+            renderItems(data.items);
+
+
+
+            const pendingNote = el("track-pending-note");
+
+            const billWrap = el("track-bill-wrap");
+
+            const checkBillWrap = el("track-check-bill-wrap");
+
+            const transferWrap = el("track-transfer-wrap");
+
+            const transferHost = el("track-transfer-host");
+
+            const selectionWrap = el("track-selection-wrap");
+
+            const showBill = !!(data.showBill && data.bill);
+
+            const showCheckBill = !!(data.showCheckBill && (data.checkBill || data.summary));
+
+
+
+            if (data.pendingPayment) {
+
+                if (pendingNote) {
+
+                    pendingNote.textContent = trackT("track.keepOpenNote");
+
+                    pendingNote.classList.remove("hidden");
+
+                }
+
+                if (billWrap) billWrap.classList.add("hidden");
+
+                if (showCheckBill) renderCheckBill(data);
+
+                else if (checkBillWrap) checkBillWrap.classList.add("hidden");
+
+                const showTransfer = !!(data.transferQr && data.paymentMethod === "BankTransfer");
+                if (transferWrap) transferWrap.classList.toggle("hidden", !showTransfer);
+                if (transferHost) {
+                    if (showTransfer && window.GuestBankTransfer) window.GuestBankTransfer.mountTransferCard(transferHost, data.transferQr);
+                    else transferHost.innerHTML = "";
+                }
+
+            } else {
+
+                if (pendingNote) pendingNote.classList.add("hidden");
+
+                if (checkBillWrap) checkBillWrap.classList.add("hidden");
+
+                if (transferWrap) transferWrap.classList.add("hidden");
+
+                if (transferHost) transferHost.innerHTML = "";
+
+                if (showBill) renderBill(data.bill);
+
+                else if (billWrap) billWrap.classList.add("hidden");
+
+            }
+
+
+
+            if (selectionWrap) selectionWrap.classList.toggle("hidden", showBill || showCheckBill);
+
+
+
+            lastTrackPayload = data;
+
+        }
+
+
+
+        function trackQuery() {
+
+            if (!trackToken) return "";
+
+            return `?token=${encodeURIComponent(trackToken)}`;
+
+        }
+
+
+
+        async function poll() {
+
+            if (!orderId || pollInFlight) return;
+
+            pollInFlight = true;
+
+            let nextDelay = POLL_MS;
+
+            try {
+
+                const ac = new AbortController();
+
+                const pt = setTimeout(function () {
+
+                    ac.abort();
+
+                }, 18000);
+
+                let res;
+
+                try {
+
+                    const trackPath = "/api/track/orders/" + orderId + trackQuery();
+
+                    res = await fetch(
+
+                        typeof window.__annapApiUrl === "function" ? window.__annapApiUrl(trackPath) : trackPath,
+
+                        {
+
+                        headers: { Accept: "application/json" },
+
+                        signal: ac.signal
+
+                    });
+
+                } finally {
+
+                    clearTimeout(pt);
+
+                }
+
+                if (res.status === 404) {
+
+                    const errEl = el("track-error");
+
+                    if (errEl) {
+
+                        errEl.textContent = trackT("track.err404");
+
+                        errEl.classList.remove("hidden");
+
+                    }
+
+                    var tl404 = el("track-live");
+
+                    if (tl404) tl404.classList.add("hidden");
+
+                    nextDelay = POLL_MS * 2;
+
+                    return;
+
+                }
+
+                if (!res.ok) throw new Error();
+
+                const data = await res.json();
+
+                applyPayload(data);
+
+                trackPollFailures = 0;
+
+            } catch (_poll) {
+
+                trackPollFailures++;
+
+                const errEl = el("track-error");
+
+                if (errEl && trackPollFailures >= 2) {
+
+                    errEl.textContent = trackT("track.errSoft");
+
+                    errEl.classList.remove("hidden");
+
+                }
+
+                nextDelay = Math.min(POLL_MS * 2, 24000);
+
+            } finally {
+
+                pollInFlight = false;
+
+                schedulePoll(nextDelay);
+
+            }
+
+        }
+
+
+
+        async function start() {
+
+            var adb = typeof window.AnnapGuestBoot !== "undefined" ? window.AnnapGuestBoot : {};
+
+            if (adb.disableSignalR === true) {
+
+                __annapTrackWarn("[annap] track: SignalR disabled (diag/safe)");
+
+                if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.markSkipped("signalr");
+
+                await poll();
+
+                if (window.AnnapGuestBootHarness && typeof AnnapGuestBootHarness.markHydrationDone === "function")
+
+                    AnnapGuestBootHarness.markHydrationDone();
+
+                return;
+
+            }
+
+            if (orderId && trackToken && window.signalR) {
+
+                annapTrackDbgHub("Connecting…");
+
+                const hubStartMs = 22000;
+
+                try {
+
+                    hubConnection = new signalR.HubConnectionBuilder()
+
+                        .withUrl(typeof window.__annapHubUrl === "function" ? window.__annapHubUrl() : "/hubs/orders")
+
+                        .withAutomaticReconnect([0, 3000, 8000, 20000, 45000, 60000])
+
+                        .build();
+
+                    hubConnection.on("orderUpdated", (payload) => {
+
+                        const at = payload && typeof payload.atUtc === "number" ? payload.atUtc : null;
+
+                        if (at != null && lastOrderHubPulseMs === at) return;
+
+                        lastOrderHubPulseMs = at;
+
+                        if (payload && payload.phaseKey && (payload.titleVi || payload.titleEn)) {
+
+                            const step =
+
+                                payload.phaseKey === "awaiting_payment"
+
+                                    ? 1
+
+                                    : payload.phaseKey === "paid_preparing"
+
+                                      ? 2
+
+                                      : payload.phaseKey === "completed"
+
+                                        ? 3
+
+                                        : Number(payload.step) || 1;
+
+                            applyPayload({
+
+                                tableCode: payload.tableCode || (lastTrackPayload && lastTrackPayload.tableCode),
+
+                                orderNumber: payload.orderNumber,
+
+                                step: step,
+
+                                phaseKey: payload.phaseKey,
+
+                                titleVi: payload.titleVi,
+
+                                lineVi: payload.lineVi,
+
+                                titleEn: payload.titleEn,
+
+                                lineEn: payload.lineEn,
+
+                                title: payload.titleVi || payload.title,
+
+                                line: payload.lineVi || payload.line,
+
+                                isComplete: !!payload.isComplete,
+
+                                pendingPayment: !!payload.pendingPayment,
+
+                                showBill: !!payload.showBill,
+
+                                showCheckBill: !!payload.showCheckBill,
+
+                                bill: payload.showBill ? payload.bill : null,
+
+                                checkBill: payload.showCheckBill ? payload.checkBill : null,
+
+                                paymentMethod: payload.paymentMethod,
+
+                                paymentMethodLabelVi: payload.paymentMethodLabelVi,
+
+                                paymentMethodLabelEn: payload.paymentMethodLabelEn,
+
+                                pendingStatusLabelVi: payload.pendingStatusLabelVi,
+
+                                pendingStatusLabelEn: payload.pendingStatusLabelEn,
+
+                                items: lastTrackPayload && lastTrackPayload.items
+
+                            });
+
+                            if (!lastTrackPayload || !lastTrackPayload.items || !lastTrackPayload.items.length) {
+
+                                scheduleHubPoll();
+
+                            }
+
+                            return;
+
+                        }
+
+                        scheduleHubPoll();
+
+                    });
+
+                    hubConnection.onreconnecting(() => {
+
+                        annapTrackDbgHub("Reconnecting");
+
+                    });
+
+                    hubConnection.onreconnected(() => {
+
+                        lastOrderHubPulseMs = null;
+
+                        annapTrackDbgHub("Connected");
+
+                        scheduleHubPoll();
+
+                    });
+
+                    hubConnection.onclose(() => {
+
+                        annapTrackDbgHub("Disconnected");
+
+                    });
+
+                    await new Promise((resolve, reject) => {
+
+                        const t = setTimeout(() => reject(new Error("SignalR start timeout")), hubStartMs);
+
+                        hubConnection
+
+                            .start()
+
+                            .then(() => {
+
+                                clearTimeout(t);
+
+                                resolve();
+
+                            })
+
+                            .catch((e) => {
+
+                                clearTimeout(t);
+
+                                reject(e);
+
+                            });
+
+                    });
+
+                    await hubConnection.invoke("JoinGuestOrder", orderId, trackToken);
+
+                    annapTrackDbgHub("Connected");
+
+                    __annapTrackInfo("[annap] track SignalR connected");
+
+                    if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.row("signalr", "ok");
+
+                } catch (e) {
+
+                    __annapTrackWarn("[annap] track SignalR failed; using poll only", e);
+
+                    annapTrackDbgHub("Offline · poll");
+
+                    hubConnection = null;
+
+                    if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.row("signalr", "fail");
+
+                }
+
+            } else {
+
+                annapTrackDbgHub(orderId && trackToken ? "N/A (no client)" : "—");
+
+                if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.markSkipped("signalr");
+
+            }
+
+            await poll();
+
+            if (window.AnnapGuestBootHarness && typeof AnnapGuestBootHarness.markHydrationDone === "function")
+
+                AnnapGuestBootHarness.markHydrationDone();
+
+        }
+
+
+
+        __annapTrackLog("[annap] boot track step 1: script parsed");
+
+
+
+        document.addEventListener("visibilitychange", function () {
+
+            if (document.visibilityState === "visible") poll();
+
+        });
+
+        try {
+
+            const _vt = (sessionStorage.getItem("annap_venue_table_id") || "").trim();
+
+            GuestInteractionContract.setTrayOpener(function () {
+
+                window.location.href =
+
+                    _vt && GuestInteractionContract.isGuid(_vt)
+
+                        ? "/Menu/Index?vt=" + encodeURIComponent(_vt)
+
+                        : "/Menu/Index";
+
+            });
+
+        } catch (_trayVt) {
+
+            /* ignore */
+
+        }
+
+
+
+        document.addEventListener("luxury:i18n-changed", function () {
+
+            if (!lastTrackPayload || lastTrackPayload.isCancelled) return;
+
+            const hero = el("track-hero-title");
+
+            const line = el("track-hero-line");
+
+            if (hero) hero.textContent = trackLocaleTitle(lastTrackPayload);
+
+            if (line) line.textContent = trackLocaleLine(lastTrackPayload);
+
+            updateStatusPill(lastTrackPayload);
+
+            updateOrderRef(lastTrackPayload);
+
+            renderMilestones(lastTrackPayload);
+
+            renderItems(lastTrackPayload.items);
+
+            if (lastTrackPayload.showBill && lastTrackPayload.bill) renderBill(lastTrackPayload.bill);
+
+            if (lastTrackPayload.showCheckBill && (lastTrackPayload.checkBill || lastTrackPayload.summary))
+
+                renderCheckBill(lastTrackPayload);
+
+            const pendingNote = el("track-pending-note");
+
+            if (pendingNote && lastTrackPayload.pendingPayment) {
+
+                pendingNote.textContent = trackT("track.keepOpenNote");
+
+            }
+
+        });
+
+
+
+        function bootTrack() {
+
+            start();
+
+        }
+
+        if (window.LuxuryI18n && window.LuxuryI18n.ready) window.LuxuryI18n.ready.then(bootTrack).catch(bootTrack);
+
+        else bootTrack();
+
+    </script>
+
+}
+
+

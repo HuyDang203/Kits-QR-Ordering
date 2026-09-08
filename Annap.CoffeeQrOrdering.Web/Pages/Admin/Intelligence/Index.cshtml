@@ -1,0 +1,183 @@
+@page "/admin/intelligence"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Intelligence.IndexModel
+@{
+    ViewData["Title"] = "Đài quan sát";
+    ViewData["AdminNavSection"] = "intelligence";
+    ViewData["AdminEyebrow"] = "Phân tích hospitality";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    var O = Model.Observatory;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/intelligence-observatory.css" asp-append-version="true" />
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="intel-page">
+    <header class="intel-hero">
+        <p class="intel-eyebrow">@O.HeroEyebrow</p>
+        <h1 class="intel-title">@O.HeroTitle</h1>
+        <p class="intel-lead">@O.HeroLead</p>
+    </header>
+
+    @if (O.EditorialSummaries.Count > 0)
+    {
+        <section class="intel-strip" aria-label="Editorial summaries">
+            @foreach (var line in O.EditorialSummaries)
+            {
+                <blockquote class="intel-quote">@line</blockquote>
+            }
+        </section>
+    }
+
+    <div class="intel-grid">
+        <section class="intel-panel intel-panel--span" aria-labelledby="intel-room-heading">
+            <div class="intel-panel__head">
+                <p class="intel-panel__eyebrow">Nhịp điệu quán</p>
+                <h2 id="intel-room-heading" class="intel-panel__title">Đồng hồ như không khí</h2>
+            </div>
+            <p class="intel-prose">@O.RoomRhythm.Narrative</p>
+            <div class="intel-metrics">
+                @foreach (var m in O.RoomRhythm.Metrics)
+                {
+                    <div class="intel-metric">
+                        <p class="intel-metric__line">@m.Line</p>
+                        @if (!string.IsNullOrEmpty(m.Whisper))
+                        {
+                            <p class="intel-metric__whisper">@m.Whisper</p>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="intel-chart" role="img" aria-label="Tỷ lệ khách đến theo giờ, 14 ngày qua">
+                <p class="intel-chart__note">14 ngày qua · giờ địa phương · chiều cao là lượng khách, không phải doanh thu</p>
+                <div class="intel-chart__bars">
+                    @foreach (var b in O.RoomRhythm.HourSpark)
+                    {
+                        var h = Math.Clamp(b.Height01, 0.04, 1);
+                        <div class="intel-bar" style="--intel-h:@h.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                            <span class="intel-bar__cap"></span>
+                            <span class="intel-bar__label">@b.Label</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="intel-panel" aria-labelledby="intel-taste-heading">
+            <div class="intel-panel__head">
+                <p class="intel-panel__eyebrow">Xu hướng vị giác</p>
+                <h2 id="intel-taste-heading" class="intel-panel__title">Tâm trạng &amp; tinh chỉnh</h2>
+            </div>
+            <p class="intel-prose">@O.TasteDirection.Narrative</p>
+            @if (O.TasteDirection.MoodCounts.Count > 0)
+            {
+                <p class="intel-sublabel">Tâm trạng được chạm đến nhiều nhất</p>
+                <ul class="intel-ribbon">
+                    @foreach (var x in O.TasteDirection.MoodCounts)
+                    {
+                        <li class="intel-ribbon__item"><span>@x.Label</span><span class="intel-ribbon__n">@x.Count</span></li>
+                    }
+                </ul>
+            }
+            @if (O.TasteDirection.RefinementCounts.Count > 0)
+            {
+                <p class="intel-sublabel">Thì thầm tinh chỉnh</p>
+                <ul class="intel-ribbon intel-ribbon--soft">
+                    @foreach (var x in O.TasteDirection.RefinementCounts)
+                    {
+                        <li class="intel-ribbon__item"><span>@x.Label</span><span class="intel-ribbon__n">@x.Count</span></li>
+                    }
+                </ul>
+            }
+            @foreach (var q in O.TasteDirection.QuietLines)
+            {
+                <p class="intel-quiet">@q.Line</p>
+            }
+        </section>
+
+        <section class="intel-panel" aria-labelledby="intel-service-heading">
+            <div class="intel-panel__head">
+                <p class="intel-panel__eyebrow">Không khí phục vụ</p>
+                <h2 id="intel-service-heading" class="intel-panel__title">Hơi thở của hàng đợi</h2>
+            </div>
+            <p class="intel-prose">@O.ServiceAtmosphere.Narrative</p>
+            @foreach (var m in O.ServiceAtmosphere.Metrics)
+            {
+                <div class="intel-metric intel-metric--tight">
+                    <p class="intel-metric__line">@m.Line</p>
+                    @if (!string.IsNullOrEmpty(m.Whisper))
+                    {
+                        <p class="intel-metric__whisper">@m.Whisper</p>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="intel-panel intel-panel--span" aria-labelledby="intel-cup-heading">
+            <div class="intel-panel__head">
+                <p class="intel-panel__eyebrow">Hiệu suất đồ uống</p>
+                <h2 id="intel-cup-heading" class="intel-panel__title">Những gì rời quầy</h2>
+            </div>
+            <p class="intel-prose">@O.CupPerformance.Narrative</p>
+            @if (O.CupPerformance.TopDrinks.Count > 0)
+            {
+                <div class="intel-cup-grid">
+                    @foreach (var d in O.CupPerformance.TopDrinks)
+                    {
+                        <div class="intel-cup-card">
+                            <p class="intel-cup-card__name">@d.Label</p>
+                            <p class="intel-cup-card__n"><span class="tabular-nums">@d.Count</span><span class="intel-cup-card__unit">ly</span></p>
+                        </div>
+                    }
+                </div>
+            }
+            @foreach (var q in O.CupPerformance.QuietLines)
+            {
+                if (!string.IsNullOrEmpty(q.Line))
+                {
+                    <p class="intel-quiet">@q.Line</p>
+                }
+            }
+        </section>
+
+        <section class="intel-panel intel-panel--span" aria-labelledby="intel-som-heading">
+            <div class="intel-panel__head">
+                <p class="intel-panel__eyebrow">Trí tuệ sommelier</p>
+                <h2 id="intel-som-heading" class="intel-panel__title">Người chủ vô hình tại quầy</h2>
+            </div>
+            <p class="intel-prose">@O.Sommelier.Narrative</p>
+            @if (O.Sommelier.Outcomes.Count > 0)
+            {
+                <div class="intel-outcomes">
+                    @foreach (var oc in O.Sommelier.Outcomes)
+                    {
+                        <div class="intel-outcome">
+                            <span class="intel-outcome__label">@oc.Label</span>
+                            <span class="intel-outcome__n tabular-nums">@oc.Count</span>
+                        </div>
+                    }
+                </div>
+            }
+            @foreach (var q in O.Sommelier.QuietLines)
+            {
+                <p class="intel-quiet">@q.Line</p>
+            }
+            @if (O.Sommelier.SensoryTransitions.Count > 0)
+            {
+                <p class="intel-sublabel">Bàn giao cảm quan · cùng lượt ngồi</p>
+                <ul class="intel-transitions">
+                    @foreach (var t in O.Sommelier.SensoryTransitions)
+                    {
+                        <li class="intel-transition">
+                            <span class="intel-transition__from">@t.FromHint</span>
+                            <span class="intel-transition__glyph" aria-hidden="true">→</span>
+                            <span class="intel-transition__to">@t.ToHint</span>
+                            <span class="intel-transition__times tabular-nums">×@t.Times</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    </div>
+</div>

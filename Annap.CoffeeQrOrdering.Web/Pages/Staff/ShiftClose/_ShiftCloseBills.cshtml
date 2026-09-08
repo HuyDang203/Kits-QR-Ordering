@@ -1,0 +1,82 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.Staff.ShiftClose.IndexModel
+
+<section class="staff-shift-close__section" aria-labelledby="shift-bills-heading">
+    <h2 class="staff-shift-close__section-title" id="shift-bills-heading">Danh sách bill trong ca</h2>
+
+    @if (Model.Preview.Bills.Count == 0)
+    {
+        <p class="staff-shift-close__section-empty">Chưa có bill thanh toán trong ca này.</p>
+    }
+    else
+    {
+        var billIndex = 0;
+        <div class="staff-shift-close__bill-cards" aria-label="Danh sách bill">
+            @foreach (var bill in Model.Preview.Bills)
+            {
+                var hidden = billIndex >= IndexModel.BillListDefault;
+                <article class="staff-shift-close__bill-card@(hidden ? " is-collapsed" : "")" data-bill-row>
+                    <div class="staff-shift-close__bill-head">
+                        <span class="staff-shift-close__bill-no">#@bill.BillNumber</span>
+                        <span class="staff-shift-close__bill-time">@Model.FormatClock(bill.PaidAtUtc)</span>
+                    </div>
+                    <dl class="staff-shift-close__bill-meta">
+                        <div><dt>Bàn</dt><dd>@bill.TableCode</dd></div>
+                        <div><dt>Phương thức</dt><dd>@bill.PaymentMethodLabelVi</dd></div>
+                        <div><dt>Tổng</dt><dd>@Model.Money(bill.TotalAmount)</dd></div>
+                        <div><dt>Xác nhận</dt><dd>@bill.ConfirmedBy</dd></div>
+                    </dl>
+                </article>
+                billIndex++;
+            }
+        </div>
+
+        @if (Model.Preview.Bills.Count > IndexModel.BillListDefault)
+        {
+            <button type="button" class="staff-shift-close__expand-bills" id="staff-shift-expand-bills" data-count="@(Model.Preview.Bills.Count - IndexModel.BillListDefault)">
+                Xem tất cả bill (@Model.Preview.Bills.Count)
+            </button>
+        }
+
+        <div class="staff-shift-close__table-wrap staff-shift-close__table-wrap--desktop staff-shift-close__table-wrap--scroll">
+            <table class="staff-shift-close__table" id="staff-shift-bills-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Giờ TT</th>
+                        <th scope="col">Bill</th>
+                        <th scope="col">Bàn</th>
+                        <th scope="col">Phương thức</th>
+                        <th scope="col" class="is-num">Tổng tiền</th>
+                        <th scope="col">Xác nhận bởi</th>
+                        <th scope="col">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        billIndex = 0;
+                    }
+                    @foreach (var bill in Model.Preview.Bills)
+                    {
+                        var hidden = billIndex >= IndexModel.BillListDefault;
+                        <tr class="@(hidden ? "is-collapsed" : "")" data-bill-row>
+                            <td class="is-num">@Model.FormatClock(bill.PaidAtUtc)</td>
+                            <td>#@bill.BillNumber</td>
+                            <td>@bill.TableCode</td>
+                            <td>@bill.PaymentMethodLabelVi</td>
+                            <td class="is-num">@Model.Money(bill.TotalAmount)</td>
+                            <td>@bill.ConfirmedBy</td>
+                            <td>@bill.StatusLabelVi</td>
+                        </tr>
+                        billIndex++;
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.Preview.Bills.Count > IndexModel.BillListDefault)
+        {
+            <button type="button" class="staff-shift-close__expand-bills staff-shift-close__expand-bills--desktop" data-shift-expand-bills data-count="@(Model.Preview.Bills.Count - IndexModel.BillListDefault)">
+                Xem tất cả bill (@Model.Preview.Bills.Count)
+            </button>
+        }
+    }
+</section>

@@ -1,0 +1,181 @@
+/**
+ * ANNAP — canonical design tokens (correspond.md + doctrine alignment).
+ * Single source of truth for NEW UI. Import once from Styles/input.css.
+ *
+ * Guardrails:
+ * - No ad-hoc hex in components — use these variables or Tailwind theme keys.
+ * - Legacy guest skin still uses wwwroot/css/app.css (--annap-*); migrate gradually.
+ */
+
+:root {
+  /* ============================================
+     PAPER — Surface Colors
+  ============================================ */
+  --paper-letter: #faf7f2;
+  --paper-aged: #f2ebe0;
+  --paper-fold: #e8ddd0;
+  --paper-desk: #1a1209;
+
+  /* ============================================
+     INK — Text Colors
+  ============================================ */
+  --ink-deep: #1a1209;
+  --ink-primary: #3d2b1a;
+  --ink-secondary: #8b6b47;
+  --ink-tertiary: #c4a882;
+  --ink-ghost: rgba(61, 43, 26, 0.35);
+
+  /* ============================================
+     WAX — Accent & Ceremony
+  ============================================ */
+  --wax-seal: #c4a882;
+  --wax-warm: #8b6b47;
+  --wax-deep: #6b4e2a;
+  --wax-gold: #9a7040;
+  --wax-sage: #4a6358;
+
+  /* ============================================
+     SURFACE — Material Layers
+  ============================================ */
+  --surface-desk: #1a1209;
+  --surface-envelope: #f2ebe0;
+  --surface-paper: #faf7f2;
+  --surface-vellum: rgba(242, 235, 224, 0.92);
+  --surface-fold: #e8ddd0;
+  --surface-vellum-blur: rgba(242, 235, 224, 0.88);
+
+  /* ============================================
+     RULE — Dividers
+  ============================================ */
+  --rule-ghost: rgba(196, 168, 130, 0.15);
+  --rule-light: rgba(196, 168, 130, 0.25);
+  --rule-medium: rgba(139, 107, 71, 0.3);
+
+  /* ============================================
+     TYPOGRAPHY — Specialty coffee hybrid stack
+     Display: guest brand / editorial (Fraunces)
+     UI: operational sans (Inter + system)
+     Code: mono for T01, bills, transfer memo
+  ============================================ */
+  --font-display: "Fraunces", "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-code: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-number: var(--font-code);
+
+  /* Legacy aliases */
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
+  --font-narrative: var(--font-ui);
+  --font-functional: var(--font-ui);
+
+  --text-display: clamp(1.875rem, 5.5vw, 3.5rem);
+  --text-title: clamp(1.35rem, 4vw, 2.25rem);
+  --text-narrative: 1rem;
+  --text-functional: 0.75rem;
+  --text-ghost: 0.6875rem;
+
+  --leading-display: 1.15;
+  --leading-narrative: 1.8;
+  --leading-functional: 1.4;
+
+  --tracking-display: 0.02em;
+  --tracking-narrative: 0.01em;
+  --tracking-functional: 0.04em;
+  --tracking-ghost: 0.05em;
+
+  /* ============================================
+     SPACING — Editorial rhythm
+  ============================================ */
+  --space-micro: 4px;
+  --space-small: 8px;
+  --space-line: 16px;
+  --space-paragraph: 28px;
+  --space-section: 40px;
+  --space-page: 56px;
+  --space-silence: 80px;
+  --inset-content: 28px;
+  --inset-narrow: 20px;
+
+  /* ============================================
+     MOTION — Durations (correspond + doctrine bridge)
+  ============================================ */
+  --duration-ink: 150ms;
+  --duration-rustle: 280ms;
+  --duration-turn: 450ms;
+  --duration-open: 650ms;
+  --duration-seal: 900ms;
+  --duration-breathe: 8000ms;
+
+  --ease-unfold: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-fold: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-room: cubic-bezier(0.25, 0.1, 0.1, 1);
+
+  /* ============================================
+     RADIUS — Paper corners
+  ============================================ */
+  --radius-none: 0px;
+  --radius-subtle: 2px;
+  --radius-paper: 4px;
+  --radius-panel: 8px;
+  --radius-envelope: 12px;
+
+  /* ============================================
+     SHADOW — Depth
+  ============================================ */
+  --shadow-paper: 0 2px 12px rgba(26, 18, 9, 0.08);
+  --shadow-lifted: 0 8px 32px rgba(26, 18, 9, 0.12);
+  --shadow-envelope: 0 16px 48px rgba(26, 18, 9, 0.16);
+
+  /* ============================================
+     Z-INDEX — Paper stack (correspond; coexists with legacy --annap-z-*)
+  ============================================ */
+  --z-desk: 0;
+  --z-paper: 10;
+  --z-content: 20;
+  --z-marker: 30;
+  --z-vellum: 40;
+  --z-envelope: 50;
+  --z-arrival: 60;
+  --z-system: 100;
+
+  /* ============================================
+     MODE — Applied with [data-mode] on html (future AtmosphereManager)
+  ============================================ */
+  --mode-accent: var(--wax-seal);
+  --mode-paper-shift: 0%;
+  --mode-tempo: 1;
+
+  /* Bridge to existing ANNAP motion tokens (doctrine Part 3) when both loaded */
+  --annap-ease-enter: var(--ease-unfold);
+  --annap-ease-soft: var(--ease-room);
+}
+
+[data-mode="solo"] {
+  --mode-accent: var(--wax-deep);
+  --mode-paper-shift: -2%;
+  --mode-tempo: 1.15;
+}
+
+[data-mode="group"] {
+  --mode-accent: var(--wax-gold);
+  --mode-paper-shift: 3%;
+  --mode-tempo: 1;
+}
+
+[data-mode="adventurous"] {
+  --mode-accent: var(--wax-sage);
+  --mode-paper-shift: 0%;
+  --mode-tempo: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-ink: 0.001ms;
+    --duration-rustle: 0.001ms;
+    --duration-turn: 0.001ms;
+    --duration-open: 0.001ms;
+    --duration-seal: 0.001ms;
+    --duration-breathe: 0.001ms;
+  }
+}

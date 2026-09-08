@@ -1,0 +1,220 @@
+@page "/admin/menu"
+@model IndexModel
+@{
+    ViewData["Title"] = "Thực đơn";
+    ViewData["AdminNavSection"] = "menu";
+    ViewData["AdminEyebrow"] = "Vận hành";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="menu-operator space-y-6 sm:space-y-8" id="menu-operator-root"
+         data-categories='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Categories.Select(c => new { id = c.Id.ToString("D"), name = c.Name }).ToArray()))'>
+
+    <header class="menu-operator__head">
+        <div class="min-w-0">
+            <p class="menu-operator__eyebrow">Vận hành</p>
+            <h1 class="menu-operator__title">Thực đơn</h1>
+            <p class="menu-operator__lede">Quản lý các món đang hiển thị cho khách.</p>
+        </div>
+        <div class="menu-operator__head-actions">
+            <button type="button"
+                    class="admin-btn admin-btn--ghost guest-hit min-h-11 px-5 text-xs tracking-[0.1em]"
+                    data-action="toggle-category-order"
+                    aria-expanded="false"
+                    aria-controls="menu-operator-category-panel">
+                <span aria-hidden="true">⇅</span>
+                <span>Sắp xếp danh mục</span>
+            </button>
+            <a asp-page="/Admin/Menu/Create"
+               class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs tracking-[0.12em]">
+                <span aria-hidden="true">＋</span>
+                <span>Thêm món</span>
+            </a>
+        </div>
+    </header>
+
+    @if (TempData["MenuCurationToast"] is string toast)
+    {
+        <div class="menu-operator-toast" role="status">@toast</div>
+    }
+
+    <div class="menu-operator__toolbar">
+        <label class="admin-search menu-operator__search">
+            <span class="admin-search__icon" aria-hidden="true">⌕</span>
+            <input id="menu-operator-search"
+                   class="admin-search__input"
+                   type="search"
+                   placeholder="Tìm món..."
+                   autocomplete="off"
+                   inputmode="search" />
+        </label>
+
+        <div class="menu-operator__filters" role="tablist" aria-label="Lọc theo danh mục">
+            <button type="button"
+                    class="menu-operator__chip is-active"
+                    data-category-filter=""
+                    role="tab"
+                    aria-selected="true">
+                Tất cả
+            </button>
+            @foreach (var c in Model.Categories)
+            {
+                <button type="button"
+                        class="menu-operator__chip"
+                        data-category-filter="@c.Id.ToString("D")"
+                        role="tab"
+                        aria-selected="false">
+                    @c.Name
+                </button>
+            }
+        </div>
+
+        <label class="menu-operator__archive-toggle">
+            <input type="checkbox" id="menu-operator-archive-toggle" />
+            <span>Hiển thị món đã lưu trữ</span>
+        </label>
+    </div>
+
+    <section id="menu-operator-category-panel"
+             class="menu-operator__category-panel"
+             hidden
+             aria-label="Sắp xếp danh mục">
+        <form method="post" asp-page="/Admin/Menu/Categories" class="space-y-4">
+            <div class="menu-operator__category-panel-head">
+                <div>
+                    <p class="menu-operator__panel-eyebrow">Sắp xếp danh mục</p>
+                    <p class="menu-operator__panel-lede">Dùng nút lên/xuống để đổi thứ tự hiển thị cho khách.</p>
+                </div>
+                <button type="button" class="admin-btn admin-btn--quiet min-h-10 px-3 text-[10px]" data-action="toggle-category-order">Đóng</button>
+            </div>
+            <ul class="menu-operator__category-list" id="menu-operator-category-list">
+                @for (var i = 0; i < Model.Categories.Count; i++)
+                {
+                    var c = Model.Categories[i];
+                    <li class="menu-operator__category-row"
+                        data-cat-id="@c.Id.ToString("D")"
+                        data-sort-order="@c.SortOrder">
+                        <input type="hidden" name="SortInputs[@i].Id" value="@c.Id" />
+                        <input type="hidden" name="SortInputs[@i].SortOrder" value="@c.SortOrder" data-cat-sort-input="@c.Id.ToString("D")" />
+                        <span class="menu-operator__category-name">@c.Name</span>
+                        <div class="menu-operator__category-controls">
+                            <button type="button"
+                                    class="menu-operator__icon-btn"
+                                    data-action="cat-up"
+                                    aria-label="Lên trên"
+                                    disabled="@(i == 0)">
+                                <span aria-hidden="true">▲</span>
+                            </button>
+                            <button type="button"
+                                    class="menu-operator__icon-btn"
+                                    data-action="cat-down"
+                                    aria-label="Xuống dưới"
+                                    disabled="@(i == Model.Categories.Count - 1)">
+                                <span aria-hidden="true">▼</span>
+                            </button>
+                        </div>
+                    </li>
+                }
+            </ul>
+            @if (Model.Categories.Count > 0)
+            {
+                <div class="menu-operator__category-panel-foot">
+                    <button type="submit" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs tracking-[0.1em]">
+                        Lưu thứ tự
+                    </button>
+                </div>
+            }
+            else
+            {
+                <p class="menu-operator__empty">Chưa có danh mục nào.</p>
+            }
+        </form>
+    </section>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="menu-operator__empty-state">
+            <p>Chưa có món nào trong thực đơn.</p>
+            <a asp-page="/Admin/Menu/Create" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs">
+                Thêm món đầu tiên
+            </a>
+        </div>
+    }
+    else
+    {
+        <ul class="menu-operator__list" id="menu-operator-list">
+            @foreach (var item in Model.Items)
+            {
+                var archivedClass = item.IsArchived ? "menu-operator__row--archived" : null;
+                var catId = item.CategoryId.ToString("D");
+                <li class="menu-operator__row @archivedClass"
+                    data-name="@item.Name"
+                    data-subtitle="@(item.Subtitle ?? "")"
+                    data-category="@item.CategoryName"
+                    data-category-id="@catId"
+                    data-archived="@(item.IsArchived ? "1" : "0")">
+                    <a class="menu-operator__row-main" asp-page="/Admin/Menu/Edit" asp-route-id="@item.Id">
+                        <span class="menu-operator__thumb" aria-hidden="true">
+                            @if (!string.IsNullOrWhiteSpace(item.PreviewImageUrl))
+                            {
+                                <img src="@item.PreviewImageUrl" alt="" width="80" height="80" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                            }
+                            else
+                            {
+                                <span class="menu-operator__thumb-empty">—</span>
+                            }
+                        </span>
+                        <span class="menu-operator__row-text">
+                            <span class="menu-operator__row-title">@item.Name</span>
+                            @if (!string.IsNullOrWhiteSpace(item.Subtitle))
+                            {
+                                <span class="menu-operator__row-sub">@item.Subtitle</span>
+                            }
+                            <span class="menu-operator__row-meta">
+                                <span class="menu-operator__pill menu-operator__pill--cat">@item.CategoryName</span>
+                                <span class="menu-operator__row-meta-status">
+                                    @if (item.IsAvailable)
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--ok">Đang bán</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--warn">Tạm hết</span>
+                                    }
+                                    @if (item.IsFeatured)
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--feat">Nổi bật</span>
+                                    }
+                                    @if (item.IsSignature)
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--sig">Đặc trưng</span>
+                                    }
+                                    @if (item.IsArchived)
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--arch">Đã lưu trữ</span>
+                                    }
+                                </span>
+                            </span>
+                        </span>
+                    </a>
+                    <span class="menu-operator__row-price">@VndMoneyFormatter.Format(item.Price)</span>
+                    <a class="admin-btn admin-btn--ghost menu-operator__row-edit"
+                       asp-page="/Admin/Menu/Edit"
+                       asp-route-id="@item.Id">
+                        Chỉnh sửa
+                    </a>
+                </li>
+            }
+        </ul>
+        <p class="menu-operator__no-results" id="menu-operator-no-results" hidden>
+            Không tìm thấy món phù hợp.
+        </p>
+    }
+</section>
+
+@section Scripts
+{
+    <script src="~/js/menu-operator.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,304 @@
+/* Guest order tracking — scoped to .track-root only */
+
+.track-root {
+  max-width: 22rem;
+}
+
+.track-root__status {
+  margin-top: 0.35rem;
+}
+
+.track-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.track-status-pill__dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.track-root--pending .track-status-pill {
+  color: rgb(92, 74, 50);
+  background: rgba(199, 168, 122, 0.16);
+  box-shadow: 0 0 0 1px rgba(199, 168, 122, 0.28);
+}
+
+.track-root--pending .track-status-pill__dot {
+  background: rgba(199, 168, 122, 0.75);
+}
+
+.track-root--paid .track-status-pill {
+  color: rgb(40, 72, 52);
+  background: rgba(110, 136, 116, 0.14);
+  box-shadow: 0 0 0 1px rgba(110, 136, 116, 0.28);
+}
+
+.track-root--paid .track-status-pill__dot {
+  background: rgba(110, 136, 116, 0.85);
+}
+
+.track-root--complete .track-status-pill {
+  color: rgb(var(--muted));
+  background: rgba(26, 18, 9, 0.05);
+  box-shadow: 0 0 0 1px rgba(139, 110, 72, 0.16);
+}
+
+.track-root--complete .track-status-pill__dot {
+  background: rgba(139, 110, 72, 0.45);
+}
+
+.track-order-ref {
+  margin: 0.35rem 0 0;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--muted-2));
+}
+
+.track-order-ref span {
+  color: rgb(var(--muted));
+  font-variant-numeric: tabular-nums;
+}
+
+.track-keep-open {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgb(var(--muted-2));
+}
+
+.track-selection-wrap {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(212, 184, 150, 0.45);
+  background: rgba(253, 249, 244, 0.55);
+  padding: 1rem 1.1rem;
+}
+
+/* Milestone tone overrides (paper guest app) */
+body.guest-app .track-root--pending .track-mile.is-current .track-mile-dot {
+  border-color: rgba(199, 168, 122, 0.55);
+  background: rgba(199, 168, 122, 0.14);
+  box-shadow: 0 0 0 1px rgba(199, 168, 122, 0.15);
+}
+
+body.guest-app .track-root--paid .track-mile.is-current .track-mile-dot {
+  border-color: rgba(42, 102, 85, 0.45);
+  background: rgba(42, 102, 85, 0.12);
+  box-shadow: 0 0 0 1px rgba(42, 102, 85, 0.12);
+}
+
+body.guest-app .track-root--complete .track-mile.is-current .track-mile-dot,
+body.guest-app .track-root--complete .track-mile.is-past .track-mile-dot--done {
+  border-color: rgba(42, 102, 85, 0.4);
+  background: rgba(42, 102, 85, 0.1);
+}
+
+.track-root--complete #track-hero-title {
+  color: rgb(var(--fg));
+}
+
+/* Guest receipt bill */
+.guest-track-bill {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(139, 110, 72, 0.22);
+  background: #faf8f4;
+  color: #1a1209;
+  padding: 1rem 1.1rem 1.15rem;
+  box-shadow:
+    0 8px 24px -16px rgba(26, 18, 9, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.guest-track-bill--provisional {
+  border-color: rgba(199, 168, 122, 0.35);
+  background: rgba(253, 249, 244, 0.92);
+}
+
+.guest-track-bill--provisional .guest-track-bill__thanks {
+  color: #967e5a;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.guest-track-bill__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #967e5a;
+}
+
+.guest-track-bill__brand {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  color: #1a1209;
+}
+
+.guest-track-bill__hero {
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(139, 110, 72, 0.14);
+}
+
+.guest-track-bill__bill-label {
+  margin: 0.65rem 0 0;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #967e5a;
+}
+
+.guest-track-bill__bill-no {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: #1a1209;
+}
+
+.guest-track-bill__table-code {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  color: #1a1209;
+}
+
+.guest-track-bill__meta {
+  margin: 0.7rem 0 0;
+  padding: 0 0 0.65rem;
+  display: grid;
+  gap: 0.35rem;
+  border-bottom: 1px dashed rgba(139, 110, 72, 0.2);
+}
+
+.guest-track-bill__meta > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.guest-track-bill__meta dt {
+  margin: 0;
+  color: #967e5a;
+  font-weight: 500;
+}
+
+.guest-track-bill__meta dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #1a1209;
+}
+
+.guest-track-bill__items {
+  margin: 0;
+  padding: 0.5rem 0 0;
+  list-style: none;
+}
+
+.guest-track-bill__line {
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted rgba(139, 110, 72, 0.16);
+  font-size: 0.875rem;
+}
+
+.guest-track-bill__line:last-child {
+  border-bottom: 0;
+}
+
+.guest-track-bill__line-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-weight: 500;
+  color: #1a1209;
+}
+
+.guest-track-bill__line-meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: #5c4a32;
+  font-variant-numeric: tabular-nums;
+}
+
+.guest-track-bill__line-total {
+  font-weight: 600;
+  color: #1a1209;
+}
+
+.guest-track-bill__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 0.7rem;
+  padding-top: 0.65rem;
+  border-top: 2px solid rgba(139, 110, 72, 0.2);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5c4a32;
+}
+
+.guest-track-bill__total strong {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1a1209;
+}
+
+.guest-track-bill__thanks {
+  margin: 0.75rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(139, 110, 72, 0.18);
+  text-align: center;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: #967e5a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track-root--pulse #track-hero-title {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 24rem) {
+  .track-root {
+    max-width: 100%;
+  }
+
+  .guest-track-bill {
+    padding: 0.9rem 0.95rem 1rem;
+  }
+}
+
+#track-transfer-wrap {
+  margin-top: 1rem;
+}

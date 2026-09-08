@@ -1,0 +1,145 @@
+@page "/admin/demo/qr"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Demo.QrModel
+@{
+    ViewData["Title"] = "Mã QR bàn";
+    ViewData["AdminNavSection"] = "demo-qr";
+    ViewData["AdminEyebrow"] = "Production QR";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-demo-qr.css" asp-append-version="true" />
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="demo-qr-page">
+    <header class="demo-qr-hero demo-qr-no-print">
+        <p class="demo-qr-eyebrow">Kits Coffee Atelier</p>
+        <h1 class="demo-qr-title">Thẻ QR bàn</h1>
+        <p class="demo-qr-lead">
+            In thẻ A4 cho bàn active. Mỗi thẻ gồm tên bàn, mã QR, URL production và logo Kits.
+            QR luôn dùng địa chỉ công khai — không localhost.
+        </p>
+        @if (Model.ShowLocalhostLanBanner)
+        {
+            <aside class="demo-qr-localhost-banner" role="note">
+                <p class="demo-qr-localhost-banner__title">Phát triển · demo điện thoại</p>
+                <p class="demo-qr-localhost-banner__text">
+                    Bạn đang mở trang trên <strong>localhost</strong>. Điện thoại phải dùng địa chỉ LAN WiFi:
+                </p>
+                <p class="demo-qr-localhost-banner__url">
+                    <a href="@Model.PhoneDemoWiFiBaseUrl">@Model.PhoneDemoWiFiBaseUrl</a>
+                </p>
+            </aside>
+        }
+        <p class="demo-qr-base">
+            <span class="demo-qr-base__label">Địa chỉ mạng công khai (QR)</span>
+            <code class="demo-qr-base__url">@(string.IsNullOrWhiteSpace(Model.PublicBaseUrl) ? "—" : Model.PublicBaseUrl)</code>
+        </p>
+        <p class="demo-qr-base demo-qr-base--meta">
+            <span class="demo-qr-base__label">Nguồn hostname QR</span>
+            <code class="demo-qr-base__url">@Model.QrResolution.SourceLabel</code>
+            <span class="demo-qr-base__hint">Bàn active: @Model.TotalActiveTables · Đang in: @Model.Rows.Count</span>
+        </p>
+        @if (Model.QrResolution.Warnings.Count > 0)
+        {
+            <aside class="demo-qr-warning-banner" role="alert">
+                @foreach (var warning in Model.QrResolution.Warnings)
+                {
+                    <p>@warning</p>
+                }
+            </aside>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.BlockReason))
+        {
+            <aside class="demo-qr-warning-banner" role="alert">
+                <p>@Model.BlockReason</p>
+            </aside>
+        }
+
+        @if (Model.CanGenerateQr)
+        {
+            <form method="get" class="demo-qr-toolbar" id="demo-qr-toolbar">
+                <label class="demo-qr-toolbar__field">
+                    <span>Số lượng thẻ</span>
+                    <select name="take" id="demo-qr-take">
+                        @{
+                            var presets = new[] { 1, 5, 10, 20, 50, 100, 200, 500 };
+                            var current = Model.Take > 0 ? Model.Take : Model.TotalActiveTables;
+                        }
+                        @foreach (var n in presets)
+                        {
+                            if (n > Model.TotalActiveTables && Model.TotalActiveTables > 0 && n != 500)
+                                continue;
+                            <option value="@n" selected="@(current == n ? "selected" : null)">@n</option>
+                        }
+                        @if (Model.TotalActiveTables > 0 && !presets.Contains(Model.TotalActiveTables))
+                        {
+                            <option value="@Model.TotalActiveTables" selected="@(current == Model.TotalActiveTables ? "selected" : null)">
+                                Tất cả (@Model.TotalActiveTables)
+                            </option>
+                        }
+                    </select>
+                </label>
+                <label class="demo-qr-toolbar__field demo-qr-toolbar__field--grow">
+                    <span>Mã bàn (tuỳ chọn, cách nhau bằng dấu phẩy)</span>
+                    <input type="text" name="codes" value="@Model.CodesQuery" placeholder="T01,T02,T12" autocomplete="off" />
+                </label>
+                <button type="submit" class="demo-qr-btn">Tải thẻ</button>
+                <button type="button" class="demo-qr-btn demo-qr-btn--gold" id="demo-qr-print-all">
+                    In A4 (@Model.Rows.Count)
+                </button>
+            </form>
+        }
+    </header>
+
+    @if (Model.CanGenerateQr && Model.Rows.Count > 0)
+    {
+        <div class="demo-qr-grid">
+            @foreach (var row in Model.Rows)
+            {
+                <article class="demo-qr-card" data-table="@row.TableCode" id="demo-qr-card-@row.TableCode">
+                    <div class="demo-qr-card__inner">
+                        <div class="demo-qr-card__brand">
+                            <img class="demo-qr-card__logo"
+                                 src="~/images/kits-mark.svg"
+                                 asp-append-version="true"
+                                 alt="Kits"
+                                 width="48"
+                                 height="48" />
+                            <p class="demo-qr-card__brand-name">Kits Coffee Atelier</p>
+                        </div>
+                        <header class="demo-qr-card__head">
+                            <p class="demo-qr-card__eyebrow">Bàn</p>
+                            <h2 class="demo-qr-card__code">@row.TableName</h2>
+                            @if (!string.Equals(row.TableName, row.TableCode, StringComparison.Ordinal))
+                            {
+                                <p class="demo-qr-card__code-meta">@row.TableCode</p>
+                            }
+                        </header>
+                        <div class="demo-qr-card__qr">
+                            <img src="@row.QrDataUri"
+                                 alt="Mã QR dẫn đến @row.GuestUrl"
+                                 width="360"
+                                 height="360"
+                                 loading="lazy"
+                                 decoding="async" />
+                        </div>
+                        <p class="demo-qr-card__url">
+                            <code class="demo-qr-card__urltext" id="demo-qr-url-@row.TableCode">@row.GuestUrl</code>
+                        </p>
+                        <div class="demo-qr-actions demo-qr-no-print">
+                            <a class="demo-qr-btn" href="@row.GuestUrl" target="_blank" rel="noopener">Mở</a>
+                            <button type="button" class="demo-qr-btn demo-qr-btn--quiet" data-copy="@row.GuestUrl">Sao chép link</button>
+                            <button type="button" class="demo-qr-btn demo-qr-btn--quiet" data-print-card="@row.TableCode">In thẻ này</button>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-demo-qr.js" asp-append-version="true"></script>
+}

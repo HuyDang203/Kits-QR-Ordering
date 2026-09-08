@@ -1,0 +1,226 @@
+@page "/admin/payments"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Policy = "StaffAdmin")]
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Payments.IndexModel
+@using Annap.CoffeeQrOrdering.Domain.Entities
+@using Annap.CoffeeQrOrdering.Web.Internal
+@using System.Globalization
+@{
+    ViewData["Title"] = "Đối soát chuyển khoản";
+    ViewData["AdminNavSection"] = "payments";
+    ViewData["AdminEyebrow"] = "Vận hành";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    var p = Model.PageData;
+    string Money(decimal v) => VndMoneyFormatter.Format(v);
+    string RangeLabel() => p.FromLocalDate == p.ToLocalDate
+        ? AnnapBusinessTime.FormatLocalDateLong(p.FromLocalDate)
+        : $"{AnnapBusinessTime.FormatLocalDateLong(p.FromLocalDate)} – {AnnapBusinessTime.FormatLocalDateLong(p.ToLocalDate)}";
+    var statusValue = string.IsNullOrWhiteSpace(Model.Status) ? "all" : Model.Status;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-payments.css" asp-append-version="true" />
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="admin-payments" aria-label="Đối soát chuyển khoản">
+    <div class="admin-payments-sheet">
+
+        <header class="admin-payments-header">
+            <p class="admin-payments-eyebrow">Sổ đối soát</p>
+            <h1 class="admin-payments-title">Đối soát chuyển khoản</h1>
+            <p class="admin-payments-lead">
+                Theo dõi webhook chuyển khoản, giao dịch đã khớp và các giao dịch cần kiểm tra thủ công.
+            </p>
+        </header>
+
+        <form method="get" class="admin-payments-filters" aria-label="Bộ lọc đối soát">
+            <div class="admin-payments-presets" role="group" aria-label="Chọn nhanh">
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "today" ? "is-active" : null)"
+                   href="@Model.BuildFilterUrl("today", status: statusValue, provider: Model.Provider, search: Model.Search)">Hôm nay</a>
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "last-7-days" ? "is-active" : null)"
+                   href="@Model.BuildFilterUrl("last-7-days", status: statusValue, provider: Model.Provider, search: Model.Search)">7 ngày qua</a>
+            </div>
+            <div class="admin-payments-custom @(Model.ActivePreset == "custom" ? "is-active" : null)">
+                <input type="hidden" name="preset" value="custom" />
+                <label class="admin-payments-field">
+                    <span>Từ ngày</span>
+                    <input type="date" name="from" value="@Model.FromLocal.ToString("yyyy-MM-dd")" required />
+                </label>
+                <label class="admin-payments-field">
+                    <span>Đến ngày</span>
+                    <input type="date" name="to" value="@Model.ToLocal.ToString("yyyy-MM-dd")" required />
+                </label>
+                <label class="admin-payments-field">
+                    <span>Trạng thái</span>
+                    <select name="status">
+                        <option value="all" selected="@(statusValue == "all" ? "selected" : null)">Tất cả</option>
+                        <option value="@PaymentConfirmationMatchStatus.Matched" selected="@(statusValue == PaymentConfirmationMatchStatus.Matched ? "selected" : null)">Đã khớp</option>
+                        <option value="@PaymentConfirmationMatchStatus.Unmatched" selected="@(statusValue == PaymentConfirmationMatchStatus.Unmatched ? "selected" : null)">Chưa khớp</option>
+                        <option value="@PaymentConfirmationMatchStatus.Duplicate" selected="@(statusValue == PaymentConfirmationMatchStatus.Duplicate ? "selected" : null)">Trùng giao dịch</option>
+                        <option value="@PaymentConfirmationMatchStatus.AmountMismatch" selected="@(statusValue == PaymentConfirmationMatchStatus.AmountMismatch ? "selected" : null)">Sai số tiền</option>
+                        <option value="@PaymentConfirmationMatchStatus.MemoMissing" selected="@(statusValue == PaymentConfirmationMatchStatus.MemoMissing ? "selected" : null)">Thiếu nội dung</option>
+                        <option value="@PaymentConfirmationMatchStatus.OrderAlreadyPaid" selected="@(statusValue == PaymentConfirmationMatchStatus.OrderAlreadyPaid ? "selected" : null)">Đơn đã thanh toán</option>
+                        <option value="@PaymentConfirmationMatchStatus.Ignored" selected="@(statusValue == PaymentConfirmationMatchStatus.Ignored ? "selected" : null)">Đã bỏ qua</option>
+                    </select>
+                </label>
+                <label class="admin-payments-field">
+                    <span>Provider</span>
+                    <input type="text" name="provider" value="@Model.Provider" placeholder="Tất cả" list="payment-provider-options" />
+                    <datalist id="payment-provider-options">
+                        @foreach (var prov in p.ProviderOptions)
+                        {
+                            <option value="@prov"></option>
+                        }
+                    </datalist>
+                </label>
+                <label class="admin-payments-field admin-payments-field--grow">
+                    <span>Tìm memo / bill</span>
+                    <input type="search" name="q" value="@Model.Search" placeholder="KITS A123…" />
+                </label>
+                <button type="submit" class="admin-btn admin-btn--primary">Lọc</button>
+            </div>
+            <p class="admin-payments-range">
+                Khoảng thời gian: <strong>@RangeLabel()</strong>
+                <span class="admin-payments-range__tz">· giờ Việt Nam</span>
+            </p>
+        </form>
+
+        <div class="admin-payments-kpi-grid">
+            <article class="admin-payments-kpi">
+                <p class="admin-payments-kpi__label">Tổng webhook nhận được</p>
+                <p class="admin-payments-kpi__value tabular-nums">@p.Summary.TotalReceived</p>
+            </article>
+            <article class="admin-payments-kpi">
+                <p class="admin-payments-kpi__label">Đã khớp đơn</p>
+                <p class="admin-payments-kpi__value tabular-nums">@p.Summary.MatchedCount</p>
+            </article>
+            <article class="admin-payments-kpi">
+                <p class="admin-payments-kpi__label">Cần kiểm tra</p>
+                <p class="admin-payments-kpi__value tabular-nums">@p.Summary.NeedsReviewCount</p>
+            </article>
+            <article class="admin-payments-kpi">
+                <p class="admin-payments-kpi__label">Sai số tiền</p>
+                <p class="admin-payments-kpi__value tabular-nums">@p.Summary.AmountMismatchCount</p>
+            </article>
+            <article class="admin-payments-kpi">
+                <p class="admin-payments-kpi__label">Trùng giao dịch</p>
+                <p class="admin-payments-kpi__value tabular-nums">@p.Summary.DuplicateCount</p>
+            </article>
+        </div>
+
+        @if (Model.Selected is { } detail)
+        {
+            <aside id="confirmation-detail" class="admin-payments-detail" aria-label="Chi tiết giao dịch">
+                <div class="admin-payments-detail__head">
+                    <h2 class="admin-payments-detail__title">Chi tiết webhook</h2>
+                    <a class="admin-btn admin-btn--quiet" href="@Model.BuildCloseDetailUrl()">Đóng</a>
+                </div>
+                <dl class="admin-payments-detail__grid">
+                    <div><dt>Provider</dt><dd>@detail.Provider</dd></div>
+                    <div><dt>Mã giao dịch</dt><dd>@(detail.ProviderTransactionId ?? "—")</dd></div>
+                    <div><dt>Thời gian nhận</dt><dd>@AnnapBusinessTime.FormatLocalDateTime(detail.ReceivedAtUtc)</dd></div>
+                    <div><dt>Số tiền</dt><dd class="tabular-nums">@Money(detail.Amount)</dd></div>
+                    <div><dt>Nội dung CK</dt><dd>@detail.Memo</dd></div>
+                    <div><dt>Tài khoản</dt><dd>@(detail.AccountNumberMasked ?? "—")</dd></div>
+                    <div><dt>Bank code</dt><dd>@(detail.BankCode ?? "—")</dd></div>
+                    <div><dt>Trạng thái</dt><dd><span class="admin-payments-badge admin-payments-badge--@detail.MatchStatus.ToLowerInvariant()">@detail.StatusLabel</span></dd></div>
+                    <div><dt>Bill khớp</dt><dd>
+                        @if (detail.MatchedOrderId is { } oid && !string.IsNullOrWhiteSpace(detail.BillNumber))
+                        {
+                            <a href="@Model.BuildBillUrl(oid)">@detail.BillNumber</a>
+                        }
+                        else
+                        {
+                            <span>—</span>
+                        }
+                    </dd></div>
+                    <div><dt>Ghi chú</dt><dd>@(detail.Notes ?? "—")</dd></div>
+                </dl>
+                @if (!string.IsNullOrWhiteSpace(detail.RawPayloadJson))
+                {
+                    <details class="admin-payments-raw">
+                        <summary>Raw payload (chỉ Admin)</summary>
+                        <pre class="admin-payments-raw__body">@detail.RawPayloadJson</pre>
+                    </details>
+                }
+            </aside>
+        }
+
+        <div class="admin-payments-table-wrap">
+            @if (p.Rows.Count == 0)
+            {
+                <p class="admin-payments-empty">Chưa có webhook nào trong khoảng này.</p>
+            }
+            else
+            {
+                <table class="admin-payments-table">
+                    <thead>
+                        <tr>
+                            <th>Thời gian nhận</th>
+                            <th>Provider</th>
+                            <th>Mã GD</th>
+                            <th>Số tiền</th>
+                            <th>Nội dung CK</th>
+                            <th>Trạng thái</th>
+                            <th>Bill / Order</th>
+                            <th>Ghi chú</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in p.Rows)
+                        {
+                            <tr class="@(Model.Id == row.Id ? "is-selected" : null)">
+                                <td>@AnnapBusinessTime.FormatLocalDateTime(row.ReceivedAtUtc)</td>
+                                <td>@row.Provider</td>
+                                <td class="admin-payments-mono">@(row.ProviderTransactionId ?? "—")</td>
+                                <td class="tabular-nums">@Money(row.Amount)</td>
+                                <td class="admin-payments-memo">@row.Memo</td>
+                                <td><span class="admin-payments-badge admin-payments-badge--@row.MatchStatus.ToLowerInvariant()">@row.StatusLabel</span></td>
+                                <td>
+                                    @if (row.MatchedOrderId is { } oid && !string.IsNullOrWhiteSpace(row.BillNumber))
+                                    {
+                                        <a href="@Model.BuildBillUrl(oid)">@row.BillNumber</a>
+                                    }
+                                    else
+                                    {
+                                        <span>—</span>
+                                    }
+                                </td>
+                                <td class="admin-payments-notes">@(row.Notes ?? "—")</td>
+                                <td class="admin-payments-actions">
+                                    @if (row.MatchedOrderId is { } matchedId)
+                                    {
+                                        <a class="admin-payments-link" href="@Model.BuildBillUrl(matchedId)">Xem bill</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-payments-hint">@IndexModel.ManualReviewNote</span>
+                                    }
+                                    <a class="admin-payments-link" href="@Model.BuildDetailUrl(row.Id)">Chi tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        @if (p.TotalPages > 1)
+        {
+            <nav class="admin-payments-pager" aria-label="Phân trang">
+                @if (p.Page > 1)
+                {
+                    <a class="admin-btn admin-btn--quiet" href="@Model.BuildFilterUrl(Model.ActivePreset, Model.FromLocal, Model.ToLocal, statusValue, Model.Provider, Model.Search, p.Page - 1, Model.Id)">← Trước</a>
+                }
+                <span class="admin-payments-pager__info">Trang @p.Page / @p.TotalPages · @p.TotalMatchingRows giao dịch</span>
+                @if (p.Page < p.TotalPages)
+                {
+                    <a class="admin-btn admin-btn--quiet" href="@Model.BuildFilterUrl(Model.ActivePreset, Model.FromLocal, Model.ToLocal, statusValue, Model.Provider, Model.Search, p.Page + 1, Model.Id)">Sau →</a>
+                }
+            </nav>
+        }
+
+    </div>
+</section>

@@ -1,0 +1,42 @@
+@page "/diag/minimal"
+@model Annap.CoffeeQrOrdering.Web.Pages.Diag.MinimalModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostEnvironment
+@inject Microsoft.Extensions.Options.IOptions<DiagnosticsOptions> DiagOptions
+@{
+    Layout = null;
+    var useDevUi = HostEnvironment.IsDevelopment() || DiagOptions.Value.DeveloperOverlays;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Minimal LAN test</title>
+    <partial name="Shared/_AnnapRuntimeHead" model="useDevUi" />
+    <style>
+        body { font: 16px system-ui, sans-serif; margin: 16px; background: #1a1a1a; color: #e5e5e5; }
+        #out { white-space: pre-wrap; word-break: break-word; margin-top: 12px; padding: 12px; background: #000; border: 1px solid #444; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Minimal test</h1>
+    <p>No Tailwind, no app scripts. Inline fetch only.</p>
+    <div id="out">Running fetch('/api/diag/ping')…</div>
+    <script>
+        (function () {
+            var el = document.getElementById("out");
+            var t0 = performance.now();
+            fetch((typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/diag/ping") : "/api/diag/ping"), { headers: { Accept: "application/json" } })
+                .then(function (r) {
+                    return r.text().then(function (txt) {
+                        var ms = Math.round(performance.now() - t0);
+                        el.textContent = "HTTP " + r.status + " in " + ms + "ms\n\n" + txt;
+                    });
+                })
+                .catch(function (e) {
+                    el.textContent = "FAIL: " + (e && e.message ? e.message : String(e));
+                });
+        })();
+    </script>
+</body>
+</html>

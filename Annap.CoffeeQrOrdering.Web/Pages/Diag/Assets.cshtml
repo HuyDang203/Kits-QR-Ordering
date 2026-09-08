@@ -1,0 +1,73 @@
+@page "/diag/assets"
+@model Annap.CoffeeQrOrdering.Web.Pages.Diag.AssetsModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Static asset diagnostics</title>
+</head>
+<body style="font:13px system-ui,sans-serif;margin:12px;background:#111;color:#eee">
+    <h1 style="font-size:16px">Static asset diagnostics</h1>
+    <pre id="out" style="white-space:pre-wrap;word-break:break-word"></pre>
+    <script>
+        (function () {
+            var lines = [];
+            var pre = document.getElementById("out");
+            function log(s) {
+                lines.push(s);
+                pre.textContent = lines.join("\n");
+            }
+
+            function testAsset(name, url) {
+                var t0 = performance.now();
+                return fetch(url, { method: "GET", cache: "no-store" })
+                    .then(function (res) {
+                        var ms = Math.round(performance.now() - t0);
+                        var ct = res.headers.get("content-type") || "";
+                        if (!res.ok) {
+                            log("FAIL " + name + " HTTP " + res.status + " " + ms + "ms ct=" + ct);
+                            return res.text().then(function (body) {
+                                log("  body head: " + body.slice(0, 200).replace(/\s+/g, " "));
+                            });
+                        }
+                        log("PASS " + name + " HTTP " + res.status + " " + ms + "ms ct=" + ct + " len~=" + (res.headers.get("content-length") || "?"));
+                    })
+                    .catch(function (e) {
+                        var ms = Math.round(performance.now() - t0);
+                        log("FAIL " + name + " " + ms + "ms " + (e && e.message ? e.message : String(e)));
+                    });
+            }
+
+            var assets = [
+                ["/css/site.css", "site.css"],
+                ["/js/site.js", "site.js"],
+                ["/js/guest-order-queue.js", "guest-order-queue.js"],
+                ["/js/guest-i18n.js", "guest-i18n.js"],
+                ["/js/guest-interaction-contract.js", "guest-interaction-contract.js"],
+                ["/js/guest-feedback.js", "guest-feedback.js"],
+                ["/js/guest-lan-debug.js", "guest-lan-debug.js"],
+                ["/lib/signalr/signalr.min.js", "signalr.min.js"],
+                ["/i18n/guest-en.json", "guest-en.json"],
+                ["/Annap.CoffeeQrOrdering.Web.styles.css", "scoped tailwind bundle"]
+            ];
+
+            log("Origin: " + location.origin);
+            var chain = Promise.resolve();
+            for (var i = 0; i < assets.length; i++) {
+                (function (pair) {
+                    chain = chain.then(function () {
+                        return testAsset(pair[1], pair[0]);
+                    });
+                })(assets[i]);
+            }
+            chain.then(function () {
+                log("Done.");
+            });
+        })();
+    </script>
+</body>
+</html>

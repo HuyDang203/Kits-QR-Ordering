@@ -1,0 +1,230 @@
+@page "/admin/system/data-audit"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Connectivity.DataAuditModel
+@using Annap.CoffeeQrOrdering.Web.Services
+@{
+    ViewData["Title"] = "Kiểm tra dữ liệu";
+    ViewData["AdminNavSection"] = "system-data-audit";
+    ViewData["AdminEyebrow"] = "Hệ thống";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    var r = Model.Report;
+
+    string LevelClass(DataAuditLevel level) => level switch
+    {
+        DataAuditLevel.Pass => "data-audit-level--pass",
+        DataAuditLevel.Warn => "data-audit-level--warn",
+        _ => "data-audit-level--fail"
+    };
+
+    string LevelLabel(DataAuditLevel level) => level switch
+    {
+        DataAuditLevel.Pass => "PASS",
+        DataAuditLevel.Warn => "WARN",
+        _ => "FAIL"
+    };
+
+    string? FileExistsLabel(bool? exists) => exists switch
+    {
+        true => "true",
+        false => "false",
+        _ => "n/a"
+    };
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="ah ah-wrap max-w-6xl data-audit-page">
+    <header class="ah-hero">
+        <div>
+            <p class="ah-hero__kicker">Hệ thống · Phase 8.9B</p>
+            <h1 class="ah-hero__title">Kiểm tra toàn vẹn dữ liệu</h1>
+            <p class="ah-hero__lede">
+                Chỉ đọc — không sửa, không seed, không bootstrap. Dùng khi không có Render Shell.
+            </p>
+        </div>
+    </header>
+
+    <section class="exp-card mt-10 p-6 data-audit-summary @LevelClass(r.OverallLevel)">
+        <p class="exp-muted text-xs tracking-wide">Tóm tắt</p>
+        <h2 class="mt-2 text-lg font-semibold text-[rgb(var(--fg))]">
+            <span class="data-audit-level-badge @LevelClass(r.OverallLevel)">@LevelLabel(r.OverallLevel)</span>
+            Production data audit
+        </h2>
+        <dl class="mt-4 grid gap-2 text-sm md:grid-cols-2 lg:grid-cols-3">
+            <div><dt class="text-[rgb(var(--muted))]">Total categories</dt><dd class="font-mono">@r.Diagnostics.TotalCategories</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Total menu items</dt><dd class="font-mono">@r.Diagnostics.TotalMenuItems</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Bakery category count</dt><dd class="font-mono">@r.Diagnostics.BakeryCategoryCount</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Bakery item count</dt><dd class="font-mono">@r.Diagnostics.BakeryItemCount</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Poster files found</dt><dd class="font-mono">@r.Diagnostics.PosterFileCount</dd></div>
+        </dl>
+        <ul class="mt-4 space-y-2 text-sm">
+            @foreach (var finding in r.Findings)
+            {
+                <li class="data-audit-finding @LevelClass(finding.Level)">
+                    <span class="data-audit-level-badge @LevelClass(finding.Level)">@LevelLabel(finding.Level)</span>
+                    @finding.Message
+                </li>
+            }
+        </ul>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">6 · Môi trường</p>
+        <dl class="mt-4 grid gap-3 text-sm md:grid-cols-2">
+            <div><dt class="text-[rgb(var(--muted))]">Database host</dt><dd class="font-mono">@r.DatabaseHost</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Database name</dt><dd class="font-mono">@r.DatabaseName</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">AppUrl__PublicBaseUrl</dt><dd class="break-all font-mono">@(r.AppUrlPublicBaseUrl ?? "(empty)")</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">PublicBaseUrlOverride</dt><dd class="break-all font-mono">@(r.PublicBaseUrlOverride ?? "(empty)")</dd></div>
+            <div><dt class="text-[rgb(var(--muted))]">Render deployment</dt><dd>@(r.RenderDeploymentDetected ? "yes" : "no")</dd></div>
+        </dl>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">1 · Danh mục</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="data-audit-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>SortOrder</th>
+                        <th>Total</th>
+                        <th>Available</th>
+                        <th>Archived</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in r.Categories)
+                    {
+                        <tr>
+                            <td>@cat.Name</td>
+                            <td class="font-mono">@cat.SortOrder</td>
+                            <td class="font-mono">@cat.TotalItems</td>
+                            <td class="font-mono">@cat.AvailableItems</td>
+                            <td class="font-mono">@cat.ArchivedItems</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">2 · Bakery (Bánh)</p>
+        <dl class="mt-4 space-y-2 text-sm">
+            <div><dt class="inline text-[rgb(var(--muted))]">Category exists</dt><dd class="inline font-mono">@r.BakeryCategoryExists</dd></div>
+            <div><dt class="inline text-[rgb(var(--muted))]">Category name</dt><dd class="inline font-mono">@(r.BakeryCategoryName ?? "—")</dd></div>
+            <div><dt class="inline text-[rgb(var(--muted))]">Item count</dt><dd class="inline font-mono">@r.BakeryItemCount</dd></div>
+        </dl>
+        @if (r.BakeryItemNames.Count > 0)
+        {
+            <ul class="mt-4 list-inside list-disc text-sm text-[rgb(var(--fg))]">
+                @foreach (var name in r.BakeryItemNames)
+                {
+                    <li>@name</li>
+                }
+            </ul>
+        }
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">3 · Specialty coffee</p>
+        <p class="mt-3 text-sm">specialty_pool_count = <span class="font-mono font-semibold">@r.SpecialtyPoolCount</span> (expected 4)</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="data-audit-table">
+                <thead>
+                    <tr>
+                        <th>Catalog key</th>
+                        <th>Name</th>
+                        <th>Available</th>
+                        <th>Archived</th>
+                        <th>Signature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in r.SpecialtyCoffees)
+                    {
+                        <tr>
+                            <td class="font-mono">@row.CatalogKey</td>
+                            <td>@row.Name</td>
+                            <td>@row.IsAvailable</td>
+                            <td>@row.IsArchived</td>
+                            <td>@row.IsSignature</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">5 · Pairing (sample drink)</p>
+        @if (r.PairingSample is null)
+        {
+            <p class="mt-3 text-sm text-[rgb(var(--muted))]">No non-bakery drink available for sample pairing audit.</p>
+        }
+        else
+        {
+            <dl class="mt-4 space-y-2 text-sm">
+                <div><dt class="inline text-[rgb(var(--muted))]">Sample drink</dt><dd class="inline">@r.PairingSample.DrinkName <span class="font-mono text-xs text-[rgb(var(--muted-2))]">(@r.PairingSample.DrinkId)</span></dd></div>
+                <div><dt class="inline text-[rgb(var(--muted))]">Bakery pool (available)</dt><dd class="inline font-mono">@r.PairingSample.BakeryPoolCount</dd></div>
+                <div><dt class="inline text-[rgb(var(--muted))]">Pairings returned</dt><dd class="inline font-mono">@r.PairingSample.PairingsReturned</dd></div>
+            </dl>
+            @if (r.PairingSample.PairingNames.Count > 0)
+            {
+                <ul class="mt-4 list-inside list-disc text-sm">
+                    @foreach (var name in r.PairingSample.PairingNames)
+                    {
+                        <li>@name</li>
+                    }
+                </ul>
+            }
+        }
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">4 · Media (every menu item)</p>
+        <p class="mt-2 text-xs text-[rgb(var(--muted))]">
+            Missing managed files: @r.MissingManagedImagePaths ImageUrl · @r.MissingManagedPosterPaths DetailPosterImagePath
+        </p>
+        <div class="mt-4 max-h-[32rem] overflow-auto">
+            <table class="data-audit-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ImageUrl</th>
+                        <th>Image file</th>
+                        <th>DetailPosterImagePath</th>
+                        <th>Poster file</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in r.MediaRows)
+                    {
+                        <tr class="@(row.HasMissingFile ? "data-audit-row--missing" : null)">
+                            <td>@row.Name</td>
+                            <td class="font-mono text-xs break-all">@(row.ImageUrl ?? "—")</td>
+                            <td class="font-mono">@FileExistsLabel(row.ImageFileExists)</td>
+                            <td class="font-mono text-xs break-all">@(row.DetailPosterImagePath ?? "—")</td>
+                            <td class="font-mono">@FileExistsLabel(row.PosterFileExists)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@section Styles {
+    <style>
+        .data-audit-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+        .data-audit-table th, .data-audit-table td { padding: 0.5rem 0.65rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+        .data-audit-table th { color: rgb(var(--muted-2)); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
+        .data-audit-row--missing { background: rgba(245, 158, 11, 0.08); }
+        .data-audit-level-badge { display: inline-block; min-width: 3rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; margin-right: 0.35rem; }
+        .data-audit-level--pass .data-audit-level-badge, .data-audit-finding.data-audit-level--pass .data-audit-level-badge { background: rgba(34, 197, 94, 0.15); color: rgb(187, 247, 208); }
+        .data-audit-level--warn .data-audit-level-badge, .data-audit-finding.data-audit-level--warn .data-audit-level-badge { background: rgba(245, 158, 11, 0.15); color: rgb(254, 243, 199); }
+        .data-audit-level--fail .data-audit-level-badge, .data-audit-finding.data-audit-level--fail .data-audit-level-badge { background: rgba(239, 68, 68, 0.15); color: rgb(254, 202, 202); }
+        .data-audit-summary.data-audit-level--pass { border-color: rgba(34, 197, 94, 0.35); }
+        .data-audit-summary.data-audit-level--warn { border-color: rgba(245, 158, 11, 0.35); }
+        .data-audit-summary.data-audit-level--fail { border-color: rgba(239, 68, 68, 0.35); }
+    </style>
+}

@@ -1,0 +1,80 @@
+@page "/admin/tables"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Tables.IndexModel
+@{
+    ViewData["Title"] = "Bàn quán";
+    ViewData["AdminNavSection"] = "tables";
+    ViewData["AdminEyebrow"] = "Sàn quán";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    string GuestLabel(FloorTableRowVm r) =>
+        string.IsNullOrWhiteSpace(r.DisplayLabel) ? r.DisplayCode : r.DisplayLabel!;
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="admin-stack-8">
+    <header class="max-w-3xl">
+        <p class="text-[10px] font-medium tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]">Nhịp bàn</p>
+        <h1 class="mt-4 font-display text-3xl font-normal tracking-tight text-[rgb(var(--fg))] sm:text-4xl">Bàn đang hoạt động</h1>
+        <p class="admin-prose-quiet mt-5">
+            Phiếu mở, ly đang pha, số tiền tạm tính và lần cuối có hoạt động — không có thông báo thừa.
+        </p>
+    </header>
+
+    @if (Model.Rows.Count == 0)
+    {
+        <p class="max-w-xl text-sm text-[rgb(var(--muted))]">Chưa có bàn nào được cấu hình.</p>
+    }
+    else
+    {
+        <div class="admin-grid-kpi">
+            @foreach (var row in Model.Rows)
+            {
+                var label = GuestLabel(row);
+                var pacing = row.PacingKey == "watch" ? "Đang chú ý" : "Ổn định";
+                var last = row.LastActivityUtc is { } la ? la.ToLocalTime().ToString("g") : "—";
+                <article class="admin-card">
+                    <div class="admin-card__body space-y-4">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                                <p class="admin-kpi-label">Bàn</p>
+                                <p class="mt-2 font-display text-2xl tabular-nums tracking-tight text-[rgb(var(--fg))]">@row.DisplayCode</p>
+                                @if (!string.Equals(label, row.DisplayCode, StringComparison.Ordinal))
+                                {
+                                    <p class="mt-2 text-xs text-[rgb(var(--muted))]">@label</p>
+                                }
+                            </div>
+                            <div>
+                                @if (row.FloorState == "active")
+                                {
+                                    <span class="admin-badge admin-badge--gold">Đang phục vụ</span>
+                                }
+                                else
+                                {
+                                    <span class="admin-badge admin-badge--mist">Trống</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-white/[0.06] pt-4 sm:grid-cols-3">
+                            <div>
+                                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-[rgb(var(--muted-2))]">Phiếu mở</p>
+                                <p class="mt-1 font-display text-xl tabular-nums text-[rgb(var(--fg))]">@row.OpenOrders</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-[rgb(var(--muted-2))]">Số ly</p>
+                                <p class="mt-1 font-display text-xl tabular-nums text-[rgb(var(--fg))]">@row.OpenCups</p>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                                <p class="text-[10px] font-medium uppercase tracking-[0.2em] text-[rgb(var(--muted-2))]">Tiền tạm tính</p>
+                                <p class="mt-1 font-display text-xl tabular-nums text-[rgb(var(--accent))]">@VndMoneyFormatter.Format(row.OpenSpend)</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-end justify-between gap-3 border-t border-white/[0.06] pt-4 text-xs text-[rgb(var(--muted))]">
+                            <p><span class="text-[rgb(var(--muted-2))]">Nhịp độ</span> · @pacing</p>
+                            <p class="tabular-nums text-[rgb(var(--muted-2))]">Hoạt động lần cuối · @last</p>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

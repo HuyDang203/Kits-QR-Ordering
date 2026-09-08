@@ -1,0 +1,317 @@
+/**
+ * staff-correspondence.css — Postal letter-world aesthetic for staff pages
+ * Loaded after staff-board.css. Overrides tokens and adds warm parchment palette.
+ * Constraint: no HTML changes — pure CSS override layer.
+ * Scope: body.staff-shell
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. COLOR TOKEN RE-THEME — warm paper world on staff-shell
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body.staff-shell {
+  /* Global guest-compatible tokens */
+  --bg:       250 247 242;   /* #faf7f2 — warm paper */
+  --fg:       26 18 9;       /* #1a1209 — deep ink */
+  --muted:    92 74 50;      /* #5c4a32 — warm brown ink */
+  --muted-2:  150 126 90;    /* #967e5a — tan letter ink */
+  --accent:   199 168 122;   /* #c7a87a — wax-seal gold */
+  --accent-2: 110 136 116;   /* #6e8874 — verdigris */
+
+  /* Staff-specific canvas tokens */
+  --staff-canvas:    250 247 242;
+  --staff-elevated:  244 239 230;
+  --staff-stroke:    139 110 72;
+
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. TOP BAR — paper surface + airmail bottom stripe
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-topbar {
+  background: rgba(var(--bg), 0.95) !important;
+  border-bottom: none !important;
+  box-shadow:
+    0 1px 0 rgba(139, 110, 72, 0.14),
+    0 4px 16px -6px rgba(26, 18, 9, 0.06);
+  position: relative;
+}
+
+/* Airmail stripe */
+.staff-topbar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(199, 168, 122, 0.45) 0px,
+    rgba(199, 168, 122, 0.45) 11px,
+    rgba(172, 96, 80,  0.30) 11px,
+    rgba(172, 96, 80,  0.30) 22px,
+    transparent              22px,
+    transparent              26px
+  );
+  pointer-events: none;
+}
+
+/* Staff header nav links */
+.staff-topbar a[class*="rounded-full"],
+.staff-topbar button[class*="rounded-full"] {
+  border-color: rgba(139, 110, 72, 0.22) !important;
+  color: rgb(var(--muted)) !important;
+}
+
+.staff-topbar a[class*="rounded-full"]:hover,
+.staff-topbar button[class*="rounded-full"]:hover {
+  background: rgba(26, 18, 9, 0.05) !important;
+  color: rgb(var(--fg)) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. SURFACE-GLASS — re-theme for paper world (site.css uses dark values)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body.staff-shell .surface-glass {
+  background: rgba(244, 239, 230, 0.72);
+  border: 1px solid rgba(139, 110, 72, 0.18);
+  box-shadow:
+    0 4px 20px rgba(26, 18, 9, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. ORDER BOARD COLUMNS — replace dark ring/bg utilities
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Column wrapper: was bg-white/[0.02] ring-1 ring-white/[0.06] */
+.staff-shell .staff-col {
+  background: rgba(244, 239, 230, 0.55) !important;
+  box-shadow: 0 0 0 1px rgba(139, 110, 72, 0.16);
+  ring: none;
+}
+
+/* Column header border */
+.staff-shell .staff-col__head {
+  border-bottom-color: rgba(139, 110, 72, 0.14) !important;
+}
+
+/* Empty state note */
+.staff-shell .staff-col-empty--note {
+  background: rgba(255, 252, 247, 0.65) !important;
+  box-shadow: none !important;
+}
+
+/* Phase chip on card: was bg-white/[0.05] ring-white/[0.08] */
+.staff-shell .staff-order-card [class*="rounded-full"][class*="bg-white"] {
+  background: rgba(26, 18, 9, 0.07) !important;
+  box-shadow: 0 0 0 1px rgba(139, 110, 72, 0.18) !important;
+}
+
+/* Backup poll label: was bg-white/[0.04] ring-white/[0.08] */
+.staff-shell label[class*="bg-white"],
+.staff-shell label[class*="ring-white"] {
+  background: rgba(244, 239, 230, 0.65) !important;
+  box-shadow: 0 0 0 1px rgba(139, 110, 72, 0.18) !important;
+}
+
+/* Error / alert: readable on paper */
+.staff-shell [class*="border-red"] {
+  border-color: rgba(196, 60, 60, 0.28) !important;
+  background: rgba(196, 60, 60, 0.07) !important;
+  color: rgb(140, 40, 40) !important;
+}
+
+/* Refresh button: was just text classes, ghost-style it */
+.staff-shell .staff-btn-ghost {
+  border: 1px solid rgba(139, 110, 72, 0.20);
+  background: rgba(26, 18, 9, 0.04);
+  color: rgb(var(--fg));
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.staff-shell .staff-btn-ghost:hover {
+  background: rgba(26, 18, 9, 0.07);
+  border-color: rgba(139, 110, 72, 0.28);
+}
+
+/* Vertical divider in header: was bg-white/[0.08] */
+.staff-shell [class*="bg-white"][class*="w-px"] {
+  background: rgba(139, 110, 72, 0.20) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. FONT — guest display serif for staff header title
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-shell .font-display {
+  font-family: var(--font-ui);
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. ORDER COLUMN SKELETON — warm parchment shimmer
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-col-skeleton__line {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 110, 72, 0.06) 0%,
+    rgba(199, 168, 122, 0.18) 45%,
+    rgba(139, 110, 72, 0.06) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. ORDER CARDS — envelope / letter surface
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Target Tailwind-generated card classes via the .staff-order-card base class */
+.staff-order-card {
+  /* Softened transitions for warm theme */
+  transition:
+    box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    transform  0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity    0.42s ease,
+    border-color 0.42s ease;
+}
+
+/* Card shift accent uses wax-seal gold */
+@keyframes staff-card-shift {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--accent), 0); }
+  35%  { box-shadow: 0 0 0 1px rgba(var(--accent), 0.18), 0 6px 24px rgba(26, 18, 9, 0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--accent), 0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. ACTION BUTTONS — ink on paper
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-order-advance {
+  background: rgba(26, 18, 9, 0.06);
+  border-color: rgba(139, 110, 72, 0.22);
+  color: rgb(var(--fg));
+}
+
+.staff-order-advance:hover {
+  background: rgba(26, 18, 9, 0.10);
+  border-color: rgba(139, 110, 72, 0.32);
+}
+
+.staff-order-back {
+  color: rgb(var(--muted));
+  border-color: transparent;
+}
+
+.staff-order-back:hover {
+  color: rgb(var(--fg));
+  border-color: rgba(139, 110, 72, 0.16);
+  background: rgba(26, 18, 9, 0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. OWNERSHIP CHIP — parchment chip
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-own-chip {
+  color: rgb(var(--muted));
+  background: rgba(26, 18, 9, 0.04);
+  border-color: rgba(139, 110, 72, 0.18);
+}
+
+.staff-own-chip:hover {
+  color: rgb(var(--fg));
+  border-color: rgba(139, 110, 72, 0.26);
+  background: rgba(26, 18, 9, 0.07);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. PACING INDICATOR — keep functional colours readable on paper
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-pacing {
+  color: rgb(var(--muted-2));
+}
+
+.staff-pacing__dot {
+  background: rgba(var(--accent-2), 0.60);
+  box-shadow: 0 0 0 3px rgba(var(--accent-2), 0.10);
+}
+
+.staff-pacing--watch .staff-pacing__dot {
+  background: rgba(199, 168, 122, 0.80);
+  box-shadow: 0 0 0 3px rgba(199, 168, 122, 0.14);
+}
+
+.staff-pacing--brisk .staff-pacing__dot {
+  background: rgba(110, 138, 118, 0.90);
+  box-shadow: 0 0 0 3px rgba(110, 138, 118, 0.14);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. SYNC DOT — keep status colours on warm bg (slightly more opaque)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.staff-sync-dot--live {
+  background: rgb(var(--accent-2)) !important;
+  box-shadow: 0 0 10px rgba(var(--accent-2), 0.40);
+}
+
+.staff-sync-dot--soft {
+  background: rgba(var(--muted-2), 0.55) !important;
+}
+
+.staff-sync-dot--reconnect {
+  background: rgba(199, 168, 122, 0.70) !important;
+  box-shadow: 0 0 8px rgba(199, 168, 122, 0.28);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. STAFF LOGIN FORM — re-paint dark Tailwind ring/bg utilities for paper bg
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Form card: was bg-white/[0.02] ring-white/[0.06] — swap to warm parchment */
+body.staff-shell form[class*="rounded-2xl"] {
+  background: rgba(244, 239, 230, 0.65) !important;
+  border-color: rgba(139, 110, 72, 0.20) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Inputs: was bg-white/5 ring-white/10 */
+body.staff-shell input[class*="bg-white"],
+body.staff-shell input[class*="ring-white"] {
+  background: rgba(250, 247, 242, 0.85) !important;
+  box-shadow: 0 0 0 1px rgba(139, 110, 72, 0.22) !important;
+  color: rgb(26, 18, 9) !important;
+}
+
+body.staff-shell input[class*="ring-white"]:focus {
+  box-shadow: 0 0 0 2px rgba(199, 168, 122, 0.42) !important;
+}
+
+/* Error alert: keep red readable on paper */
+body.staff-shell [class*="border-red"] {
+  border-color: rgba(196, 60, 60, 0.30) !important;
+  background: rgba(196, 60, 60, 0.08) !important;
+  color: rgb(140, 40, 40) !important;
+}
+
+/* btn-ink (site.css primary button) stays ink-on-paper by default — no override needed */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12. REDUCED MOTION guard
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .staff-topbar::after {
+    display: none;
+  }
+}

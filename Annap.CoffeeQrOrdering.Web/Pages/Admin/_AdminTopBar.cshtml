@@ -1,0 +1,48 @@
+@{
+    var eyebrow = ViewData["AdminEyebrow"] as string ?? "Quản trị";
+    var title = ViewData["Title"] as string ?? "Tổng quan";
+}
+<header class="admin-topbar">
+    <button type="button"
+            id="admin-nav-toggle"
+            class="admin-topbar__menu guest-hit"
+            aria-expanded="false"
+            aria-controls="admin-drawer">
+        <span class="sr-only">Mở điều hướng</span>
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 1.25h18M0 7h18M0 12.75h18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+    </button>
+
+    <div class="admin-topbar__crumb">
+        <p class="admin-topbar__eyebrow">@eyebrow</p>
+        <h1 class="admin-topbar__title">@title</h1>
+    </div>
+
+    <div class="hidden sm:flex sm:max-w-md sm:flex-1 sm:justify-end">
+        <label class="sr-only" for="admin-global-search">Tìm kiếm</label>
+        <div class="admin-search max-w-full">
+            <span class="admin-search__icon" aria-hidden="true">⌕</span>
+            <input id="admin-global-search"
+                   class="admin-search__input"
+                   type="search"
+                   placeholder="Tìm món, bàn hoặc ghi chú…"
+                   autocomplete="off" />
+        </div>
+    </div>
+
+    <div class="admin-dropdown shrink-0" id="admin-user-menu">
+        <button type="button"
+                id="admin-user-menu-btn"
+                class="admin-btn admin-btn--ghost min-w-0 px-4 text-xs tracking-[0.14em] uppercase text-[rgb(var(--muted))]">
+            Quản lý
+            <span class="text-[rgb(var(--muted-2))]" aria-hidden="true">▾</span>
+        </button>
+        <div class="admin-dropdown__panel" role="menu">
+            <a class="admin-dropdown__item" asp-page="/Staff/Orders" role="menuitem">Sàn phục vụ</a>
+            <form method="post" asp-page="/Staff/Logout" class="p-0">
+                <button type="submit" class="admin-dropdown__item" role="menuitem">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
+</header>

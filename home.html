@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en" class="annap-correspond-ui">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Order - Kits Coffee Atelier</title>
+    <script>
+window.__ANNAP_DEV_MODE = true;
+window.__annapRuntime = {"publicBaseUrl":"http://192.168.1.7:8080"};
+if (typeof window.__annapRuntime !== "object" || window.__annapRuntime === null) { window.__annapRuntime = {}; }
+</script>
+<script src="/js/annap-runtime-api.js?v=4QWUajjE5CeLMj4OXcrCSTaB_Q-deC2fk5KEkBf_qoE"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+
+        <script src="/js/annap-forensics.js?v=_6gAlrhOeHjXz7lTToAT-A5lOLZdODVMEpDL0j8owrA"></script>
+    <link rel="stylesheet" href="/css/site.css?v=yX8Nw-dHWlnrt1Z6RW_aauAf4t_NKIVcPn9ftdjW8RA" />
+    <link rel="stylesheet" href="/css/correspondence.css?v=3sjQyNwxRfBcpiPBcfBB0Gl3xu4P4uac3YaGUdA5Azg" />
+    <link rel="stylesheet" href="/css/menu-browse.css?v=xtvztkw1w3qQSSfSmVDsV5sv4HyprGNbNAJtg0ZopqU" />
+        <link rel="stylesheet" href="/css/menu-browse-physical.css?v=GZOcBxaUW_x35eCbg1CHM2US2ODk5dwvzCtxRUnvMoo" />
+    <link rel="stylesheet" href="/css/drink-detail.css?v=OJEYpow9D7iuqcpZXvh0CgHw-ufZSjB2I7bC6OGXjkU" />
+        <link rel="stylesheet" href="/css/atmosphere-modes.css?v=v8WNA677s-8P6ZT0kYwUNpUMK2oVvKJ1I9XaC8LGpvc" />
+    <link rel="stylesheet" href="/Annap.CoffeeQrOrdering.Web.styles.css?v=8X8m5pZYVUVonc7Y4ggbVX2pVb68554rNej74YUBiZQ" />
+    <link rel="stylesheet" href="/css/typography-brand.css?v=iyAwe8n-xaeqUqZujaGyJ9TPakaEE01TE5lw7KvV9rI" />
+    <link rel="stylesheet" href="/css/interaction-feedback.css?v=bP-mB9rsvEX1EB27kJ9Mdm85rnNvGFtTbgPwcrQtZqY" />
+    <link rel="stylesheet" href="/css/kits-identity.css?v=NNP0Qo-7TNSw92n7I3X-AeimHbJHzscZYEPVgzbDDcA" />
+    <script src="/js/annap-viewport.js?v=hu4DZ5Jy0_JB4G0hqGA0zwpfha8idZif1PwJDaZ5Csw"></script>
+        <script src="/js/modes/atmosphereManager.js?v=8E_vy3vgixdhfLSMmQZNMYC_y7uObvoA2_keFBoNDW4"></script>
+        <script src="/js/ambient.js?v=nCeBtH_Gp5nsQfcbfpdVg1YQkItvcRqsRdIub_pp474" defer></script>
+    <style>
+        html.annap-guest-no-motion .mood-results,
+        html.annap-guest-no-motion .mood-grid--enter .mood-drink-card,
+        html.annap-guest-no-motion .mood-tasting-card,
+        html.annap-guest-no-motion .order-tray-sheet,
+        html.annap-guest-no-motion #drink-detail-panel,
+        html.annap-guest-no-motion #drink-detail-modal {
+            animation: none !important;
+            transition: none !important;
+        }
+        #annap-boot-overlay .annap-boot-spinbar {
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,.12);
+            overflow: hidden;
+        }
+        #annap-boot-overlay .annap-boot-spinbar > i {
+            display: block;
+            height: 100%;
+            width: 25%;
+            background: rgba(199,168,122,.85);
+            animation: annapBootIndet 1.1s ease-in-out infinite alternate;
+        }
+        @keyframes annapBootIndet {
+            0% { transform: translateX(0); opacity: .7; }
+            100% { transform: translateX(300%); opacity: 1; }
+        }
+        html.annap-guest-no-motion #annap-boot-overlay .annap-boot-spinbar > i { animation: none; }
+    </style>
+</head>
+<body class="guest-app min-h-dvh overflow-x-hidden antialiased font-normal text-[rgb(var(--fg))]">
+    <div b-a9s0fj8hxd id="annap-root" class="annap-root">
+        <div b-a9s0fj8hxd class="annap-ambient-stack" aria-hidden="true">
+            <div b-a9s0fj8hxd class="annap-ambient-bg"></div>
+            <div b-a9s0fj8hxd class="annap-ambient-thermal" aria-hidden="true"></div>
+            <div b-a9s0fj8hxd class="annap-ambient-grain"></div>
+        </div>
+        <div b-a9s0fj8hxd class="annap-root-surface">
+    <header b-a9s0fj8hxd class="guest-header guest-masthead sticky top-0 z-40 pt-[max(0.35rem,env(safe-area-inset-top))]">
+        <div b-a9s0fj8hxd class="mx-auto max-w-5xl px-4 sm:px-4">
+            <div b-a9s0fj8hxd class="guest-masthead__sheet surface-glass overflow-hidden rounded-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_10px_32px_-12px_rgba(26,18,9,0.08)] sm:rounded-sm">
+                <div b-a9s0fj8hxd class="postal-airmail-edge postal-airmail-edge--top" aria-hidden="true"></div>
+                <div b-a9s0fj8hxd class="px-4 py-[max(0.75rem,2.2vh)] sm:px-5 sm:py-[max(0.85rem,2.4vh)]">
+                <div b-a9s0fj8hxd class="flex flex-col gap-[max(0.75rem,2vh)] lg:flex-row lg:items-center lg:justify-between lg:gap-4">
+                    <a class="guest-hit guest-masthead__mark inline-flex min-h-11 max-w-full items-center font-display text-[0.72rem] font-medium tracking-[0.06em] text-[rgb(var(--muted))] transition active:opacity-80 sm:text-xs" data-guest-vt-link="1" href="/">
+                        Kits Coffee Atelier
+                    </a>
+                    <nav b-a9s0fj8hxd class="guest-masthead__nav flex flex-wrap items-center gap-x-2 gap-y-2 border-t border-[rgba(190,165,130,0.28)] pt-3 text-xs lg:gap-x-3 lg:border-t-0 lg:pt-0 lg:text-sm" data-i18n-aria="nav.siteAria">
+                        <span b-a9s0fj8hxd class="hidden min-h-11 items-center text-[10px] tracking-[0.18em] text-[rgb(var(--muted-2))] lg:inline-flex" data-i18n="langSwitcher.label">Language</span>
+                        <div b-a9s0fj8hxd class="guest-lang-register flex min-h-11 items-center gap-0 border border-[rgba(190,165,130,0.42)] bg-[rgba(253,249,244,0.4)] p-px" role="group" data-i18n-aria="langSwitcher.label">
+                            <button b-a9s0fj8hxd type="button" data-lang-set="en" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))] lg:tracking-[0.18em]" data-i18n="langSwitcher.en">EN</button>
+                            <button b-a9s0fj8hxd type="button" data-lang-set="vi" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))] lg:tracking-[0.18em]" data-i18n="langSwitcher.vi">VI</button>
+                        </div>
+                        <div class="annap-if-prefs" role="group" data-i18n-aria="feedback.prefsLabel" aria-label="Sound and haptics">
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="sound"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.soundToggle"
+            title="Sound"
+            aria-label="Sound">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 10v4h3l5 4V6L7 10H4z" />
+            <path d="M16 9.5a3.5 3.5 0 0 1 0 5" />
+            <path d="M18.2 7.2a6.2 6.2 0 0 1 0 9.6" />
+        </svg>
+    </button>
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="haptic"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.hapticToggle"
+            title="Haptics"
+            aria-label="Haptics">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="3" width="8" height="18" rx="2" />
+            <path d="M4 9v6M20 9v6" />
+        </svg>
+    </button>
+</div>
+
+                        <a class="guest-hit inline-flex min-h-11 items-center px-2 text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:opacity-80" data-guest-vt-link="1" data-i18n="nav.menu" href="/Menu">Menu</a>
+                        <a class="guest-hit inline-flex min-h-11 items-center px-2 text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:opacity-80" data-i18n="nav.staff" href="/staff/orders">Staff</a>
+                        <a class="guest-hit inline-flex min-h-11 items-center px-2 text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:opacity-80" data-i18n="nav.privacy" href="/Privacy">Privacy</a>
+                    </nav>
+                </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main b-a9s0fj8hxd role="main" class="guest-main mx-auto max-w-5xl px-4 pb-[max(2.5rem,env(safe-area-inset-bottom))] lg:px-4">
+            
+<div class="space-y-14 sm:space-y-24">
+    <!-- 1) Hero -->
+    <section class="pt-4 sm:pt-8">
+        <div class="surface-paper overflow-hidden rounded-[2rem] px-7 py-12 sm:px-12 sm:py-16">
+            <div class="postal-airmail-edge postal-airmail-edge--top -mx-7 mb-8 sm:-mx-12" aria-hidden="true"></div>
+            <div class="max-w-2xl">
+                <p class="postal-hero-kicker" data-i18n="home.postalFrom">From Kinini Village, Rwanda</p>
+                <p class="mt-4 text-xs tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.brand">Kits Coffee Atelier</p>
+
+                <h1 class="mt-6 text-[2.05rem] font-semibold leading-[1.08] tracking-tight text-[rgb(var(--fg))] sm:text-[3.1rem] sm:leading-[1.02] font-display">
+                    <span data-i18n="home.heroLine1">Espresso. Filter.</span>
+                    <span class="block text-[rgb(var(--muted))] font-normal">
+                        <span data-i18n="home.heroLine2">Quiet sweetness.</span>
+                    </span>
+                </h1>
+
+                <p class="mt-7 text-base leading-[1.55] text-[rgb(var(--muted))] md:text-lg" data-i18n="home.heroLead">
+                    Warm cups. Clean finishes. Long aftertaste.
+                </p>
+
+                <div class="mt-6">
+                    <span class="postal-stamp" data-i18n="home.postalStamp">Farm to cup</span>
+                </div>
+
+                    <div class="mt-8 rounded-2xl border border-[rgba(212,184,150,0.55)] bg-[rgba(253,249,244,0.55)] px-5 py-4 text-sm leading-relaxed text-[rgb(var(--muted))]">
+                        <span data-i18n="home.unseatedHint">To order and follow your tray, please scan the QR at your table. For a quiet preview of the room, you may still browse the menu.</span>
+                            <span class="mt-2 block text-xs text-[rgb(var(--muted-2))]"><span data-i18n="home.devTableSetup">Development:</span> <a class="underline underline-offset-4 hover:text-[rgb(var(--fg))]" href="/table/T12" data-i18n="home.devTableLink">Open table T12</a></span>
+                    </div>
+
+                <div class="mt-10 flex flex-col gap-3 md:flex-row md:items-center">
+                    <a class="btn-ink guest-hit w-full justify-center md:w-auto" href="/Menu">
+                        <span data-i18n="nav.menu">Menu</span>
+                        <span aria-hidden="true" class="text-white/80">Ã¢â€ â€™</span>
+                    </a>
+                    <button type="button"
+                            class="btn-quiet guest-hit w-full justify-center md:w-auto"
+                            onclick="openCart()">
+                        <span data-i18n="home.orderCta">Order</span>
+                        <span id="cartCountPill"
+                              class="ml-2 hidden rounded-full bg-[rgb(var(--accent))] px-2 py-0.5 text-xs font-semibold text-white">0</span>
+                    </button>
+                </div>
+
+                <div class="mt-10 grid grid-cols-1 gap-3 text-sm text-[rgb(var(--muted))] md:grid-cols-2">
+                    <div class="surface-glass rounded-[1.35rem] px-5 py-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[rgb(var(--muted-2))] tracking-[0.22em] uppercase text-xs" data-i18n="home.statService">Service</span>
+                            <span class="text-[rgb(var(--fg))]" data-i18n="home.statServiceValue">Quiet Ã¢â‚¬Â¢ precise</span>
+                        </div>
+                    </div>
+                    <div class="surface-glass rounded-[1.35rem] px-5 py-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[rgb(var(--muted-2))] tracking-[0.22em] uppercase text-xs" data-i18n="home.statProfile">Profile</span>
+                            <span class="text-[rgb(var(--fg))]" data-i18n="home.statProfileValue">Citrus Ã¢â‚¬Â¢ cocoa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="postal-airmail-edge postal-airmail-edge--bottom -mx-7 mt-10 sm:-mx-12" aria-hidden="true"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2) Signature drinks preview -->
+    <section aria-labelledby="signature">
+        <div class="flex items-end justify-between gap-4">
+            <div>
+                <h2 id="signature" class="text-xl sm:text-2xl font-semibold tracking-tight text-[rgb(var(--fg))]" data-i18n="home.signatureHeading">
+                    Signature cups
+                </h2>
+                <p class="mt-2 text-sm sm:text-base text-[rgb(var(--muted))]" data-i18n="home.signatureSub">
+                    Balanced sweetness. Clean structure. Long finish.
+                </p>
+            </div>
+            <a class="text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))] underline underline-offset-4" data-i18n="home.signatureSeeAll" href="/Menu">
+                See all
+            </a>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+                <article class="surface-paper relative rounded-[2rem] p-7 transition-transform duration-200 sm:hover:-translate-y-0.5">
+                    <div class="relative z-[1] grid grid-cols-[96px_1fr] gap-5 md:grid-cols-[112px_1fr]">
+                        <a href="/menu/drink/5862bcbd-d540-44a2-a400-1133d9a3897e"
+                           data-ge-open-detail="5862bcbd-d540-44a2-a400-1133d9a3897e"
+                           class="relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[rgba(26,20,16,0.04)] ring-1 ring-[rgba(212,184,150,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))]/35"
+                           aria-label="Sunrise Ã¢â‚¬â€ view details">
+                                <img src="/media/menu-items/5862bcbdd54044a2a4001133d9a3897e-thumb.webp"
+                                     alt=""
+                                     class="absolute inset-0 z-0 h-full w-full object-cover"
+                                     loading="lazy"
+                                     decoding="async"
+                                     referrerpolicy="no-referrer" />
+                            <div class="absolute inset-0 z-[1] bg-[radial-gradient(80px_80px_at_30%_20%,rgba(199,168,122,0.22),transparent_60%),radial-gradient(120px_100px_at_70%_80%,rgba(122,151,130,0.14),transparent_65%)]"></div>
+                            <div class="absolute inset-0 z-[1] opacity-50 mix-blend-overlay" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 4px);"></div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[1] text-[10px] tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.signatureCupBadge">
+                                Cup
+                            </div>
+                        </a>
+
+                        <div class="min-w-0">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    <p class="text-xs tracking-[0.28em] text-[rgb(var(--muted-2))] uppercase">Good Things</p>
+                                    <h3 class="mt-3 text-lg sm:text-xl font-semibold tracking-tight text-[rgb(var(--fg))]">Sunrise</h3>
+                                </div>
+                                <div class="text-sm font-semibold text-[rgb(var(--fg))] whitespace-nowrap pt-1">
+                                    65.000 &#x20AB;
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-ink guest-hit mt-5 w-full justify-center py-4 text-sm font-normal tracking-wide transition-transform active:scale-[0.99]"
+                                    onclick="quickAdd('5862bcbd-d540-44a2-a400-1133d9a3897e', undefined, this)"
+                                    data-i18n="menu.addToTray">
+                                Send to my table
+                            </button>
+
+                            <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <a href="/menu/drink/5862bcbd-d540-44a2-a400-1133d9a3897e"
+                                   data-ge-open-detail="5862bcbd-d540-44a2-a400-1133d9a3897e"
+                                   class="guest-hit inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))]"
+                                   data-i18n="menu.discover">
+                                    Discover
+                                </a>
+                                <button type="button"
+                                        class="guest-hit min-h-11 text-left text-sm text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))] sm:text-right"
+                                        onclick="openCart()"
+                                        data-i18n="cart.openSelections">
+                                    Open order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="surface-paper relative rounded-[2rem] p-7 transition-transform duration-200 sm:hover:-translate-y-0.5">
+                    <div class="relative z-[1] grid grid-cols-[96px_1fr] gap-5 md:grid-cols-[112px_1fr]">
+                        <a href="/menu/drink/890f657f-96db-477e-ab36-cd74c08f2ce4"
+                           data-ge-open-detail="890f657f-96db-477e-ab36-cd74c08f2ce4"
+                           class="relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[rgba(26,20,16,0.04)] ring-1 ring-[rgba(212,184,150,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))]/35"
+                           aria-label="Coco B&#x1A1; Ã¢â‚¬â€ view details">
+                                <img src="/media/menu-items/890f657f96db477eab36cd74c08f2ce4-thumb.webp"
+                                     alt=""
+                                     class="absolute inset-0 z-0 h-full w-full object-cover"
+                                     loading="lazy"
+                                     decoding="async"
+                                     referrerpolicy="no-referrer" />
+                            <div class="absolute inset-0 z-[1] bg-[radial-gradient(80px_80px_at_30%_20%,rgba(199,168,122,0.22),transparent_60%),radial-gradient(120px_100px_at_70%_80%,rgba(122,151,130,0.14),transparent_65%)]"></div>
+                            <div class="absolute inset-0 z-[1] opacity-50 mix-blend-overlay" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 4px);"></div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[1] text-[10px] tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.signatureCupBadge">
+                                Cup
+                            </div>
+                        </a>
+
+                        <div class="min-w-0">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    <p class="text-xs tracking-[0.28em] text-[rgb(var(--muted-2))] uppercase">Good Things</p>
+                                    <h3 class="mt-3 text-lg sm:text-xl font-semibold tracking-tight text-[rgb(var(--fg))]">Coco B&#x1A1;</h3>
+                                </div>
+                                <div class="text-sm font-semibold text-[rgb(var(--fg))] whitespace-nowrap pt-1">
+                                    65.000 &#x20AB;
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-ink guest-hit mt-5 w-full justify-center py-4 text-sm font-normal tracking-wide transition-transform active:scale-[0.99]"
+                                    onclick="quickAdd('890f657f-96db-477e-ab36-cd74c08f2ce4', undefined, this)"
+                                    data-i18n="menu.addToTray">
+                                Send to my table
+                            </button>
+
+                            <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <a href="/menu/drink/890f657f-96db-477e-ab36-cd74c08f2ce4"
+                                   data-ge-open-detail="890f657f-96db-477e-ab36-cd74c08f2ce4"
+                                   class="guest-hit inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))]"
+                                   data-i18n="menu.discover">
+                                    Discover
+                                </a>
+                                <button type="button"
+                                        class="guest-hit min-h-11 text-left text-sm text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))] sm:text-right"
+                                        onclick="openCart()"
+                                        data-i18n="cart.openSelections">
+                                    Open order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="surface-paper relative rounded-[2rem] p-7 transition-transform duration-200 sm:hover:-translate-y-0.5">
+                    <div class="relative z-[1] grid grid-cols-[96px_1fr] gap-5 md:grid-cols-[112px_1fr]">
+                        <a href="/menu/drink/aaaf622a-31fc-431e-8257-95945798acf6"
+                           data-ge-open-detail="aaaf622a-31fc-431e-8257-95945798acf6"
+                           class="relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[rgba(26,20,16,0.04)] ring-1 ring-[rgba(212,184,150,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))]/35"
+                           aria-label="Hibicus Tea Ã¢â‚¬â€ view details">
+                                <img src="/media/menu-items/aaaf622a31fc431e825795945798acf6-thumb.webp"
+                                     alt=""
+                                     class="absolute inset-0 z-0 h-full w-full object-cover"
+                                     loading="lazy"
+                                     decoding="async"
+                                     referrerpolicy="no-referrer" />
+                            <div class="absolute inset-0 z-[1] bg-[radial-gradient(80px_80px_at_30%_20%,rgba(199,168,122,0.22),transparent_60%),radial-gradient(120px_100px_at_70%_80%,rgba(122,151,130,0.14),transparent_65%)]"></div>
+                            <div class="absolute inset-0 z-[1] opacity-50 mix-blend-overlay" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 4px);"></div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[1] text-[10px] tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.signatureCupBadge">
+                                Cup
+                            </div>
+                        </a>
+
+                        <div class="min-w-0">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    <p class="text-xs tracking-[0.28em] text-[rgb(var(--muted-2))] uppercase">Tea</p>
+                                    <h3 class="mt-3 text-lg sm:text-xl font-semibold tracking-tight text-[rgb(var(--fg))]">Hibicus Tea</h3>
+                                </div>
+                                <div class="text-sm font-semibold text-[rgb(var(--fg))] whitespace-nowrap pt-1">
+                                    42.000 &#x20AB;
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-ink guest-hit mt-5 w-full justify-center py-4 text-sm font-normal tracking-wide transition-transform active:scale-[0.99]"
+                                    onclick="quickAdd('aaaf622a-31fc-431e-8257-95945798acf6', undefined, this)"
+                                    data-i18n="menu.addToTray">
+                                Send to my table
+                            </button>
+
+                            <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <a href="/menu/drink/aaaf622a-31fc-431e-8257-95945798acf6"
+                                   data-ge-open-detail="aaaf622a-31fc-431e-8257-95945798acf6"
+                                   class="guest-hit inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))]"
+                                   data-i18n="menu.discover">
+                                    Discover
+                                </a>
+                                <button type="button"
+                                        class="guest-hit min-h-11 text-left text-sm text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))] sm:text-right"
+                                        onclick="openCart()"
+                                        data-i18n="cart.openSelections">
+                                    Open order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+        </div>
+    </section>
+
+    <!-- 3) Categories -->
+    <section aria-labelledby="categories">
+        <h2 id="categories" class="text-xl sm:text-2xl font-semibold tracking-tight text-[rgb(var(--fg))]" data-i18n="nav.menu">Menu</h2>
+        <p class="mt-2 text-sm sm:text-base text-[rgb(var(--muted))]" data-i18n="home.categoriesHint">Choose a direction. We'll keep it simple.</p>
+
+        <div class="mt-8 grid grid-cols-1 gap-2 md:grid-cols-3">
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Specialty Coffee</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">CAFE</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Signature</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">TR&#xC0;</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Espresso</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Tea</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">B&#xC1;NH</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">COMBO</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Smoothie</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Juice</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Cold Brew</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+                <a class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5" href="/Menu">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">Vietnamese Coffee</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+        </div>
+    </section>
+</div>
+
+<script type="application/json" id="home-cart-catalog-json">[{"id":"2b53fbbc-0906-4ec0-a241-067841cbce55","name":"Almond Brioche","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"2a0c0b7e-5ad1-44d7-8b82-899845eab470","name":"Bun Coffee Croissant","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"8c9b4858-4712-41a8-8076-b52c7a7f940d","name":"C\u00E0 Ph\u00EA \u0110en","price":35000.00,"categoryName":"Vietnamese Coffee","supportsHotIced":true},{"id":"de5b2c82-1058-4249-9798-1e4e51f75c03","name":"CheeseCake","price":45000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"890f657f-96db-477e-ab36-cd74c08f2ce4","name":"Coco B\u01A1","price":65000.00,"categoryName":"Signature","supportsHotIced":true},{"id":"63495f18-47aa-4cf3-a1b6-895e3d2733f2","name":"Cold Brew","price":49000.00,"categoryName":"Cold Brew","supportsHotIced":false},{"id":"47b912d2-a760-4657-ba0f-f8688e973df3","name":"Croissant","price":40000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"cf7192c4-7bb0-4541-9723-f11185abc57c","name":"Dara","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"ec5c30be-45ec-45ba-aed8-1dfa7443f516","name":"Espresso","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"aaaf622a-31fc-431e-8257-95945798acf6","name":"Hibicus Tea","price":42000.00,"categoryName":"Tea","supportsHotIced":false},{"id":"d899da99-62a9-4789-98ce-846cf2563151","name":"Jemma","price":65000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"460f0064-4989-40a6-8cae-70da34cc9497","name":"Nana","price":40000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"029e0e24-9b7d-4a4f-80d2-ec29efbd9734","name":"N\u01B0\u1EDBc \u00C9p Cam","price":45000.00,"categoryName":"Juice","supportsHotIced":false},{"id":"3ab8b66f-9f9f-4f2c-892c-f94078c550aa","name":"Ruby","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"47620942-1c88-421a-aa60-f8e451ac5518","name":"Sinh T\u1ED1 Xo\u00E0i","price":48000.00,"categoryName":"Smoothie","supportsHotIced":false},{"id":"8000fa4b-54dc-47aa-b4db-b6d9a53ab400","name":"Yoko","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"8f8bdf24-2323-482a-9b27-b1bffd2be83b","name":"Americano","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"e1ab46bb-3347-404d-90c4-bf5c18995ed1","name":"C\u00E0 ph\u00EA \u0111en \u0111\u00E1","price":30000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"956685ad-06ea-4f69-80ba-d291b06fe23e","name":"C\u00E0 Ph\u00EA S\u1EEFa","price":35000.00,"categoryName":"Vietnamese Coffee","supportsHotIced":true},{"id":"c6fd2cd2-546f-4926-8fcc-16d1877a0447","name":"Coffee \u002B Donut","price":60000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"3fba5735-1094-4b32-ae7e-ebd9d07831b8","name":"Cold Brew Cam","price":49000.00,"categoryName":"Cold Brew","supportsHotIced":false},{"id":"5484191a-4b8f-4be7-8d35-ce10ca127aeb","name":"Croissant th\u1ECBt ngu\u1ED9i \u0026 ph\u00F4 mai","price":55000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"ab71f6b8-f1c7-4839-9de6-f6aa833b7b41","name":"Kinini Village \u2014 Dufatanye","price":80000.00,"categoryName":"Specialty Coffee","supportsHotIced":true},{"id":"5d654ce3-aa80-42af-aa25-f18545756303","name":"N\u01B0\u1EDBc \u00C9p Th\u01A1m","price":45000.00,"categoryName":"Juice","supportsHotIced":false},{"id":"0169825a-2401-455b-9caa-4bc26f4a3fc7","name":"Sinh T\u1ED1 B\u01A1","price":48000.00,"categoryName":"Smoothie","supportsHotIced":false},{"id":"66acc277-4706-416c-8419-1354edfa5dae","name":"Three Kick","price":65000.00,"categoryName":"Signature","supportsHotIced":true},{"id":"ec838cfb-c7da-42df-8813-051654198c91","name":"Tr\u00E0 \u0111\u00E0o cam s\u1EA3","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"8dbbde62-4c36-4507-aec7-3c0967dd7c65","name":"Tr\u00E0 D\u00E2u T\u1EB1m","price":42000.00,"categoryName":"Tea","supportsHotIced":false},{"id":"d2b95bec-e582-4898-8269-6958611ad1aa","name":"C\u00E0 ph\u00EA s\u1EEFa \u0111\u00E1","price":35000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"07d20a11-cf38-4cc6-ae40-a1b4c6b3fc78","name":"Coffee \u002B Brownie","price":75000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"df026d05-6664-43fd-be9a-2c734cd46113","name":"Cold Brew T\u00E1o","price":49000.00,"categoryName":"Cold Brew","supportsHotIced":false},{"id":"f22576e2-ba0e-450b-8ba3-a09dfa1704ae","name":"Croissant tr\u1EE9ng mu\u1ED1i","price":50000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"ad1f4535-e295-4fcb-a391-ed3812aea608","name":"\u0110en \u0110\u00E1 S\u00E0i G\u00F2n","price":35000.00,"categoryName":"Vietnamese Coffee","supportsHotIced":false},{"id":"c85d30f6-3985-4801-a9bf-b1fb759298fb","name":"Ginger Singer","price":65000.00,"categoryName":"Signature","supportsHotIced":true},{"id":"d8bca66e-3648-468a-81a7-76a599add26e","name":"Kinini Village \u2014 Abateranankunga","price":80000.00,"categoryName":"Specialty Coffee","supportsHotIced":true},{"id":"11d4aab0-205d-464d-950b-05cdd22c0d8c","name":"Latte","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"7bfbf2dc-38ec-41a0-8bde-ea4749382654","name":"Matcha Mu\u1ED1i","price":42000.00,"categoryName":"Tea","supportsHotIced":false},{"id":"9a1527f0-956c-4ff9-8807-f789280194e1","name":"N\u01B0\u1EDBc \u00C9p Chanh V\u00E0ng","price":45000.00,"categoryName":"Juice","supportsHotIced":false},{"id":"703f2924-a21a-4dcd-8b00-61ff996a8149","name":"Sinh T\u1ED1 D\u00E2u","price":48000.00,"categoryName":"Smoothie","supportsHotIced":false},{"id":"b8aca53b-f9ef-46e8-80ac-5c3dd15ce308","name":"Tr\u00E0 v\u1EA3i","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"301eda3c-b913-4899-b23d-31014c22c6d8","name":"B\u1EA1c x\u1EC9u","price":38000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"f8c6a0d0-2429-45a8-a304-592936afcc62","name":"Capuchino","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"4946c844-ddeb-45b3-9c1b-6f1da9302c5e","name":"Cold Brew D\u00E2u T\u1EB1m","price":49000.00,"categoryName":"Cold Brew","supportsHotIced":false},{"id":"3d1b75e4-8ce6-47b9-aa25-e33fa543a9d7","name":"Donut \u0111\u01B0\u1EDDng","price":30000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"f906a747-6c84-4d77-a008-d355be98da21","name":"Latte \u002B Croissant","price":90000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"abe9548f-b5dc-4443-9e52-6263338ee84b","name":"N\u01B0\u1EDBc \u00C9p T\u00E1o Xanh","price":45000.00,"categoryName":"Juice","supportsHotIced":false},{"id":"54aca3b5-133e-4d6e-9cdd-700b7899ddf7","name":"Rift Valley Coffee Caucus","price":80000.00,"categoryName":"Specialty Coffee","supportsHotIced":true},{"id":"b3b3abbc-81ec-4351-8cc8-a66905a63c74","name":"Sinh T\u1ED1 D\u00E2u Chu\u1ED1i","price":48000.00,"categoryName":"Smoothie","supportsHotIced":false},{"id":"c1c1b1f5-31a9-433d-88eb-f1444a91be0b","name":"S\u1EEFa \u0110\u00E1 S\u00E0i G\u00F2n","price":35000.00,"categoryName":"Vietnamese Coffee","supportsHotIced":false},{"id":"5862bcbd-d540-44a2-a400-1133d9a3897e","name":"Sunrise","price":65000.00,"categoryName":"Signature","supportsHotIced":true},{"id":"69736ca6-0b83-4b49-9790-f800b50b351b","name":"Tr\u00E0 chanh m\u1EADt ong","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"405df5a7-bc6c-45fd-9ddb-c057c1b69ccf","name":"B\u1EA1c X\u1EC9u","price":35000.00,"categoryName":"Vietnamese Coffee","supportsHotIced":true},{"id":"30b85afa-7a10-4e90-8042-d4bba57cab35","name":"C\u00E0 ph\u00EA mu\u1ED1i","price":40000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"7fb90860-fbee-4fcd-abaf-16bef547ed7e","name":"Daugurt Kefir","price":48000.00,"categoryName":"Smoothie","supportsHotIced":false},{"id":"3a58f5ce-5336-4708-872f-8d7b52538f03","name":"Donut chocolate","price":35000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"72e17934-0c8e-4904-98d3-32760871d9ca","name":"D\u01B0a Fame","price":65000.00,"categoryName":"Signature","supportsHotIced":true},{"id":"673a05ff-c5e3-4d0b-9545-984accf70ac0","name":"Nigussie Nare \u2014 Murago Outgrowers","price":80000.00,"categoryName":"Specialty Coffee","supportsHotIced":true},{"id":"e833e474-bcc8-430f-9adc-c4608d217999","name":"N\u01B0\u1EDBc \u00C9p D\u01B0a H\u1EA5u","price":45000.00,"categoryName":"Juice","supportsHotIced":false},{"id":"5c8f3e54-88f8-49da-b348-57b445c78529","name":"Salted Caramel Latte","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"7a02b0ad-770a-4831-8645-a0e7d68ff377","name":"Tr\u00E0 d\u00E2u","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"ca0ef7c6-8c03-4314-bb8b-42bccbd49c53","name":"Tr\u00E0 \u002B Donut","price":70000.00,"categoryName":"COMBO","supportsHotIced":false},{"id":"f1d7a950-3357-45af-bfc0-f7d7b9e9e330","name":"Donut matcha","price":35000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"38f7f879-11c5-47f8-ab72-e8e43b32f28f","name":"Espresso","price":35000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"1fbd2b4a-8bb0-4566-9633-0710b0102771","name":"Mocha","price":45000.00,"categoryName":"Espresso","supportsHotIced":true},{"id":"b199e524-17fe-4388-adbd-48f753083551","name":"Tr\u00E0 xo\u00E0i","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"aab00c78-d003-4de7-bb8d-51a5c81ba4e6","name":"Americano","price":40000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"5c4c9ca1-9098-4285-964f-71d00dc4a707","name":"Brownie chocolate","price":40000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"7c61e6cd-d09a-494c-a00c-3e6e8b9bacae","name":"Tr\u00E0 \u00F4 long s\u1EEFa","price":45000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"a95d312f-d7ca-47cb-8190-c314dac1c0bf","name":"Brownie h\u1EA1t","price":45000.00,"categoryName":"B\u00C1NH","supportsHotIced":false},{"id":"c6413aec-819a-47aa-9280-9f1f1d0e4832","name":"Cappuccino","price":45000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"d39ae9a4-10ff-4244-8d6d-e125c7707fcc","name":"Tr\u00E0 Earl Grey","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"df878b52-ca80-4364-bde8-53e2ea409788","name":"Latte","price":45000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"47303b69-e6a7-44e5-ab54-3b1c4e386ee3","name":"Tr\u00E0 hoa c\u00FAc m\u1EADt ong","price":40000.00,"categoryName":"TR\u00C0","supportsHotIced":false},{"id":"26ae430f-3d4a-49e5-a674-14d072654ef0","name":"Mocha","price":48000.00,"categoryName":"CAFE","supportsHotIced":false},{"id":"cfa199ec-e294-481a-be69-8d357a22e44c","name":"Caramel Macchiato","price":50000.00,"categoryName":"CAFE","supportsHotIced":false}]</script>
+
+<!-- Legacy preview-home cart sheet (non-seated only; seated uses _OrderTrayDock) -->
+<div id="cartOverlay" class="fixed inset-0 z-50 hidden">
+    <div id="cartBackdrop" class="absolute inset-0 bg-[rgba(26,20,16,0.34)] opacity-0 transition-opacity duration-200 ease-out" onclick="closeCart()"></div>
+    <div class="absolute inset-x-0 bottom-0">
+        <div class="mx-auto max-w-5xl px-4 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))]">
+            <div id="cartSheet"
+                 class="guest-cart-shell surface-paper overflow-y-auto overscroll-y-contain rounded-[1.75rem] translate-y-5 opacity-0 shadow-xl ring-1 ring-[rgba(212,184,150,0.55)] transition-[transform,opacity] duration-200 ease-out sm:rounded-[2rem]">
+                <div class="flex items-start justify-between gap-4 px-5 py-5 sm:px-10 sm:py-6">
+                    <div>
+                        <div class="text-sm font-semibold leading-snug text-[rgb(var(--fg))]" data-i18n="cart.title">Order tray</div>
+                        <div class="mt-1.5 text-xs leading-relaxed text-[rgb(var(--muted))]" data-i18n="cart.subtitle">Quietly prepared. Confirm when ready.</div>
+                    </div>
+                    <button type="button" class="guest-hit -mr-2 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-xs text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.97]" onclick="closeCart()" data-i18n="cart.close">Close</button>
+                </div>
+
+                <div class="space-y-5 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-10">
+                    <input type="hidden" id="venueTableIdHome" value="" />
+                        <div class="rounded-2xl border border-[rgba(212,184,150,0.6)] bg-[rgba(253,249,244,0.5)] px-5 py-4 text-sm leading-relaxed text-[rgb(var(--muted))]" data-i18n="cart.needQr">
+                            Please scan the table QR to begin.
+                        </div>
+
+                    <div id="activeOrderBanner" class="hidden rounded-2xl border border-[rgb(var(--accent))]/25 bg-[rgb(var(--accent))]/10 px-5 py-4 text-sm text-[rgb(var(--muted))]">
+                        <p class="text-[10px] font-medium tracking-[0.26em] uppercase text-[rgb(var(--muted-2))]" data-i18n="order.inProgressKicker">In progress</p>
+                        <p class="mt-2 text-[rgb(var(--fg))]" data-i18n="order.inProgressLine">You have an open order from this table.</p>
+                        <a id="activeOrderTrackLink" href="#" class="mt-3 inline-block text-xs font-medium tracking-[0.18em] uppercase text-[rgb(var(--accent))] underline-offset-4 hover:underline"></a>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="text-xs font-medium text-[rgb(var(--muted))]" data-i18n="cart.itemsLabel">Items</div>
+                            <button type="button" class="guest-hit inline-flex min-h-10 items-center rounded-full px-3 text-xs text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.98]" onclick="clearCart()" data-i18n="cart.clear">Clear tray</button>
+                        </div>
+                        <div id="cartItemsHome" class="mt-3 space-y-2 text-sm text-[rgb(var(--muted))]"></div>
+                    </div>
+
+                    <div class="pt-4">
+                        <div class="hairline"></div>
+                        <div class="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                            <div class="order-2 text-xs leading-relaxed text-[rgb(var(--muted-2))] md:order-1" data-i18n="cart.pricesNote">Prices are confirmed when you submit.</div>
+                            <button type="button"
+                                    id="cartSubmitBtn"
+                                    class="btn-ink guest-hit order-1 w-full justify-center disabled:opacity-50 md:order-2 md:w-auto"
+                                    onclick="submitCartOrder()"
+                                    disabled=&quot;disabled&quot;
+                                    data-i18n="cart.submit">
+                                Place order
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="cartSubmitResult" class="text-xs text-[rgb(var(--muted))]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </main>
+
+        <div b-a9s0fj8hxd id="annap-boot-overlay" class="hidden" aria-hidden="true"></div>
+
+    <footer b-a9s0fj8hxd class="pb-[max(2rem,env(safe-area-inset-bottom))] pt-4">
+        <div b-a9s0fj8hxd class="mx-auto max-w-5xl px-4 text-[10px] tracking-[0.16em] text-[rgb(var(--muted-2))] lg:text-xs lg:tracking-[0.18em]">
+            &copy; 2026 - Kits Coffee Atelier
+        </div>
+    </footer>
+        </div>
+
+    <div b-a9s0fj8hxd id="guestToast" class="fixed left-4 right-4 z-50 hidden [bottom:max(1rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))]">
+        <div b-a9s0fj8hxd class="mx-auto max-w-5xl">
+            <div b-a9s0fj8hxd class="surface-glass inline-flex min-h-12 items-center gap-3 rounded-sm border border-[rgba(190,165,130,0.35)] px-5 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_24px_-12px_rgba(26,18,9,0.1)]">
+                <div b-a9s0fj8hxd class="text-sm text-[rgb(var(--fg))]" id="guestToastText" data-i18n="toast.addedShort">Added.</div>
+                <button b-a9s0fj8hxd type="button" id="guestToastViewTray" class="guest-hit min-h-11 px-3 text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))] underline underline-offset-4" data-i18n="toast.viewOpen">View tray</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/json" id="annap-guest-boot-json">{"disableSommelierBoot":false,"disableSignalR":false,"disableGuestQueue":false,"disableI18n":false,"disableMoodCatalog":false,"disableCartHydration":false,"disableGuestAnimations":false,"disableGuestObservers":false,"showBootChecklist":false,"safeQuery":""}</script>
+    <script src="/js/guest-boot-harness.js?v=YnwEU-LG8Ag54dSTwBhoIdiayR7eqBjSHkDIVptMCKU"></script>
+    <script src="/js/annap-money.js?v=eOw42wjzgcO0dfBRnfIGytXJXXVcXcrvEwkiE4FjMl8"></script>
+        <script src="/js/guest-order-queue.js?v=B4CqDZrBSQkMr2Qc5KB9XjJxAnTWp1Ynm37bghf2xgY"></script>
+    <script src="/js/site.js?v=xQvlqRO252Mcv0jbZvIeKmhbow6PNZao4c_mWaOTr4k" defer></script>
+    <script src="/js/interaction-feedback.js?v=LRr7Abf4iKVVi6VF_r7kZBM4ze-FyK-KyzzFfKnzNM8"></script>
+    <script src="/js/add-to-order-animation-provider.js?v=ZJnY3N1HrUZsZcLIKyfpQcOEYUTkvQy-H8XvFfoG-8c" defer></script>
+    <script src="/js/correspondence.js?v=9THrEiztbba4J12rKz7DviwKXVEReQ0Uq0aNqsisNfQ" defer></script>
+        <script src="/js/guest-i18n.js?v=AT8Koa9gby0AVU5cBpiFP_3o7ye3iySt7N_8HrB3WwQ"></script>
+    <script src="/js/guest-interaction-contract.js?v=s2NfDqkhomxP36RDbC2x8tzcNfIS1zn9vzBQTMy6y8k"></script>
+    <script src="/js/guest-feedback.js?v=koZoP1bg_3k29iGJlQyw2QaQ1kDLuu2PwgtVIX2DQ40"></script>
+
+
+    
+    <script>
+        (function (w) {
+            var c = typeof w.AnnapGuestBoot !== "undefined" ? w.AnnapGuestBoot : {};
+            var on = w.__ANNAP_DEV_MODE === true && (w.__ANNAP_DEBUG === true || c.showBootChecklist === true);
+            function nop() {}
+            w.__annapGuestLog = on
+                ? function () {
+                      w.console.log.apply(w.console, arguments);
+                  }
+                : nop;
+            w.__annapGuestWarn = on
+                ? function () {
+                      w.console.warn.apply(w.console, arguments);
+                  }
+                : nop;
+            w.__annapGuestErr = on
+                ? function () {
+                      w.console.error.apply(w.console, arguments);
+                  }
+                : nop;
+        })(window);
+        const ANNAP_SERVER_VENUE_TABLE_ID = "";
+        const GE_ENTRY_ROOT = document.getElementById("guest-experience-root");
+
+        __annapGuestLog("[annap] boot step 1: guest script start");
+        function annapBootOff(key) {
+            var b = typeof window.AnnapGuestBoot !== "undefined" ? window.AnnapGuestBoot : {};
+            return b[key] === true;
+        }
+        function annapCoalesce(a, b) {
+            return a !== null && a !== undefined ? a : b;
+        }
+        function annapRenderPlainMenuFallback(reason) {
+            try {
+                __annapGuestLog("[annap] boot fallback: plain menu from /api/menu", reason);
+                var mount = document.querySelector(".guest-main");
+                if (!mount) return;
+                var box = document.getElementById("annap-plain-menu-fallback");
+                if (!box) {
+                    box = document.createElement("div");
+                    box.id = "annap-plain-menu-fallback";
+                    box.setAttribute("style", "margin:12px;padding:12px;border:1px solid #666;border-radius:8px;background:#111;color:#eee;font:14px system-ui,sans-serif");
+                    mount.insertBefore(box, mount.firstChild);
+                }
+                box.innerHTML = "<p>Loading menu...</p>";
+                fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/menu") : "/api/menu", { headers: { Accept: "application/json" }, cache: "no-store" })
+                    .then(function (r) {
+                        if (!r.ok) throw new Error("HTTP " + r.status);
+                        return r.json();
+                    })
+                    .then(function (data) {
+                        var cats = Array.isArray(data) ? data : (data.categories || []);
+                        var html = ["<h2 style=\"font-size:16px\">Menu (compatibility fallback)</h2>"];
+                        for (var fi = 0; fi < cats.length; fi++) {
+                            var c = cats[fi];
+                            html.push("<h3 style=\"margin:10px 0 4px\">" + String(c.name || "").replace(/</g, "&lt;") + "</h3><ul>");
+                            var items = c.items || [];
+                            for (var fj = 0; fj < items.length; fj++) {
+                                var it = items[fj];
+                                html.push("<li>" + String(it.name || "").replace(/</g, "&lt;") + "</li>");
+                            }
+                            html.push("</ul>");
+                        }
+                        box.innerHTML = html.join("");
+                        __annapGuestLog("[annap] boot step 99: plain menu fallback rendered");
+                    })
+                    .catch(function (e) {
+                        box.innerHTML = "<p>The menu did not arrive. Please try again in a moment.</p>";
+                    });
+            } catch (e2) {
+                __annapGuestErr("[annap] fallback failed", e2);
+            }
+        }
+
+        const HOME_CART_CATALOG = (function () {
+            const node = document.getElementById("home-cart-catalog-json");
+            if (!node) return [];
+            try {
+                return JSON.parse(node.textContent || "[]");
+            } catch (_annap) {
+                return [];
+            }
+        })();
+
+        function catalogRow(id) {
+            return HOME_CART_CATALOG.find((r) => String(r.id) === String(id));
+        }
+
+        GuestInteractionContract.bindPageContext({
+            serverVt: ANNAP_SERVER_VENUE_TABLE_ID,
+            migrateCatalog: {
+                catalogRow,
+                selectionFallback: () => LuxuryI18n.t("cart.selectionFallback")
+            }
+        });
+
+        (function rehydrateHomeVtFromSession() {
+            const srv = (ANNAP_SERVER_VENUE_TABLE_ID || "").trim();
+            try {
+                const u = new URL(window.location.href);
+                const urlVt = (u.searchParams.get("vt") || "").trim();
+                const stored = (sessionStorage.getItem("annap_venue_table_id") || "").trim();
+                if (!GuestInteractionContract.isGuid(stored)) return;
+                if (srv) return;
+                if (urlVt) {
+                    if (GuestInteractionContract.isGuid(urlVt)) sessionStorage.removeItem("annap_venue_table_id");
+                    return;
+                }
+                u.searchParams.set("vt", stored);
+                window.location.replace(u.pathname + u.search + u.hash);
+            } catch (_annap) {
+                /* ignore */
+            }
+        })();
+
+        function readCartLines() {
+            return GuestInteractionContract.getCartLines();
+        }
+
+        function writeCartLines(lines) {
+            GuestInteractionContract.setCartLines(lines);
+            updateCartPills();
+        }
+
+        function cartLineCount(lines) {
+            return lines.reduce((a, l) => a + (Number(l.qty) || 0), 0);
+        }
+
+        function updateCartPills() {
+            const lines = readCartLines();
+            const count = cartLineCount(lines);
+            const pill = document.getElementById("cartCountPill");
+            if (!pill) return;
+            if (count <= 0) {
+                pill.classList.add("hidden");
+                return;
+            }
+            pill.textContent = count;
+            pill.classList.remove("hidden");
+        }
+
+        function quickAdd(menuItemId, guestLabel, sourceEl) {
+            const gl =
+                guestLabel !== undefined && guestLabel !== null
+                    ? String(guestLabel).trim()
+                    : typeof window.__annapActiveGroupGuestLabel === "string"
+                      ? window.__annapActiveGroupGuestLabel.trim()
+                      : "";
+            const row = catalogRow(menuItemId);
+            GuestInteractionContract.addItem({
+                menuItemId,
+                name: annapCoalesce(row && row.name, LuxuryI18n.t("cart.selectionFallback")),
+                unitPrice: Number(annapCoalesce(row && row.price, 0)),
+                selectionFallback: LuxuryI18n.t("cart.selectionFallback"),
+                sourceElement: sourceEl || null,
+                guestLabel: gl
+            });
+            updateCartPills();
+            renderCart();
+        }
+
+        function clearCart() {
+            GuestInteractionContract.clearCart();
+            updateCartPills();
+            renderCart();
+            document.getElementById("cartSubmitResult").textContent = "";
+        }
+
+        let guestCartLockY = 0;
+        let homeOrderIdempotencyKey = null;
+        let homeOrderSubmitInFlight = false;
+
+        function openCart() {
+            const overlay = document.getElementById("cartOverlay");
+            const sheet = document.getElementById("cartSheet");
+            const backdrop = document.getElementById("cartBackdrop");
+            if (!overlay || !sheet || !backdrop) {
+                try {
+                    if (typeof console !== "undefined" && console.warn) {
+                        console.warn("[annap-ge-boot] openCart skipped: cart overlay DOM missing");
+                    }
+                } catch (_oc) {}
+                return;
+            }
+            renderCart();
+            guestCartLockY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.documentElement.style.setProperty("--guest-lock-y", `-${guestCartLockY}px`);
+            document.body.classList.add("guest-scroll-lock");
+            document.body.style.top = `-${guestCartLockY}px`;
+
+            overlay.classList.remove("hidden");
+            requestAnimationFrame(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                sheet.classList.remove("translate-y-5", "opacity-0");
+                sheet.classList.add("translate-y-0", "opacity-100");
+            });
+        }
+
+        function closeCart() {
+            const overlay = document.getElementById("cartOverlay");
+            const sheet = document.getElementById("cartSheet");
+            const backdrop = document.getElementById("cartBackdrop");
+            if (!overlay || !sheet || !backdrop) return;
+
+            backdrop.classList.add("opacity-0");
+            backdrop.classList.remove("opacity-100");
+            sheet.classList.add("translate-y-5", "opacity-0");
+            sheet.classList.remove("translate-y-0", "opacity-100");
+
+            window.setTimeout(() => {
+                overlay.classList.add("hidden");
+                document.body.classList.remove("guest-scroll-lock");
+                document.body.style.top = "";
+                document.documentElement.style.removeProperty("--guest-lock-y");
+                window.scrollTo(0, guestCartLockY);
+            }, 220);
+        }
+
+        function renderCart() {
+            const linesAll = readCartLines();
+            const el = document.getElementById("cartItemsHome");
+            if (!el) return;
+            el.innerHTML = "";
+
+            const guestCount =
+                typeof window.__annapGroupGuestCount !== "undefined" && window.__annapGroupGuestCount != null
+                    ? parseInt(window.__annapGroupGuestCount, 10)
+                    : 0;
+            const useGrouped =
+                typeof GuestInteractionContract.buildGroupOrderTraySections === "function" &&
+                typeof window.__annapGroupBrowseActive !== "undefined" &&
+                window.__annapGroupBrowseActive &&
+                guestCount >= 1;
+
+            if (linesAll.length === 0) {
+                const emptyMsg = LuxuryI18n.t("cart.empty");
+                el.innerHTML = `<div class="surface-glass rounded-[1.35rem] px-5 py-4 text-sm text-[rgb(var(--muted))]">${escapeHtml(emptyMsg)}</div>`;
+                return;
+            }
+
+            function appendLineRow(line) {
+                const id = line.menuItemId;
+                const qty = Number(line.qty) || 0;
+                const displayName = line.name || id;
+                const unit = Number(line.unitPrice) || 0;
+                const row = document.createElement("div");
+                row.className = "surface-glass flex items-center justify-between gap-3 rounded-[1.35rem] px-5 py-4";
+
+                const left = document.createElement("div");
+                left.className = "min-w-0";
+                const gl = (line.guestLabel && String(line.guestLabel).trim()) || "";
+                const guestHtml = gl
+                    ? `<div class="mt-0.5 text-[11px] font-medium tracking-[0.12em] text-[rgb(var(--accent))]/90">${escapeHtml(gl)}</div>`
+                    : "";
+                left.innerHTML = `<div class="truncate text-sm text-[rgb(var(--fg))]">${escapeHtml(String(displayName))}</div>${guestHtml}<div class="mt-0.5 text-xs text-[rgb(var(--muted))] tabular-nums">${GuestInteractionContract.formatMoney(unit)} ${escapeHtml(LuxuryI18n.t("cart.unitEach"))}</div>`;
+
+                const right = document.createElement("div");
+                right.className = "flex items-center gap-2";
+
+                const minus = document.createElement("button");
+                minus.className = "btn-quiet guest-hit inline-flex min-h-11 min-w-11 items-center justify-center px-0 text-sm";
+                minus.textContent = "Ã¢â‚¬â€œ";
+                minus.onclick = () => {
+                    GuestInteractionContract.adjustItemQuantity(id, -1, gl);
+                    updateCartPills();
+                    renderCart();
+                };
+
+                const qtyEl = document.createElement("span");
+                qtyEl.className = "text-xs font-semibold text-[rgb(var(--fg))] w-10 text-center";
+                qtyEl.textContent = `x${qty}`;
+
+                const plus = document.createElement("button");
+                plus.className = "btn-quiet guest-hit inline-flex min-h-11 min-w-11 items-center justify-center px-0 text-sm";
+                plus.textContent = "+";
+                plus.onclick = () => {
+                    GuestInteractionContract.adjustItemQuantity(id, 1, gl);
+                    updateCartPills();
+                    renderCart();
+                };
+
+                right.appendChild(minus);
+                right.appendChild(qtyEl);
+                right.appendChild(plus);
+                row.appendChild(left);
+                row.appendChild(right);
+                el.appendChild(row);
+            }
+
+            if (useGrouped) {
+                const sections = GuestInteractionContract.buildGroupOrderTraySections(linesAll, guestCount);
+                for (let si = 0; si < sections.length; si++) {
+                    const sec = sections[si];
+                    const head = document.createElement("div");
+                    head.className =
+                        "mb-1 mt-3 first:mt-0 text-[10px] font-medium tracking-[0.2em] text-[rgb(var(--accent))]";
+                    head.textContent = sec.label;
+                    el.appendChild(head);
+                    if (!sec.lines || sec.lines.length === 0) {
+                        const emptyRow = document.createElement("div");
+                        emptyRow.className =
+                            "surface-glass rounded-[1.35rem] px-4 py-3 text-xs text-[rgb(var(--muted))] mb-2";
+                        emptyRow.textContent =
+                            LuxuryI18n.t("cart.emptyGuestSection");
+                        el.appendChild(emptyRow);
+                        continue;
+                    }
+                    for (const line of sec.lines) appendLineRow(line);
+                }
+                return;
+            }
+
+            const lines =
+                typeof GuestInteractionContract.filterCartLinesForActiveGuest === "function"
+                    ? GuestInteractionContract.filterCartLinesForActiveGuest(linesAll)
+                    : linesAll;
+
+            if (lines.length === 0) {
+                const emptyMsg =
+                    linesAll.length > 0 &&
+                    typeof window.__annapGroupBrowseActive !== "undefined" &&
+                    window.__annapGroupBrowseActive
+                        ? LuxuryI18n.t("cart.emptyGuest")
+                        : LuxuryI18n.t("cart.empty");
+                el.innerHTML = `<div class="surface-glass rounded-[1.35rem] px-5 py-4 text-sm text-[rgb(var(--muted))]">${escapeHtml(emptyMsg)}</div>`;
+                return;
+            }
+
+            for (const line of lines) appendLineRow(line);
+        }
+
+        async function submitCartOrder() {
+            const lines = readCartLines();
+            const result = document.getElementById("cartSubmitResult");
+            const btn = document.getElementById("cartSubmitBtn");
+            result.textContent = "";
+
+            if (!GuestInteractionContract.getVenueTableId()) {
+                result.textContent = LuxuryI18n.t("order.needTableScan") || LuxuryI18n.t("order.needTable");
+                return;
+            }
+            if (lines.length === 0) {
+                result.textContent = LuxuryI18n.t("order.minOne");
+                return;
+            }
+            if (homeOrderSubmitInFlight) return;
+            homeOrderSubmitInFlight = true;
+            try {
+                if (!homeOrderIdempotencyKey && window.crypto && typeof window.crypto.randomUUID === "function")
+                    homeOrderIdempotencyKey = window.crypto.randomUUID();
+                else if (!homeOrderIdempotencyKey) homeOrderIdempotencyKey = String(Date.now());
+                if (!homeOrderIdempotencyKey) {
+                    result.textContent =
+                        LuxuryI18n.t("order.submitFailed");
+                    return;
+                }
+
+                if (btn) btn.setAttribute("disabled", "disabled");
+                const prev = btn && btn.textContent;
+                if (btn) btn.textContent = LuxuryI18n.t("order.submitting");
+
+                const items = lines.map((l) => {
+                    const g = (l.guestLabel && String(l.guestLabel).trim()) || "";
+                    return {
+                        menuItemId: l.menuItemId,
+                        quantity: l.qty,
+                        notes: g ? `Guest: ${g}` : null
+                    };
+                });
+                const vt = GuestInteractionContract.getVenueTableId();
+                let res;
+                try {
+                    res = await fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/orders") : "/api/orders", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            "Idempotency-Key": homeOrderIdempotencyKey
+                        },
+                        body: JSON.stringify({
+                            venueTableId: vt,
+                            items,
+                            idempotencyKey: homeOrderIdempotencyKey,
+                            paymentMethod: "CashOrCardAtCounter"
+                        })
+                    });
+                } catch (_annap) {
+                    if (window.GuestOrderQueue) window.GuestOrderQueue.enqueue(vt, items, homeOrderIdempotencyKey, "CashOrCardAtCounter");
+                    result.textContent =
+                        LuxuryI18n.t("order.queuedSoft");
+                    if (btn) {
+                        btn.textContent = prev;
+                        btn.removeAttribute("disabled");
+                    }
+                    return;
+                }
+
+                const payload = await res.json().catch(function () {
+                    return null;
+                });
+                if (!res.ok) {
+                    const er = String((payload && payload.error) || "").toLowerCase();
+                    let msg = LuxuryI18n.t("order.submitFailed");
+                    if (res.status === 400) {
+                        homeOrderIdempotencyKey = null;
+                        if (er.includes("scan") || er.includes("table qr") || er.includes("seat"))
+                            msg = LuxuryI18n.t("order.needTableScan") || msg;
+                        else if (er.includes("table") && (er.includes("not available") || er.includes("inactive")))
+                            msg = LuxuryI18n.t("order.tableUnavailable") || msg;
+                        else if (er.includes("menu") || er.includes("refresh"))
+                            msg = LuxuryI18n.t("order.menuChanged") || msg;
+                        else if (er.includes("at least one") || er.includes("tray"))
+                            msg = LuxuryI18n.t("order.minOne") || msg;
+                    } else if (res.status >= 500 || res.status === 429) {
+                        if (window.GuestOrderQueue) window.GuestOrderQueue.enqueue(vt, items, homeOrderIdempotencyKey, "CashOrCardAtCounter");
+                        msg =
+                            LuxuryI18n.t("order.queuedSoft");
+                    }
+                    result.textContent = msg;
+                    if (btn) {
+                        btn.textContent = prev;
+                        btn.removeAttribute("disabled");
+                    }
+                    return;
+                }
+
+                homeOrderIdempotencyKey = null;
+
+                GuestInteractionContract.writeGuestOrderSession({
+                    orderId: payload.id,
+                    token: payload.guestSessionToken,
+                    venueTableId: GuestInteractionContract.getVenueTableId(),
+                    status: "submittedPendingPayment"
+                });
+
+                const oid = escapeHtml(String(payload.id));
+                const submitted = escapeHtml(LuxuryI18n.t("order.submitted"));
+                const follow = escapeHtml(LuxuryI18n.t("order.followLink"));
+                const trackHref = payload.trackUrl || `/track/${payload.id}?token=${encodeURIComponent(payload.guestSessionToken || "")}`;
+                result.innerHTML = `${submitted} <span class="font-medium text-[rgb(var(--fg))] tabular-nums">${oid}</span>
+                <a href="${String(trackHref).replace(/"/g, "&quot;")}" class="mt-3 block text-center text-[11px] font-medium tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline-offset-4 transition hover:text-[rgb(var(--accent))] hover:underline">${follow}</a>`;
+                GuestInteractionContract.clearCart();
+                updateCartPills();
+                renderCart();
+                refreshActiveOrderBanner();
+                if (typeof window.__annapRefreshTraySummary === "function") window.__annapRefreshTraySummary();
+                if (btn) {
+                    btn.textContent = prev;
+                    btn.removeAttribute("disabled");
+                }
+            } finally {
+                homeOrderSubmitInFlight = false;
+            }
+        }
+
+        function readOrderSession() {
+            return GuestInteractionContract.readGuestOrderSession();
+        }
+
+        async function refreshActiveOrderBanner() {
+            const wrap = document.getElementById("activeOrderBanner");
+            const link = document.getElementById("activeOrderTrackLink");
+            if (!wrap || !link) return;
+            const sess = readOrderSession();
+            if (!sess || !GuestInteractionContract.getVenueTableId()) {
+                wrap.classList.add("hidden");
+                return;
+            }
+            try {
+                const res = await fetch(
+                    (typeof window.__annapApiUrl === "function"
+                        ? window.__annapApiUrl(
+                              "/api/track/orders/" +
+                                  encodeURIComponent(sess.orderId) +
+                                  "?token=" +
+                                  encodeURIComponent(sess.token)
+                          )
+                        : `/api/track/orders/${encodeURIComponent(sess.orderId)}?token=${encodeURIComponent(sess.token)}`),
+                    { headers: { Accept: "application/json" } }
+                );
+                if (res.status === 404) {
+                    GuestInteractionContract.removeGuestOrderSession();
+                    wrap.classList.add("hidden");
+                    return;
+                }
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                if (data.isCancelled || data.isComplete) {
+                    wrap.classList.add("hidden");
+                    return;
+                }
+                link.href = `/track/${encodeURIComponent(sess.orderId)}?token=${encodeURIComponent(sess.token)}`;
+                link.textContent = LuxuryI18n.t("order.followPreparation");
+                wrap.classList.remove("hidden");
+            } catch (_annap) {
+                wrap.classList.add("hidden");
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise((r) => setTimeout(r, ms));
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+
+        function bootGuestExperience() {
+            __annapGuestLog("[annap] boot step 3: bootGuestExperience start");
+            var dbg = window.AnnapGuestLanDebug;
+            var H = window.AnnapGuestBootHarness;
+            try {
+                try {
+                    if (ANNAP_SERVER_VENUE_TABLE_ID) sessionStorage.setItem("annap_venue_table_id", ANNAP_SERVER_VENUE_TABLE_ID);
+                } catch (_annap) {
+                    /* ignore */
+                }
+            if (dbg && dbg.setHub) dbg.setHub("N/A");
+
+            __annapGuestLog("[annap] starting tray/vt");
+            try {
+                if (typeof console !== "undefined" && console.log) {
+                    console.log("[annap-ge-boot] bootGuestExperience", {
+                        hasGeRoot: !!GE_ENTRY_ROOT,
+                        seatedVt: (ANNAP_SERVER_VENUE_TABLE_ID || "").trim() || null,
+                        menuFirstArrival: true
+                    });
+                }
+                if (!GE_ENTRY_ROOT) {
+                    GuestInteractionContract.setTrayOpener(openCart);
+                } else {
+                    if (typeof console !== "undefined" && console.log) {
+                        console.log("[annap-ge-boot] skip setTrayOpener(openCart) on seated arrival; order-tray-dock wires tray");
+                    }
+                }
+                GuestInteractionContract.navigation.applyVtNavPatches();
+                __annapGuestLog("[annap] tray/vt ok");
+            } catch (eTv) {
+                __annapGuestErr("[annap] tray/vt failed", eTv);
+            }
+
+            __annapGuestLog("[annap] starting i18n DOM");
+            try {
+                LuxuryI18n.applyDom();
+                __annapGuestLog("[annap] i18n DOM ok");
+            } catch (eI18n) {
+                __annapGuestErr("[annap] i18n DOM failed", eI18n);
+            }
+            __annapGuestLog("[annap] boot step 4: i18n DOM applied");
+
+            try {
+                document.addEventListener("luxury:i18n-changed", function () {
+                    LuxuryI18n.applyDom();
+                    if (!annapBootOff("disableCartHydration")) {
+                        renderCart();
+                        refreshActiveOrderBanner();
+                    }
+                });
+            } catch (eL) {
+                __annapGuestErr("[annap] i18n listener failed", eL);
+            }
+
+            try {
+                window.addEventListener("online", function () {
+                    document.dispatchEvent(new CustomEvent("annap:network-online"));
+                    if (!annapBootOff("disableGuestQueue") && window.GuestOrderQueue && typeof window.GuestOrderQueue.flush === "function")
+                        void window.GuestOrderQueue.flush();
+                });
+            } catch (eOn) {
+                __annapGuestErr("[annap] online listener failed", eOn);
+            }
+
+            __annapGuestLog("[annap] starting cart hydration");
+            try {
+                updateCartPills();
+                if (!annapBootOff("disableCartHydration")) {
+                    renderCart();
+                    refreshActiveOrderBanner();
+                    if (H) H.row("hydration", "ok");
+                    __annapGuestLog("[annap] cart hydration ok");
+                } else {
+                    if (H) H.markSkipped("hydration");
+                    __annapGuestLog("[annap] cart hydration skipped (diag/safe)");
+                }
+            } catch (eC) {
+                __annapGuestErr("[annap] cart hydration failed", eC);
+                if (H) H.row("hydration", "fail");
+            }
+            __annapGuestLog("[annap] boot step 7: cart init + hydration pass done");
+
+            if (H) {
+                H.row("signalr", "skip");
+                if (annapBootOff("disableGuestQueue")) H.markSkipped("queue");
+                H.markSkipped("observers");
+            }
+            if (H && typeof H.markHydrationDone === "function") H.markHydrationDone();
+            } catch (eBoot) {
+                __annapGuestErr("[annap] guest boot failed", eBoot);
+                if (dbg && dbg.log) dbg.log("boot err");
+                annapRenderPlainMenuFallback(eBoot);
+                if (H && typeof H.markHydrationDone === "function") H.markHydrationDone();
+            }
+        }
+
+        function annapStartHomeGuestBoot() {
+            if (annapBootOff("disableI18n")) {
+                __annapGuestLog("[annap] starting i18n (skipped diag/safe)");
+                if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.markSkipped("i18n");
+                try {
+                    bootGuestExperience();
+                } catch (bootErr0) {
+                    __annapGuestErr("[annap] bootGuestExperience threw", bootErr0);
+                    annapRenderPlainMenuFallback(bootErr0);
+                }
+                return;
+            }
+            var H = window.AnnapGuestBootHarness;
+            __annapGuestLog("[annap] starting i18n");
+            var i18nPromise = window.LuxuryI18n && window.LuxuryI18n.ready ? window.LuxuryI18n.ready : Promise.resolve();
+            var gate =
+                H && typeof H.runTimed === "function"
+                    ? H.runTimed("i18n", 5000, function () {
+                          return i18nPromise;
+                      })
+                    : i18nPromise;
+            gate.then(
+                function () {
+                    __annapGuestLog("[annap] i18n ok");
+                    __annapGuestLog("[annap] boot step 2: i18n bundles ready");
+                    try {
+                        bootGuestExperience();
+                    } catch (bootErr) {
+                        __annapGuestErr("[annap] bootGuestExperience threw", bootErr);
+                        annapRenderPlainMenuFallback(bootErr);
+                    }
+                },
+                function (e) {
+                    __annapGuestErr("[annap] i18n failed or timeout", e);
+                    try {
+                        bootGuestExperience();
+                    } catch (bootErr2) {
+                        annapRenderPlainMenuFallback(bootErr2);
+                    }
+                }
+            );
+        }
+
+        document.addEventListener("annap:guest-interaction", function (ev) {
+            var d = ev && ev.detail;
+            if (!d || (d.type !== "cartUpdated" && d.type !== "activeGuestChanged")) return;
+            try {
+                if (typeof updateCartPills === "function") updateCartPills();
+                if (typeof renderCart === "function") renderCart();
+            } catch (_cartUi) {
+                /* ignore */
+            }
+        });
+
+        try {
+            annapStartHomeGuestBoot();
+        } catch (topBootErr) {
+            __annapGuestErr("[annap] boot outer failure", topBootErr);
+            annapRenderPlainMenuFallback(topBootErr);
+        }
+    </script>
+
+    <script>
+/* Service worker disabled in Development — avoids stale /api/menu handlers on LAN devices. */    </script>
+    </div>
+</body>
+</html>

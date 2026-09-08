@@ -1,0 +1,51 @@
+@page "/staff/login"
+@model LoginModel
+@{
+    Layout = "_StaffLayout";
+    ViewData["Title"] = "Đăng nhập quầy";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/staff-login.css" asp-append-version="true" />
+}
+
+<div class="staff-login">
+    <div class="staff-login__sheet">
+        <header class="staff-login__header">
+            <p class="staff-login__eyebrow">Kits Coffee Atelier</p>
+            <h1 class="staff-login__title">Đăng nhập quầy</h1>
+            <p class="staff-login__subtitle">Dành cho nhân viên thu ngân, quản lý và pha chế.</p>
+        </header>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="staff-login__error" role="alert">@Model.ErrorMessage</div>
+        }
+
+        <form method="post" class="staff-login__form">
+            @Html.AntiForgeryToken()
+            <label class="staff-login__field" for="UserName">
+                <span class="staff-login__label">Tên đăng nhập</span>
+                <input id="UserName"
+                       name="UserName"
+                       asp-for="UserName"
+                       autocomplete="username"
+                       placeholder="Ví dụ: thu-ngan-1" />
+                <span class="staff-login__hint">Nhân viên dùng tên đăng nhập và mật khẩu được quản lý cấp.</span>
+            </label>
+            <label class="staff-login__field" for="Password">
+                <span class="staff-login__label">Mật khẩu</span>
+                <input id="Password"
+                       name="Password"
+                       asp-for="Password"
+                       type="password"
+                       autocomplete="current-password"
+                       placeholder="Mật khẩu nhân viên hoặc mật khẩu quầy" />
+                <span class="staff-login__hint staff-login__hint--shared">
+                    Nếu dùng mật khẩu chung của quầy, có thể để trống tên đăng nhập.
+                </span>
+            </label>
+            <button type="submit" class="staff-login__submit btn-ink">Đăng nhập</button>
+        </form>
+    </div>
+</div>

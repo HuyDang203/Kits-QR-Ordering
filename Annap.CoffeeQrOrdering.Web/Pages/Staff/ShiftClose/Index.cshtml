@@ -1,0 +1,125 @@
+@page "/staff/shift-close"
+@model Annap.CoffeeQrOrdering.Web.Pages.Staff.ShiftClose.IndexModel
+@{
+    Layout = "_StaffLayout";
+    ViewData["StaffBodyClass"] = "staff-shift-close-page";
+    var isSuccess = TempData["ShiftCloseSuccess"] as string == "1";
+    var copyText = ViewData["ShiftCloseCopyText"] as string ?? "";
+    var preview = isSuccess && Model.ClosedSummary is not null ? Model.ClosedSummary : Model.Preview;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/staff-shift-close.css" asp-append-version="true" />
+}
+
+<div class="staff-shift-close" data-can-close="@(preview.CanClose ? "true" : "false")">
+    @if (isSuccess)
+    {
+        <header class="staff-shift-close__header staff-shift-close__header--success">
+            <div class="staff-shift-close__header-main">
+                <h1 class="staff-shift-close__title">Đã kết ca</h1>
+                <p class="staff-shift-close__subtitle">Báo cáo ca đã được lưu. Ca mới bắt đầu từ thời điểm kết ca vừa rồi.</p>
+            </div>
+            <a class="staff-shift-close__back" asp-page="/Staff/Orders">Quay lại sàn phục vụ</a>
+        </header>
+
+        @if (Model.ClosedSummary is not null)
+        {
+            var s = Model.ClosedSummary;
+            <section class="staff-shift-close__shift-bar" aria-label="Ca vừa kết">
+                <span class="staff-shift-close__shift-label">Ca vừa kết</span>
+                <span class="staff-shift-close__shift-window">@Model.FormatCompactWindow(s.Window.StartUtc, s.Window.EndUtc)</span>
+                <span class="staff-shift-close__shift-user">@s.CurrentUserDisplayName</span>
+            </section>
+
+            <partial name="_ShiftCloseKpis" model="Model" />
+
+            @if (s.Employees.Count > 0)
+            {
+                <partial name="_ShiftCloseEmployees" model="Model" />
+            }
+
+            <div class="staff-shift-close__actions staff-shift-close__actions--inline">
+                @if (!string.IsNullOrWhiteSpace(copyText))
+                {
+                    <button type="button" class="staff-shift-close__secondary staff-shift-close__copy" id="staff-shift-copy" data-copy="@copyText">
+                        Sao chép tổng kết
+                    </button>
+                }
+                <a class="staff-shift-close__primary" asp-page="/Staff/Orders">Về sàn phục vụ</a>
+                <a class="staff-shift-close__link" asp-page="/Staff/ShiftClose/Index">Xem ca hiện tại</a>
+            </div>
+        }
+    }
+    else
+    {
+        <header class="staff-shift-close__header">
+            <div class="staff-shift-close__header-main">
+                <h1 class="staff-shift-close__title">Kết ca</h1>
+                <p class="staff-shift-close__subtitle">Tổng hợp các bill đã thanh toán trong ca hiện tại.</p>
+            </div>
+            <a class="staff-shift-close__back" asp-page="/Staff/Orders">Quay lại sàn phục vụ</a>
+        </header>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <p class="staff-shift-close__error" role="alert">@Model.ErrorMessage</p>
+        }
+
+        <section class="staff-shift-close__shift-bar" aria-label="Ca hiện tại">
+            <span class="staff-shift-close__shift-label">Ca hiện tại</span>
+            <span class="staff-shift-close__shift-window">@Model.FormatCompactWindow(Model.Preview.Window.StartUtc, Model.Preview.Window.EndUtc)</span>
+            <span class="staff-shift-close__shift-user">@Model.Preview.CurrentUserDisplayName</span>
+        </section>
+
+        <partial name="_ShiftCloseKpis" model="Model" />
+
+        @if (!Model.Preview.CanClose && !string.IsNullOrEmpty(Model.Preview.EmptyMessage))
+        {
+            <p class="staff-shift-close__empty-banner" role="status">@Model.Preview.EmptyMessage</p>
+        }
+
+        <partial name="_ShiftClosePaymentMethods" model="Model" />
+
+        <partial name="_ShiftCloseEmployees" model="Model" />
+
+        <partial name="_ShiftCloseBills" model="Model" />
+
+        @if (Model.Preview.LastClose is { } last)
+        {
+            <details class="staff-shift-close__last">
+                <summary class="staff-shift-close__last-summary">Ca đã kết gần nhất</summary>
+                <dl class="staff-shift-close__last-body">
+                    <div><dt>Thời gian kết</dt><dd>@Model.FormatLocal(last.ClosedAtUtc)</dd></div>
+                    <div><dt>Người kết ca</dt><dd>@last.ClosedBy</dd></div>
+                    <div><dt>Doanh thu</dt><dd>@Model.Money(last.TotalGrossAmount)</dd></div>
+                    <div><dt>Số bill</dt><dd>@last.TotalOrders</dd></div>
+                </dl>
+            </details>
+        }
+
+        <form method="post" asp-page-handler="Close" class="staff-shift-close__actions staff-shift-close__actions--inline" id="staff-shift-close-form">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    class="staff-shift-close__primary staff-shift-close__primary--close"
+                    id="staff-shift-close-btn"
+                    @(Model.Preview.CanClose ? null : "disabled")>
+                Kết ca
+            </button>
+            <a class="staff-shift-close__link" asp-page="/Staff/Orders">Quay lại sàn phục vụ</a>
+        </form>
+
+        @if (Model.Preview.CanClose)
+        {
+            <div class="staff-shift-close__sticky" id="staff-shift-close-sticky" aria-hidden="true">
+                <form method="post" asp-page-handler="Close" class="staff-shift-close__sticky-form" id="staff-shift-close-sticky-form">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="staff-shift-close__sticky-btn">Kết ca</button>
+                </form>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/staff-shift-close.js" asp-append-version="true"></script>
+}

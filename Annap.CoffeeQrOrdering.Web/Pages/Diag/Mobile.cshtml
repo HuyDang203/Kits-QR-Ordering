@@ -1,0 +1,80 @@
+@page "/diag/mobile"
+@model Annap.CoffeeQrOrdering.Web.Pages.Diag.MobileModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostEnvironment
+@inject Microsoft.Extensions.Options.IOptions<DiagnosticsOptions> DiagOptions
+@{
+    Layout = null;
+    var useDevUi = HostEnvironment.IsDevelopment() || DiagOptions.Value.DeveloperOverlays;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kits LAN diagnostics</title>
+    <partial name="Shared/_AnnapRuntimeHead" model="useDevUi" />
+</head>
+<body>
+    <h1>Kits LAN / mobile diagnostics</h1>
+    <pre id="out">Running…</pre>
+    <script src="/lib/signalr/signalr.min.js"></script>
+    <script>
+        (async function () {
+            const pre = document.getElementById("out");
+            const lines = [];
+            function log(s) { lines.push(s); pre.textContent = lines.join("\n"); }
+
+            async function step(name, fn) {
+                const t0 = performance.now();
+                try {
+                    const r = await fn();
+                    const ms = Math.round(performance.now() - t0);
+                    log("PASS " + name + " (" + ms + "ms) " + (r || ""));
+                    return { ok: true, ms, detail: r || "" };
+                } catch (e) {
+                    const ms = Math.round(performance.now() - t0);
+                    const msg = (e && e.message) ? e.message : String(e);
+                    log("FAIL " + name + " (" + ms + "ms) " + msg);
+                    return { ok: false, ms, detail: msg };
+                }
+            }
+
+            log("Origin: " + location.origin);
+
+            await step("GET /api/diag/ping", async () => {
+                const res = await fetch((typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/diag/ping") : "/api/diag/ping"), { headers: { Accept: "application/json" } });
+                const txt = await res.text();
+                if (!res.ok) throw new Error("HTTP " + res.status + " " + txt);
+                return txt;
+            });
+
+            await step("GET /api/menu", async () => {
+                const res = await fetch((typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/menu") : "/api/menu"), { headers: { Accept: "application/json" }, cache: "no-store" });
+                const txt = await res.text();
+                if (!res.ok) throw new Error("HTTP " + res.status + " " + txt.slice(0, 400));
+                const j = JSON.parse(txt);
+                const n = (j.categories && j.categories.length) || 0;
+                return "categories=" + n;
+            });
+
+            await step("SignalR /hubs/orders", async () => {
+                if (typeof signalR === "undefined") throw new Error("signalR global missing (CDN blocked?)");
+                const conn = new signalR.HubConnectionBuilder()
+                    .withUrl(typeof window.__annapHubUrl === "function" ? window.__annapHubUrl() : "/hubs/orders")
+                    .withAutomaticReconnect([0, 2000, 5000])
+                    .build();
+                const t = setTimeout(() => { try { conn.stop(); } catch (e) { } }, 12000);
+                try {
+                    await conn.start();
+                    return "state=" + conn.state;
+                } finally {
+                    clearTimeout(t);
+                    try { await conn.stop(); } catch (e2) { }
+                }
+            });
+
+            log("Done.");
+        })();
+    </script>
+</body>
+</html>

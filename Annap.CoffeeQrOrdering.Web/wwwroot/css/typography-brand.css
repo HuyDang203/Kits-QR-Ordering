@@ -1,0 +1,171 @@
+/**
+ * Annap specialty-coffee typography — brand display on guest/admin;
+ * operational UI stays Inter sans. Load after feature CSS bundles.
+ */
+
+/* Staff: no display serif — operational tool */
+.staff-shell {
+  --font-display: var(--font-ui);
+}
+
+/* ── Guest brand / editorial (Fraunces) ─────────────────────────────────── */
+
+html.annap-correspond-ui .guest-masthead__mark,
+html.annap-correspond-ui #order-tray-chip-title,
+html.annap-correspond-ui .order-tray-confirm-card__title,
+html.annap-correspond-ui .menu-cat-section h2,
+html.annap-correspond-ui .menu-chapter-head .menu-cat-heading,
+html.annap-correspond-ui .menu-chapter-hero .menu-editorial-card__name,
+.guest-table-notice__title,
+.ge-sommelier-lite__title,
+.guest-sommelier-lite__headline {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+html.annap-correspond-ui .menu-cat-section h2,
+html.annap-correspond-ui .menu-chapter-head .menu-cat-heading {
+  font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+  font-weight: 500;
+}
+
+html.annap-correspond-ui .menu-cat-section > div > p,
+.guest-table-notice__lead {
+  font-family: var(--font-ui);
+  font-style: normal;
+  font-size: clamp(0.9375rem, 2.5vw, 1.0625rem);
+  line-height: 1.55;
+}
+
+html.annap-correspond-ui h1,
+html.annap-correspond-ui h2,
+html.annap-correspond-ui h3 {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+}
+
+html.annap-correspond-ui .guest-masthead__mark {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Product names — display on hero only; support list stays UI sans */
+html.annap-correspond-ui .menu-chapter-support .menu-editorial-card__name {
+  font-family: var(--font-ui);
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.menu-editorial-card__price,
+.order-tray-chip__total,
+.guest-track-bill__amount {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Table / bill codes — never decorative serif */
+.guest-track-bill__table-code,
+.guest-track-bill__bill-no,
+.staff-order-card__table-code {
+  font-family: var(--font-code) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ── Admin — premium titles, calm body ──────────────────────────────────── */
+
+.admin-root {
+  font-family: var(--font-ui);
+}
+
+.admin-root .font-display,
+.admin-root .ah-hero__title,
+.admin-root .admin-page-title,
+.admin-home__hero-title {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.admin-root .admin-page-title {
+  font-size: clamp(1.625rem, 4vw, 2.75rem);
+  line-height: 1.15;
+}
+
+/* ── Staff operational scale ────────────────────────────────────────────── */
+
+.staff-topbar__title,
+.staff-floor-header__title {
+  font-family: var(--font-ui);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.staff-order-card__table-code {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 700;
+}
+
+.staff-order-card__item-name {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.staff-order-card__payment-badge,
+.staff-mobile-kpi__label {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.staff-shift-close__title {
+  font-family: var(--font-ui);
+  font-weight: 700;
+}
+
+.staff-shift-close__kpi-value,
+.staff-shift-close__pay-value,
+.staff-shift-close__bill-no {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Table / order codes — mono everywhere (never display serif) */
+#track-table {
+  font-family: var(--font-code) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Bank transfer / QR — scannable numbers & memo */
+.guest-bank-transfer__amount,
+.guest-bank-transfer__memo,
+.guest-bank-transfer__meta dd {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+}
+
+.staff-order-card__transfer-memo {
+  font-family: var(--font-code);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Staff stays operational — no decorative italic from legacy correspondence */
+.staff-shell .font-display {
+  font-family: var(--font-ui) !important;
+  font-style: normal !important;
+}

@@ -1,0 +1,478 @@
+/* ============================================================================
+ * Kits Arrival — venue photo welcome
+ *
+ * Single-purpose visual surface shown when a guest lands on the homepage with
+ * a valid table QR (`?vt=`). Composed for mobile portrait first; desktop and
+ * landscape phones adapt cleanly.
+ *
+ * Token-driven: every color / surface reads from the Kits palette defined in
+ * kits-identity.css (--kits-bg, --kits-surface, --kits-text, --kits-coffee).
+ * No Annap / Atelier / cream paper / editorial serif styling.
+ *
+ * Entrance is purely opacity + small translateY. Respect prefers-reduced-motion.
+ * ========================================================================== */
+
+.kits-arrival {
+    /* Layout */
+    --arr-safe-top: max(0.5rem, env(safe-area-inset-top, 0px));
+    --arr-safe-right: max(0.75rem, env(safe-area-inset-right, 0px));
+    --arr-safe-bottom: max(0.85rem, env(safe-area-inset-bottom, 0px));
+    --arr-safe-left: max(0.75rem, env(safe-area-inset-left, 0px));
+    --arr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: rgb(var(--kits-bg));
+    color: rgb(var(--kits-text));
+    font-family: var(--font-ui);
+    contain: layout paint;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Stage: photo + layered overlays for readability ── */
+
+.kits-arrival__stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.kits-arrival__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Landscape 16:9 source — center the focal subject on portrait viewports. */
+    object-position: center center;
+    display: block;
+    opacity: 0;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: opacity;
+}
+
+.kits-arrival__overlay {
+    position: absolute;
+    inset: 0;
+    /* Soft top-bottom shade for type legibility */
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.45) 0%,
+            rgba(0, 0, 0, 0.18) 35%,
+            rgba(0, 0, 0, 0.32) 65%,
+            rgba(0, 0, 0, 0.7) 100%
+        );
+    opacity: 0;
+    pointer-events: none;
+}
+
+.kits-arrival__gradient {
+    /* Bottom fade to the Kits canvas so CTAs sit on a solid dark surface */
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(11, 11, 11, 0.6) 60%,
+            rgb(11, 11, 11) 100%
+        );
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── Compact chrome: KITS | EN VI | sound / haptic ── */
+
+.kits-arrival__chrome {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: var(--arr-safe-top);
+    padding-left: var(--arr-safe-left);
+    padding-right: var(--arr-safe-right);
+    padding-bottom: 0.4rem;
+    pointer-events: auto;
+}
+
+.kits-arrival__mark {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--kits-text));
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 0.4rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.kits-arrival__chrome-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ── Welcome content: eyebrow / heading / supporting ── */
+
+.kits-arrival__content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem var(--arr-safe-left) 1.25rem;
+    max-width: 32rem;
+    pointer-events: none;
+}
+
+.kits-arrival__eyebrow {
+    margin: 0 0 0.85rem;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--kits-text-muted));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.kits-arrival__eyebrow-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: rgba(var(--kits-coffee), 1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.kits-arrival__table-code {
+    color: rgb(var(--kits-text));
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.kits-arrival__heading {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: clamp(1.85rem, 6.5vw, 2.65rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: rgb(var(--kits-text));
+    text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.4),
+        0 6px 22px rgba(0, 0, 0, 0.4);
+    max-width: 22ch;
+}
+
+.kits-arrival__supporting {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    line-height: 1.5;
+    color: rgb(var(--kits-text-muted));
+    max-width: 30ch;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ── CTAs: lower third, full-width on mobile, capped on desktop ── */
+
+.kits-arrival__actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0 var(--arr-safe-left) var(--arr-safe-bottom);
+    pointer-events: auto;
+}
+
+.kits-arrival__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 56px;
+    padding: 0 1.25rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0;
+    text-transform: none;
+    transition:
+        transform 120ms ease,
+        background 120ms ease,
+        border-color 120ms ease,
+        opacity 120ms ease;
+    border: 1px solid transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    color: rgb(var(--kits-text));
+}
+
+.kits-arrival__cta-text {
+    flex: 1;
+    text-align: left;
+}
+
+.kits-arrival__cta-arrow {
+    font-size: 1.05rem;
+    line-height: 1;
+    opacity: 0.85;
+    transition: transform 220ms var(--arr-ease);
+}
+
+.kits-arrival__cta:hover .kits-arrival__cta-arrow,
+.kits-arrival__cta:focus-visible .kits-arrival__cta-arrow {
+    transform: translateX(3px);
+}
+
+.kits-arrival__cta:focus-visible {
+    outline: 2px solid rgba(var(--kits-coffee), 0.8);
+    outline-offset: 2px;
+}
+
+/* Primary — strong filled surface, high contrast */
+.kits-arrival__cta--primary {
+    background: rgb(var(--kits-coffee));
+    color: rgb(var(--kits-text));
+    border-color: rgb(var(--kits-coffee-strong));
+    box-shadow:
+        0 12px 32px -16px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.kits-arrival__cta--primary:hover,
+.kits-arrival__cta--primary:focus-visible {
+    background: rgb(var(--kits-coffee-strong));
+}
+
+.kits-arrival__cta--primary:active {
+    transform: scale(0.985);
+}
+
+/* Secondary — translucent dark surface with subtle border */
+.kits-arrival__cta--secondary {
+    background: rgba(0, 0, 0, 0.42);
+    color: rgb(var(--kits-text));
+    border-color: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.kits-arrival__cta--secondary:hover,
+.kits-arrival__cta--secondary:focus-visible {
+    background: rgba(0, 0, 0, 0.55);
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+.kits-arrival__cta--secondary:active {
+    transform: scale(0.985);
+}
+
+/* ── Entrance (set .is-live via small inline script after first paint) ── */
+
+.kits-arrival__chrome,
+.kits-arrival__content,
+.kits-arrival__actions {
+    opacity: 0;
+    transform: translateY(10px);
+    will-change: opacity, transform;
+}
+
+.kits-arrival__chrome { transition: opacity 600ms ease 250ms, transform 600ms ease 250ms; }
+.kits-arrival__content { transition: opacity 700ms ease 380ms, transform 700ms ease 380ms; }
+.kits-arrival__actions { transition: opacity 700ms ease 540ms, transform 700ms ease 540ms; }
+
+.kits-arrival.is-live .kits-arrival__photo {
+    opacity: 1;
+    transition: opacity 800ms var(--arr-ease);
+}
+
+.kits-arrival.is-live .kits-arrival__overlay {
+    opacity: 1;
+    transition: opacity 700ms var(--arr-ease) 80ms;
+}
+
+.kits-arrival.is-live .kits-arrival__gradient {
+    opacity: 1;
+    transition: opacity 700ms var(--arr-ease) 80ms;
+}
+
+.kits-arrival.is-live .kits-arrival__chrome,
+.kits-arrival.is-live .kits-arrival__content,
+.kits-arrival.is-live .kits-arrival__actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.kits-arrival.is-live .kits-arrival__chrome { will-change: auto; }
+.kits-arrival.is-live .kits-arrival__content { will-change: auto; }
+.kits-arrival.is-live .kits-arrival__actions { will-change: auto; }
+.kits-arrival.is-live .kits-arrival__photo { will-change: auto; }
+
+/* ── Calm mode (low-end / WebView devices) — reduce motion distance ── */
+
+.kits-arrival--calm .kits-arrival__chrome,
+.kits-arrival--calm .kits-arrival__content,
+.kits-arrival--calm .kits-arrival__actions {
+    transform: translateY(4px);
+}
+
+/* ── Tablet: keep mobile composition, slightly more horizontal padding ── */
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .kits-arrival__content {
+        margin-left: max(1.5rem, 4vw);
+        max-width: 32rem;
+    }
+
+    .kits-arrival__actions {
+        max-width: 32rem;
+        margin-left: max(1.5rem, 4vw);
+    }
+
+    .kits-arrival__photo {
+        object-position: 55% center;
+    }
+}
+
+/* ── Desktop: centered content, capped CTAs, photo remains immersive ── */
+
+@media (min-width: 1025px) {
+    .kits-arrival__content {
+        margin: 0 auto;
+        padding-left: max(2rem, 5vw);
+        padding-right: max(2rem, 5vw);
+        max-width: 38rem;
+        align-items: center;
+        text-align: center;
+    }
+
+    .kits-arrival__eyebrow {
+        justify-content: center;
+    }
+
+    .kits-arrival__heading {
+        font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+    }
+
+    .kits-arrival__actions {
+        max-width: 28rem;
+        margin: 0 auto;
+        padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+    }
+
+    .kits-arrival__photo {
+        object-position: center 40%;
+    }
+}
+
+/* ── Landscape phones / short viewports: keep CTAs reachable ── */
+
+@media (max-height: 480px) and (orientation: landscape) {
+    .kits-arrival__content {
+        margin-top: 0;
+        max-width: 26rem;
+    }
+
+    .kits-arrival__heading {
+        font-size: clamp(1.5rem, 5vh, 2rem);
+    }
+
+    .kits-arrival__photo {
+        object-position: 60% center;
+    }
+
+    .kits-arrival__actions {
+        position: absolute;
+        right: var(--arr-safe-right);
+        bottom: var(--arr-safe-bottom);
+        width: min(20rem, 50vw);
+        z-index: 2;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* ── Reduced motion — no fades, no transforms ── */
+
+@media (prefers-reduced-motion: reduce) {
+    .kits-arrival__chrome,
+    .kits-arrival__content,
+    .kits-arrival__actions {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .kits-arrival__photo,
+    .kits-arrival__overlay,
+    .kits-arrival__gradient {
+        transition: none !important;
+        opacity: 1 !important;
+    }
+
+    .kits-arrival__cta-arrow {
+        transition: none !important;
+    }
+}
+
+/* No-motion class set by safe-mode boot (avoids WebView repaint churn) */
+html.annap-guest-no-motion .kits-arrival__chrome,
+html.annap-guest-no-motion .kits-arrival__content,
+html.annap-guest-no-motion .kits-arrival__actions,
+html.annap-guest-no-motion .kits-arrival__photo,
+html.annap-guest-no-motion .kits-arrival__overlay,
+html.annap-guest-no-motion .kits-arrival__gradient {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* ── Hide non-arrival chrome while the arrival root is on screen ── */
+
+html.kits-arrival-active,
+html.kits-arrival-active body {
+    overflow: hidden;
+    overflow-x: clip;
+}
+
+html.kits-arrival-active .annap-ambient-stack,
+html.kits-arrival-active .annap-root-surface > footer,
+html.kits-arrival-active .order-tray-root {
+    display: none !important;
+}
+
+html.kits-arrival-active .guest-header,
+html.kits-arrival-active .guest-toast {
+    display: none !important;
+}
+
+/* The table-notice surface reuses the same compact header pattern; keep that one. */
+html.kits-arrival-active.guest-table-notice-root .guest-table-notice__head {
+    position: relative;
+    z-index: 3;
+}

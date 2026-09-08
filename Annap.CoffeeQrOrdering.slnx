@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Annap.CoffeeQrOrdering.Application/Annap.CoffeeQrOrdering.Application.csproj" />
+  <Project Path="Annap.CoffeeQrOrdering.Domain/Annap.CoffeeQrOrdering.Domain.csproj" />
+  <Project Path="Annap.CoffeeQrOrdering.Infrastructure/Annap.CoffeeQrOrdering.Infrastructure.csproj" />
+  <Project Path="Annap.CoffeeQrOrdering.Tests/Annap.CoffeeQrOrdering.Tests.csproj" />
+  <Project Path="Annap.CoffeeQrOrdering.Web/Annap.CoffeeQrOrdering.Web.csproj" />
+</Solution>

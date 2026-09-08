@@ -1,0 +1,58 @@
+@page "/admin/menu/categories"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Menu.CategoriesModel
+@{
+    ViewData["Title"] = "Thứ tự danh mục";
+    ViewData["AdminNavSection"] = "menu-categories";
+    ViewData["AdminEyebrow"] = "Quản lý thực đơn";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin/menu");
+    ViewData["AdminReturnLabel"] = "← Danh sách đồ uống";
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="menu-curation-page space-y-10">
+    <header class="menu-curation-list__intro max-w-2xl">
+        <p class="text-[10px] font-medium tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]">Quản lý thực đơn</p>
+        <h1 class="mt-4 font-display text-3xl font-normal tracking-tight text-[rgb(var(--fg))] sm:text-4xl">
+            Thứ tự danh mục
+        </h1>
+        <p class="mt-5 text-base leading-relaxed text-[rgb(var(--muted))]">
+            Sắp nhịp các chương trên thực đơn khách. Số nhỏ hơn sẽ xuất hiện trước.
+        </p>
+    </header>
+
+    @if (TempData["MenuCurationToast"] is string flash)
+    {
+        <div class="menu-curation-toast" role="status">@flash</div>
+    }
+
+    <form method="post" class="space-y-4">
+        @for (var i = 0; i < Model.SortInputs.Count; i++)
+        {
+            var row = Model.Categories[i];
+            <div class="menu-curation-panel flex flex-wrap items-center gap-4 sm:gap-6">
+                <input type="hidden" asp-for="SortInputs[i].Id" />
+                <div class="min-w-0 flex-1">
+                    <p class="font-display text-lg text-[rgb(var(--fg))]">@row.Name</p>
+                </div>
+                <div class="sm:w-28">
+                    <label class="admin-field-label" asp-for="SortInputs[i].SortOrder">Thứ tự</label>
+                    <input type="number"
+                           min="0"
+                           max="9999"
+                           step="1"
+                           class="admin-input tabular-nums"
+                           asp-for="SortInputs[i].SortOrder" />
+                </div>
+            </div>
+        }
+
+        @if (Model.SortInputs.Count == 0)
+        {
+            <p class="text-sm text-[rgb(var(--muted))]">Chưa có danh mục. Khi có món đầu tiên, các chương thực đơn sẽ hiện ở đây.</p>
+        }
+        else
+        {
+            <button type="submit" class="admin-btn admin-btn--primary guest-hit min-h-12 px-8">Lưu nhịp thực đơn</button>
+        }
+    </form>
+</section>

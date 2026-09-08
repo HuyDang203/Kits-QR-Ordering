@@ -1,0 +1,11 @@
+@* Calm wayfinding — set ViewData["AdminReturnHref"] + ViewData["AdminReturnLabel"] on each page. *@
+@{
+    var href = ViewData["AdminReturnHref"] as string;
+    var label = ViewData["AdminReturnLabel"] as string;
+}
+@if (!string.IsNullOrWhiteSpace(href) && !string.IsNullOrWhiteSpace(label))
+{
+    <nav class="admin-editorial-return" aria-label="Wayfinding">
+        <a class="admin-editorial-return__link guest-hit" href="@href">@label</a>
+    </nav>
+}

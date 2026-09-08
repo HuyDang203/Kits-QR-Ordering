@@ -1,0 +1,184 @@
+/**
+ * Annap Interaction Feedback — tactile press, soft flash, motion tokens.
+ * Guest layout only. Respects prefers-reduced-motion and .annap-guest-no-motion.
+ */
+
+:root {
+  --motion-fast: 100ms;
+  --motion-normal: 220ms;
+  --motion-slow: 420ms;
+  --motion-press: 100ms;
+  --ease-out-press: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --if-flash: rgba(255, 252, 247, 0.42);
+}
+
+/* Unified press — replace inconsistent active:scale utilities visually when class present */
+.guest-hit,
+.btn-ink,
+.btn-quiet,
+.menu-add-btn,
+.order-tray-payment-option,
+[data-feedback]:not([data-feedback="none"]) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform var(--motion-press) var(--ease-out-press),
+    box-shadow var(--motion-normal) var(--ease-out-press),
+    opacity var(--motion-press) var(--ease-out-press),
+    background-color var(--motion-normal) var(--ease-out-press);
+  will-change: transform;
+}
+
+.guest-hit:active,
+.btn-ink:active,
+.btn-quiet:active,
+.menu-add-btn:active,
+.order-tray-payment-option:active,
+[data-feedback]:not([data-feedback="none"]):active {
+  transform: scale(0.98);
+}
+
+.menu-editorial-card,
+.ge-sig-card {
+  transition:
+    transform var(--motion-normal) var(--ease-out-press),
+    box-shadow var(--motion-normal) var(--ease-out-press);
+}
+
+.menu-editorial-card:active,
+.ge-sig-card:active {
+  transform: scale(0.985);
+  box-shadow: 0 6px 20px -10px rgba(26, 18, 9, 0.14);
+}
+
+/* Soft opacity flash — not Material ripple */
+.if-flash {
+  position: relative;
+}
+
+.if-flash::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--if-flash);
+  opacity: 0;
+  animation: if-soft-flash var(--motion-press) var(--ease-out-press) forwards;
+}
+
+@keyframes if-soft-flash {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Preference toggles — quiet, beside language */
+.annap-if-prefs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.annap-if-pref {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--muted-2));
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color var(--motion-fast) var(--ease-out-press),
+    opacity var(--motion-fast) var(--ease-out-press);
+}
+
+.annap-if-pref:hover {
+  color: rgb(var(--fg));
+}
+
+.annap-if-pref--on {
+  color: rgb(var(--muted));
+  opacity: 1;
+}
+
+.annap-if-pref--off {
+  opacity: 0.38;
+}
+
+.annap-if-pref svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guest-hit,
+  .btn-ink,
+  .btn-quiet,
+  .menu-add-btn,
+  .menu-editorial-card,
+  .ge-sig-card,
+  [data-feedback] {
+    transition: none !important;
+  }
+
+  .guest-hit:active,
+  .btn-ink:active,
+  .btn-quiet:active,
+  .menu-add-btn:active,
+  .menu-editorial-card:active,
+  .ge-sig-card:active,
+  [data-feedback]:active {
+    transform: none !important;
+  }
+
+  .if-flash::after {
+    display: none !important;
+  }
+}
+
+html.annap-guest-no-motion .guest-hit,
+html.annap-guest-no-motion .btn-ink,
+html.annap-guest-no-motion .btn-quiet,
+html.annap-guest-no-motion .menu-add-btn,
+html.annap-guest-no-motion .menu-editorial-card,
+html.annap-guest-no-motion .ge-sig-card,
+html.annap-guest-no-motion [data-feedback] {
+  transition: none !important;
+}
+
+html.annap-guest-no-motion .guest-hit:active,
+html.annap-guest-no-motion .btn-ink:active,
+html.annap-guest-no-motion .btn-quiet:active,
+html.annap-guest-no-motion .menu-add-btn:active,
+html.annap-guest-no-motion .menu-editorial-card:active,
+html.annap-guest-no-motion .ge-sig-card:active,
+html.annap-guest-no-motion [data-feedback]:active {
+  transform: none !important;
+}
+
+html.annap-guest-no-motion .if-flash::after {
+  display: none !important;
+}
+
+/* Language switch — soft fade of live regions */
+html.annap-if-lang-fading [data-i18n],
+html.annap-if-lang-fading [data-i18n-placeholder],
+html.annap-if-lang-fading [data-i18n-aria] {
+  transition: opacity var(--motion-fast) var(--ease-out-press);
+  opacity: 0.72;
+}

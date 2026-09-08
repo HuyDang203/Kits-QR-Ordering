@@ -1,0 +1,221 @@
+@* Shared table order dock — Menu + seated Home. Requires #menu-catalog-json + #menu-guest-context (or window.__ANNAP_TRAY_GUEST_CTX) before scripts. *@
+<link rel="stylesheet" href="~/css/guest-tray-submitted.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/checkout-sheet.css" asp-append-version="true" />
+<div id="order-tray-backdrop"
+     class="order-tray-backdrop order-tray-backdrop-layer pointer-events-none fixed inset-0 z-[55] hidden opacity-0 sm:rounded-none"
+     aria-hidden="true"></div>
+
+<div id="order-tray-root"
+     class="order-tray-root order-tray-root--dock pointer-events-none fixed inset-x-0 bottom-0 z-[60] sm:left-auto sm:right-6 sm:w-[min(23.5rem,calc(100vw-2rem))]">
+    <div class="order-tray-shell pointer-events-none relative z-[60] mx-auto max-w-lg px-3 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))] sm:px-0">
+        <div class="relative flex flex-col items-stretch">
+            <div id="order-tray-sheet"
+                 class="order-tray-sheet checkout-sheet order-tray-sheet--closed pointer-events-none absolute bottom-full left-0 right-0 mb-2 flex max-h-[min(78dvh,720px)] flex-col overflow-hidden">
+                <div class="annap-tray-header order-tray-header-compact relative flex shrink-0 items-center gap-2">
+                    <div class="order-tray-handle pointer-events-none absolute left-1/2 top-1 h-0.5 w-7 -translate-x-1/2 rounded-full bg-[rgba(26,20,16,0.1)]" aria-hidden="true"></div>
+
+                    <div class="order-tray-header__stamp order-tray-header__stamp--compact" aria-hidden="true">A</div>
+                    <div class="min-w-0 flex-1">
+                        <p id="traySheetTitle" class="order-tray-sheet-title" data-i18n="menuTray.sheetTitle">Khay của bạn</p>
+                        <p id="trayCountLine"
+                           class="order-tray-sheet-sub" data-i18n="menuTray.sheetSub">Chạm để xem và gửi order</p>
+                        <p id="trayTableMeta" class="order-tray-table-meta hidden" aria-live="polite"></p>
+                    </div>
+
+                    <div class="flex shrink-0 items-center gap-0.5">
+                        <button type="button"
+                                id="order-tray-clear"
+                                class="guest-hit inline-flex min-h-8 items-center rounded-full px-2 py-0.5 text-[8px] font-medium tracking-[0.2em] uppercase text-[rgb(var(--muted))] transition hover:text-[rgb(var(--fg))] active:scale-[0.97]"
+                                data-i18n="menuTray.clear">
+                            Xóa lựa chọn
+                        </button>
+                        <button type="button"
+                                id="annap-tray-close"
+                                class="guest-hit inline-flex h-8 w-8 items-center justify-center rounded-full text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.97]"
+                                data-i18n-aria="cart.close">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-3.5 w-3.5">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="order-tray-lines-wrap" class="order-tray-lines-wrap min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+                    <div id="cart" class="order-tray-lines pb-1 text-sm"></div>
+                    @* Permanent submitted + QR mount — never recreated by renderCart *@
+                    <div id="order-tray-submitted-panel" class="order-tray-submitted-panel hidden" hidden>
+                        <div id="order-tray-submitted-card" class="order-tray-submitted-card order-tray-submitted-card--compact" role="status">
+                            <div class="order-tray-submitted-card__seal" aria-hidden="true">A</div>
+                            <p id="order-tray-submitted-title" class="order-tray-submitted-card__title"></p>
+                            <p id="order-tray-submitted-status" class="order-tray-submitted-card__status hidden" hidden></p>
+                            <p id="order-tray-submitted-body" class="order-tray-submitted-card__body"></p>
+                            <p id="order-tray-submitted-note" class="order-tray-submitted-card__note"></p>
+                            <div id="order-tray-transfer-host" class="order-tray-transfer-host"></div>
+                            <a id="order-tray-submitted-track" href="#" class="order-tray-submitted-card__link"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="order-tray-sheet-footer" class="order-tray-sheet-footer shrink-0">
+                    <div id="order-tray-checkout-body" class="order-tray-checkout-body min-h-0">
+                    <div id="order-tray-checkout-review" class="order-tray-checkout hidden" hidden>
+                        <p class="order-tray-checkout__kicker" data-i18n="checkout.checkBillTitle">Kiểm tra đơn</p>
+                        <p class="order-tray-checkout__note" data-i18n="checkout.reviewNoteShort">Kiểm tra món trước khi thanh toán.</p>
+                        <ul id="order-tray-checkout-lines" class="order-tray-checkout__lines"></ul>
+                        <div class="order-tray-subtotal-row">
+                            <span data-i18n="checkout.estimatedTotal">Tạm tính</span>
+                            <p id="order-tray-checkout-total">0đ</p>
+                        </div>
+                    </div>
+
+                    <div id="order-tray-checkout-payment" class="order-tray-checkout hidden" hidden>
+                        <p class="order-tray-checkout__kicker" data-i18n="checkout.choosePaymentMethod">Chọn cách thanh toán</p>
+                        <div class="order-tray-payment-options order-tray-payment-options--triple grid grid-cols-3" role="radiogroup" data-i18n-aria="checkout.paymentMethodLabel">
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="Cash"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.payCash">Tiền mặt</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.payAtCounterHint">Thanh toán tại quầy</span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="Card"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.payCard">Thẻ</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.payAtCounterHint">Thanh toán tại quầy</span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="order-tray-payment-option guest-hit"
+                                    data-payment-method="BankTransfer"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="checkout.bankTransfer">Chuyển khoản</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="checkout.bankTransferHint">QR theo đúng số tiền</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div id="order-tray-payment-preview"
+                             class="order-tray-payment-preview hidden"
+                             hidden
+                             aria-live="polite">
+                            <p id="order-tray-payment-preview-title" class="order-tray-payment-preview__title"></p>
+                            <p id="order-tray-payment-preview-body" class="order-tray-payment-preview__body"></p>
+                            <p id="order-tray-payment-preview-note" class="order-tray-payment-preview__note"></p>
+                            <p id="order-tray-payment-preview-keepopen"
+                               class="order-tray-payment-preview__keepopen hidden"
+                               hidden
+                               role="status"></p>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div id="order-tray-cart-footer" class="order-tray-cart-footer">
+                    <div class="order-tray-subtotal-row">
+                        <span data-i18n="menuTray.subtotal">Tạm tính</span>
+                        <p id="order-tray-subtotal">0đ</p>
+                    </div>
+
+                    <div id="menu-table-identity" class="hidden" aria-hidden="true">
+                        <p id="menu-table-primary"></p>
+                    </div>
+                    <div id="menu-table-need-qr"
+                         class="order-tray-need-qr hidden"
+                         data-i18n="cart.needQr">
+                        Vui lòng quét QR trên bàn để bắt đầu.
+                    </div>
+
+                    <input type="hidden" id="menuVenueTableId" value="" autocomplete="off" />
+
+                    <div id="order-tray-checkout-sticky" class="order-tray-checkout-sticky">
+                        <div id="order-tray-checkout-actions" class="order-tray-checkout-actions flex gap-1.5 hidden" hidden>
+                            <button type="button"
+                                    id="order-tray-checkout-back"
+                                    class="order-tray-back-btn guest-hit">
+                                <span data-i18n="menu.back">Quay lại</span>
+                            </button>
+                        </div>
+
+                        <button type="button"
+                                id="menuSubmitBtn"
+                                class="btn-ink order-tray-submit w-full disabled:opacity-45"
+                                disabled
+                                onclick="if (typeof window.__annapMenuSubmitOrder === 'function') window.__annapMenuSubmitOrder();">
+                            Kiểm tra đơn
+                        </button>
+                    </div>
+
+                    <div id="orderResult"
+                         class="order-tray-result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button"
+                    id="order-tray-chip"
+                    class="order-tray-chip checkout-sheet-chip pointer-events-auto guest-hit relative z-[1] flex min-h-[2.75rem] w-full items-center gap-1.5 px-2.5 py-1.5 text-left transition-[box-shadow] duration-200 ease-out active:scale-[0.995] sm:min-h-0 sm:duration-300 sm:ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    aria-expanded="false"
+                    aria-controls="order-tray-sheet"
+                    data-i18n-aria="menuTray.ariaChip">
+                <span id="order-tray-chip-impact" class="order-tray-chip__impact" aria-hidden="true"></span>
+                <div class="order-tray-chip__lead">
+                    <span id="order-tray-chip-stack" class="order-tray-chip__stack" aria-hidden="true">
+                        <span class="order-tray-chip__empty-line"></span>
+                    </span>
+                    <div class="order-tray-chip__copy">
+                        <p class="order-tray-chip__kicker text-[8px] font-medium tracking-[0.24em] uppercase text-[rgb(var(--muted-2))]" data-i18n="menuTray.chipKicker">Khay</p>
+                        <p id="order-tray-chip-title"
+                           class="mt-0.5 text-[0.75rem] font-medium leading-snug text-[rgb(var(--fg))]" data-i18n="menuTray.chipEmpty">Khay đang chờ</p>
+                        <p id="order-tray-chip-sub"
+                           class="order-tray-chip__sub mt-0.5 text-[10px] leading-snug text-[rgb(var(--muted))]" data-i18n="menuTray.chipSubEmpty">Chọn một ly để bắt đầu.</p>
+                        <p id="order-tray-chip-guest"
+                           class="mt-1 hidden text-[10px] font-medium tracking-[0.18em] uppercase text-[rgb(var(--accent))]/80"></p>
+                    </div>
+                </div>
+                <div class="order-tray-chip__price">
+                    <span id="order-tray-chip-total" class="order-tray-chip__total">0đ</span>
+                </div>
+                <span class="order-tray-chevron flex items-center justify-center rounded-full bg-[rgba(253,249,244,0.95)] ring-1 ring-[rgba(212,184,150,0.45)] transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                      aria-hidden="true">
+                    <svg class="h-3.5 w-3.5 text-[rgb(var(--muted))]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+@* Drink detail — JSON-driven overlay (dd-* via DrinkDetailModal + DrinkDetailRenderer). *@
+<div id="drink-detail-modal"
+     class="drink-detail-modal fixed inset-0 z-[350] hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-hidden="true">
+    <div id="drink-detail-backdrop" role="presentation"></div>
+    <div id="drink-detail-panel">
+        <header class="drink-detail-action-bar"
+                data-i18n-aria="menu.detailActionsAria">
+            <button type="button"
+                    id="drink-detail-close"
+                    class="drink-detail-close drink-detail-action-bar__back drink-modal-close drink-poster-back"
+                    data-i18n-aria="cart.close">
+                <span class="drink-detail-action-bar__glyph" aria-hidden="true">←</span>
+                <span data-i18n="menu.back">Quay lại</span>
+            </button>
+            <button type="button"
+                    id="drink-detail-add-top"
+                    class="drink-detail-add-top drink-detail-action-bar__add menu-add-btn"
+                    hidden
+                    disabled
+                    data-i18n="menu.prepareForTable">
+                <span class="drink-detail-add-top__label">Pha cho bàn tôi</span>
+            </button>
+        </header>
+        <div id="drink-detail-mount"></div>
+    </div>
+</div>

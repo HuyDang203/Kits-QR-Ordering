@@ -1,0 +1,220 @@
+@model MenuCurationEditorPartialModel
+
+<div class="menu-curation-form space-y-8 sm:space-y-10">
+
+    <!-- ════════ SECTION A — HÌNH ẢNH ════════ -->
+    <section class="menu-curation-panel" data-form-section="image">
+        <p class="admin-kpi-label">Hình ảnh</p>
+        <p class="mt-2 max-w-xl text-sm leading-relaxed text-[rgb(var(--muted))]">
+            Ảnh sẽ hiện trên thực đơn và trang chi tiết. Ảnh lớn hơn được chấp nhận — hệ thống tự tối ưu (WebP · tối đa 5&nbsp;MB).
+        </p>
+
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+            <div>
+                <label class="admin-field-label">Ảnh món</label>
+                <p class="text-xs text-[rgb(var(--muted))] mb-2">Hiển thị trên thực đơn.</p>
+                <div class="menu-curation-dropzone" data-dropzone>
+                    <input asp-for="Input.HeroImage"
+                           type="file"
+                           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                           class="menu-curation-dropzone__input"
+                           id="hero-image-input"
+                           data-preview-file />
+                    <label for="hero-image-input" class="menu-curation-dropzone__label guest-hit">
+                        <span class="menu-curation-dropzone__glyph" aria-hidden="true">◇</span>
+                        <span class="menu-curation-dropzone__title">Đặt hình ảnh</span>
+                        <span class="menu-curation-dropzone__hint">4:3 · 1200×900 khuyến nghị</span>
+                    </label>
+                </div>
+                <span asp-validation-for="Input.HeroImage" class="mt-2 block text-xs text-red-200/90"></span>
+                @if (!string.IsNullOrWhiteSpace(Model.CurrentHeroUrl))
+                {
+                    <div class="menu-curation-image-current">
+                        <figure class="menu-curation-hero-thumb">
+                            <img src="@Model.CurrentHeroUrl" alt="" width="120" height="120" loading="lazy" referrerpolicy="no-referrer" />
+                        </figure>
+                        <div class="menu-curation-image-current-actions">
+                            <label for="hero-image-input" class="admin-btn admin-btn--ghost min-h-10 px-4 text-xs cursor-pointer">
+                                Thay ảnh
+                            </label>
+                            <button type="button"
+                                    class="admin-btn admin-btn--quiet min-h-10 px-3 text-xs text-[rgb(var(--muted))]"
+                                    data-action="clear-hero">
+                                Xóa ảnh
+                            </button>
+                            <input asp-for="Input.RemoveHeroImage" type="checkbox" class="menu-curation-remove-flag" />
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div>
+                <label class="admin-field-label">Ảnh chi tiết</label>
+                <p class="text-xs text-[rgb(var(--muted))] mb-2">Hiển thị khi khách mở chi tiết món.</p>
+                <div class="menu-curation-dropzone" data-dropzone>
+                    <input asp-for="Input.DetailPosterImage"
+                           type="file"
+                           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                           class="menu-curation-dropzone__input"
+                           id="poster-image-input" />
+                    <label for="poster-image-input" class="menu-curation-dropzone__label guest-hit">
+                        <span class="menu-curation-dropzone__glyph" aria-hidden="true">◈</span>
+                        <span class="menu-curation-dropzone__title">Đặt poster</span>
+                        <span class="menu-curation-dropzone__hint">Mọi tỉ lệ được chấp nhận</span>
+                    </label>
+                </div>
+                <span asp-validation-for="Input.DetailPosterImage" class="mt-2 block text-xs text-red-200/90"></span>
+                @if (!string.IsNullOrWhiteSpace(Model.CurrentDetailPosterUrl))
+                {
+                    <div class="menu-curation-image-current">
+                        <figure class="menu-curation-hero-thumb menu-curation-hero-thumb--poster">
+                            <img src="@Model.CurrentDetailPosterUrl" alt="" width="80" height="60" loading="lazy" referrerpolicy="no-referrer" />
+                        </figure>
+                        <div class="menu-curation-image-current-actions">
+                            <label for="poster-image-input" class="admin-btn admin-btn--ghost min-h-10 px-4 text-xs cursor-pointer">
+                                Thay ảnh
+                            </label>
+                            <button type="button"
+                                    class="admin-btn admin-btn--quiet min-h-10 px-3 text-xs text-[rgb(var(--muted))]"
+                                    data-action="clear-poster">
+                                Xóa ảnh
+                            </button>
+                            <input asp-for="Input.RemoveDetailPosterImage" type="checkbox" class="menu-curation-remove-flag" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════ SECTION B — THÔNG TIN MÓN ════════ -->
+    <section class="menu-curation-panel" data-form-section="info">
+        <p class="admin-kpi-label">Thông tin món</p>
+        <div class="mt-6 space-y-5">
+            <div>
+                <label class="admin-field-label" asp-for="Input.Name">Tên món</label>
+                <input asp-for="Input.Name" class="admin-input text-base font-medium" autocomplete="off" data-preview="name" />
+                <span asp-validation-for="Input.Name" class="mt-2 block text-xs text-red-200/90"></span>
+            </div>
+
+            <div>
+                <label class="admin-field-label" asp-for="Input.Subtitle">Mô tả ngắn</label>
+                <input asp-for="Input.Subtitle"
+                       class="admin-input"
+                       autocomplete="off"
+                       data-preview="subtitle"
+                       placeholder="Ví dụ: Espresso, sữa tươi và caramel." />
+                <span asp-validation-for="Input.Subtitle" class="mt-2 block text-xs text-red-200/90"></span>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label class="admin-field-label" asp-for="Input.CategoryId">Danh mục</label>
+                    <select asp-for="Input.CategoryId" class="admin-select" data-preview="category">
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.Id">@c.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Input.CategoryId" class="mt-2 block text-xs text-red-200/90"></span>
+                </div>
+
+                <div>
+                    <label class="admin-field-label" asp-for="Input.Price">Giá bán (VND)</label>
+                    <div class="admin-input-group">
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               inputmode="decimal"
+                               class="admin-input tabular-nums"
+                               data-preview="price"
+                               name="@Html.NameFor(m => m.Input.Price)"
+                               id="@Html.IdFor(m => m.Input.Price)"
+                               value="@Model.Input.Price.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)" />
+                        <span class="admin-input-suffix" aria-hidden="true">₫</span>
+                    </div>
+                    <span asp-validation-for="Input.Price" class="mt-2 block text-xs text-red-200/90"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════ SECTION C — TRẠNG THÁI HIỂN THỊ ════════ -->
+    <section class="menu-curation-panel" data-form-section="visibility">
+        <p class="admin-kpi-label">Trạng thái hiển thị</p>
+        <p class="mt-2 max-w-xl text-sm leading-relaxed text-[rgb(var(--muted))]">
+            Quyết định món có xuất hiện và nổi bật như thế nào trên thực đơn.
+        </p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+            <label class="menu-curation-toggle guest-hit">
+                <input asp-for="Input.IsAvailable" type="checkbox" class="menu-curation-toggle__input" data-preview="available" />
+                <span class="menu-curation-toggle__face">
+                    <span class="menu-curation-toggle__title">Đang bán</span>
+                    <span class="menu-curation-toggle__line">Bật: khách có thể gọi món này. Tắt: món sẽ hiển thị là tạm hết.</span>
+                </span>
+            </label>
+
+            <label class="menu-curation-toggle guest-hit">
+                <input asp-for="Input.IsFeatured" type="checkbox" class="menu-curation-toggle__input" data-preview-flag="featured" />
+                <span class="menu-curation-toggle__face">
+                    <span class="menu-curation-toggle__title">Nổi bật</span>
+                    <span class="menu-curation-toggle__line">Ưu tiên hiển thị trong khu vực nổi bật.</span>
+                </span>
+            </label>
+
+            <label class="menu-curation-toggle guest-hit sm:col-span-2">
+                <input asp-for="Input.IsSignature" type="checkbox" class="menu-curation-toggle__input" data-preview-flag="signature" />
+                <span class="menu-curation-toggle__face">
+                    <span class="menu-curation-toggle__title">Đặc trưng</span>
+                    <span class="menu-curation-toggle__line">Đánh dấu đây là món đặc trưng của quán.</span>
+                </span>
+            </label>
+        </div>
+    </section>
+
+    <!-- ════════ ADVANCED DISCLOSURE ════════ -->
+    <section class="menu-curation-panel menu-curation-panel--advanced" data-form-section="advanced">
+        <details class="menu-curation-disclosure">
+            <summary class="menu-curation-disclosure__summary">
+                <span class="menu-curation-disclosure__title">Tùy chọn nâng cao</span>
+                <span class="menu-curation-disclosure__hint" aria-hidden="true">＋</span>
+            </summary>
+            <div class="menu-curation-disclosure__body space-y-5">
+                <div>
+                    <label class="admin-field-label" asp-for="Input.Description">Mô tả dài (trang chủ)</label>
+                    <p class="text-xs text-[rgb(var(--muted))] mb-2">Không phải mô tả chính trên thực đơn. Dùng cho trang chi tiết.</p>
+                    <textarea asp-for="Input.Description"
+                              rows="5"
+                              class="admin-input min-h-[8rem] resize-y"
+                              data-preview="description"
+                              placeholder="Mô tả dài hơn cho trang chi tiết…"></textarea>
+                    <span asp-validation-for="Input.Description" class="mt-2 block text-xs text-red-200/90"></span>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label class="admin-field-label" asp-for="Input.DisplaySortOrder">Vị trí hiển thị</label>
+                        <input type="number"
+                               step="1"
+                               min="0"
+                               max="9999"
+                               class="admin-input tabular-nums"
+                               asp-for="Input.DisplaySortOrder" />
+                        <p class="mt-2 text-xs text-[rgb(var(--muted))]">Số nhỏ hơn sẽ đứng trước trong danh mục.</p>
+                        <span asp-validation-for="Input.DisplaySortOrder" class="mt-2 block text-xs text-red-200/90"></span>
+                    </div>
+
+                    <div>
+                        <label class="admin-field-label" asp-for="Input.ItemType">Loại món</label>
+                        <input asp-for="Input.ItemType"
+                               class="admin-input"
+                               autocomplete="off"
+                               placeholder="Ví dụ: nóng, đá, đặc trưng" />
+                        <p class="mt-2 text-xs text-[rgb(var(--muted))]">Phân loại nội bộ.</p>
+                        <span asp-validation-for="Input.ItemType" class="mt-2 block text-xs text-red-200/90"></span>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </section>
+</div>

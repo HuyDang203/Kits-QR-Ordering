@@ -1,0 +1,109 @@
+@page
+@model ErrorModel
+@{
+    Layout = null;
+    ViewData["Title"] = Model.GuestFacing ? "Error" : Model.StatusCodeValue switch
+    {
+        404 => "Không tìm thấy trang",
+        403 => "Không có quyền truy cập",
+        503 => "Tạm bảo trì",
+        _ => "Đã xảy ra lỗi"
+    };
+    var staffTitle = Model.StatusCodeValue switch
+    {
+        404 => "Không tìm thấy trang",
+        403 => "Không có quyền truy cập",
+        503 => "Tạm bảo trì",
+        _ => "Đã xảy ra lỗi"
+    };
+    var staffLede = Model.StatusCodeValue switch
+    {
+        404 => "Liên kết có thể đã đổi hoặc bàn chưa được cấu hình. Quay lại menu để tiếp tục.",
+        403 => "Bạn không thể mở trang này. Nếu bạn là nhân viên, hãy đăng nhập lại.",
+        503 => "Quán đang bảo trì hệ thống trong giây lát. Vui lòng thử lại sau.",
+        _ => "Chúng tôi không thể hoàn tất yêu cầu của bạn. Vui lòng thử lại hoặc quay lại thực đơn."
+    };
+}
+<!DOCTYPE html>
+<html lang="@(Model.GuestFacing ? "vi" : "vi")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#faf7f2" />
+    <meta name="color-scheme" content="light" />
+    <title>@(Model.GuestFacing ? "Error" : staffTitle) · Kits Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .err-page {
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: max(1.5rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+            background: #faf7f2;
+            color: #2a2218;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .err-card { width: 100%; max-width: 22rem; text-align: center; }
+        .err-kicker { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: #8a7d6e; }
+        .err-title { margin-top: 1rem; font-family: "Fraunces", Georgia, serif; font-size: 1.5rem; font-weight: 500; line-height: 1.2; color: #2a2218; }
+        .err-lede { margin-top: 1rem; font-size: 0.9375rem; line-height: 1.6; color: #6b5f52; }
+        .err-actions { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .err-btn { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; border-radius: 9999px; padding: 0 1.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: opacity 0.15s ease; border: 0; cursor: pointer; font-family: inherit; }
+        .err-btn:active { opacity: 0.85; }
+        .err-btn--primary { background: #2a2218; color: #faf7f2; }
+        .err-btn--quiet { background: transparent; color: #6b5f52; border: 1px solid rgba(107, 95, 82, 0.35); }
+        .err-ref { margin-top: 2rem; font-size: 0.6875rem; letter-spacing: 0.06em; color: #a89a8a; word-break: break-all; }
+        .err-lang { margin-top: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    </style>
+</head>
+<body class="err-page">
+    <main class="err-card" role="main">
+        <p class="err-kicker">Kits Coffee · @Model.StatusCodeValue</p>
+        @if (Model.GuestFacing)
+        {
+            <h1 class="err-title" data-i18n="@Model.TitleKey"></h1>
+            <p class="err-lede" data-i18n="@Model.LedeKey"></p>
+            <div class="err-actions">
+                <a class="err-btn err-btn--primary" href="/Menu/Index" data-i18n="errors.backToMenu">Back to menu</a>
+                <button type="button" class="err-btn err-btn--quiet" onclick="location.reload()" data-i18n="errors.retry">Try again</button>
+            </div>
+            @if (Model.ShowRequestId)
+            {
+                <p class="err-ref" data-i18n-aria="errors.referenceId">@Model.RequestId</p>
+            }
+            <div class="err-lang">
+                <partial name="Shared/_LanguageSwitcher" />
+                <partial name="Shared/_InteractionPrefs" />
+            </div>
+            <link rel="stylesheet" href="~/css/interaction-feedback.css" asp-append-version="true" />
+            <script src="~/js/interaction-feedback.js" asp-append-version="true"></script>
+            <script src="~/js/guest-i18n.js" asp-append-version="true"></script>
+        }
+        else
+        {
+            <h1 class="err-title">@staffTitle</h1>
+            <p class="err-lede">@staffLede</p>
+            <div class="err-actions">
+                @if (Model.StatusCodeValue == 403)
+                {
+                    <a class="err-btn err-btn--primary" href="/staff/login">Đăng nhập quầy</a>
+                }
+                else
+                {
+                    <a class="err-btn err-btn--primary" href="/staff/orders">Về sàn phục vụ</a>
+                }
+                <button type="button" class="err-btn err-btn--quiet" onclick="location.reload()">Thử lại</button>
+            </div>
+            @if (Model.ShowRequestId)
+            {
+                <p class="err-ref" aria-label="Mã tham chiếu">@Model.RequestId</p>
+            }
+        }
+    </main>
+</body>
+</html>

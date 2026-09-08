@@ -1,0 +1,34 @@
+Category,Tên món,Nguyên liệu,Nguồn gốc / Xuất xứ,Vị
+Signature,Coco Bơ,"Sữa dừa, bơ xay",unknown,
+Signature,Three Kick,"Dưa hấu, cà chua, chanh vàng",unknown,"Tươi mát, mọng nước "
+Signature,Ginger Singer,"Táo xanh, gừng",Táo xanh Granny Smith Mỹ,"Chua thanh, cay ấm nhẹ"
+Signature,Sunrise,"Xoài, trà, mứt xoài",unknown,"Chua thanh, hậu ngọt, béo nhẹ, thơm"
+Signature,Dưa Fame,"Dứa GlobalGAP, dưa leo","Dứa Na Queen tại Quỳnh Lưu, Nghệ An","Thơm mạnh , ngọt , mát xanh"
+Espresso,Espresso,Coffee Brazilian,Brazil,
+Espresso,Americano,"Water, coffee Brazilian",Brazil,
+Espresso,Latte,"Sữa tươi, coffee Brazilian",Brazil,
+Espresso,Capuchino,"Sữa tươi, coffee Brazilian",Brazil,
+Espresso,Salted Caramel Latte,"Sữa tươi, coffee Brazilian, kem muối, caramel",Brazil,
+Espresso,Mocha,"Sữa tươi, coffee Brazilian, cacao",Brazil,
+Tea,Hibicus Tea,"Trà Atiso, mứt dâu, chanh",unknown,"Không quá ngọt, thơm , rõ vị"
+Tea,Trà Dâu Tằm,"Trà lài, dâu tằm, chanh",unknown,"Ngọt thơm , chua nhẹ , thanh mát, cảm giác giải nhiệt "
+Tea,Matcha Muối,"Sữa tươi, matcha, kem muối",IMO Matcha,"Thơm, b"
+Smoothie,Sinh Tố Xoài,"Xoài, sữa tươi, đường, chanh",unknown,
+Smoothie,Sinh Tố Bơ,"Bơ, sữa tươi, đường",unknown,
+Smoothie,Sinh Tố Dâu,"Dâu, sữa tươi, đường",unknown,
+Smoothie,Sinh Tố Dâu Chuối,"Dâu, chuối, đường, đá",unknown,
+Smoothie,Daugurt Kefir,"Sữa chua Kefir, mứt dâu, sữa tươi",unknown,
+Juice,Nước Ép Cam,Cam VietGap,"Cam Trần Đức Vững tại Bắc Tân Uyên, Bình Dương",
+Juice,Nước Ép Thơm,Thơm GlobalGAP,"Dứa Na Queen tại Quỳnh Lưu, Nghệ An",
+Juice,Nước Ép Chanh Vàng,"Chanh vàng, đường",unknown,
+Juice,Nước Ép Táo Xanh,"Táo xanh Granny Smith, đường",Táo xanh Granny Smith Mỹ,
+Juice,Nước Ép Dưa Hấu,"Dưa hấu, đường",unknown,
+Cold Brew,Cold Brew,Coffee Brazilian,Brazil,
+Cold Brew,Cold Brew Cam,"Coffee Brazilian, cam ép",Brazil,
+Cold Brew,Cold Brew Táo,"Coffee Brazilian, táo xanh Granny Smith",Brazil,
+Cold Brew,Cold Brew Dâu Tằm,"Coffee Brazilian, mứt dâu tằm",Brazil,
+Vietnamese Coffee,Cà Phê Đen,Robusta Gia Lai,Gia Lai,
+Vietnamese Coffee,Cà Phê Sữa,"Robusta Gia Lai, sữa đặc",Gia Lai,
+Vietnamese Coffee,Đen Đá Sài Gòn,"Robusta Gia Lai, đường, shaker",Gia Lai,
+Vietnamese Coffee,Sữa Đá Sài Gòn,"Robusta Gia Lai, sữa đặc, shaker",Gia Lai,
+Vietnamese Coffee,Bạc Xỉu,"Robusta Gia Lai, sữa tươi, sữa đặc",Gia Lai,

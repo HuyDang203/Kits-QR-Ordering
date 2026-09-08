@@ -1,0 +1,48 @@
+{
+  "presets": {
+    "morning-calm": {
+      "label": "Morning calm",
+      "discovery": {
+        "seasonalOnlyPool": false,
+        "allowSeasonalCups": true,
+        "preferSignaturesFirst": true,
+        "allowRerolls": false,
+        "adventureTone": 2,
+        "courierMoodCopy": "Focus on balanced, easy-to-choose recommendations."
+      }
+    },
+    "signature-night": {
+      "label": "Signature night",
+      "discovery": {
+        "seasonalOnlyPool": false,
+        "allowSeasonalCups": true,
+        "preferSignaturesFirst": true,
+        "allowRerolls": true,
+        "adventureTone": 4,
+        "courierMoodCopy": "Prioritize signature drinks first, then show alternatives."
+      }
+    },
+    "bright-fruit-season": {
+      "label": "Bright fruit season",
+      "discovery": {
+        "seasonalOnlyPool": true,
+        "allowSeasonalCups": true,
+        "preferSignaturesFirst": false,
+        "allowRerolls": true,
+        "adventureTone": 4,
+        "courierMoodCopy": "Show seasonal drinks only, prioritizing bright fruit profiles."
+      }
+    },
+    "slow-espresso-ritual": {
+      "label": "Slow espresso ritual",
+      "discovery": {
+        "seasonalOnlyPool": false,
+        "allowSeasonalCups": false,
+        "preferSignaturesFirst": true,
+        "allowRerolls": false,
+        "adventureTone": 1,
+        "courierMoodCopy": "Limit rerolls and focus on core espresso-style options."
+      }
+    }
+  }
+}

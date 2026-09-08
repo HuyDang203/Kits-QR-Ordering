@@ -1,0 +1,171 @@
+/* KitsQR — minimal seated guest experience styles (Phase 11C-6).
+   Only styles required by the seated signature strip and the
+   .ge-sig-card click-feedback target (interaction-feedback.js).
+   Specialty panels (sommelier, discovery, group, mood, ritual) removed. */
+
+.ge-root {
+    display: flex;
+    flex-direction: column;
+    min-height: min(92dvh, 52rem);
+    padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* Horizontal signature strip */
+.ge-sig-strip-wrap {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.ge-sig-strip {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.75rem;
+    scrollbar-width: none;
+}
+
+.ge-sig-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.ge-sig-card {
+    flex: 0 0 min(82vw, 19.5rem);
+    scroll-snap-align: center;
+    border-radius: 1.35rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ge-sig-strip--count-1,
+.ge-sig-strip--count-2 {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    scroll-snap-type: none;
+}
+
+.ge-sig-strip--count-1 .ge-sig-card {
+    flex: 1 1 auto;
+    max-width: 19.5rem;
+    margin-inline: auto;
+    scroll-snap-align: none;
+}
+
+.ge-sig-strip--count-2 .ge-sig-card {
+    flex: 1 1 min(42vw, 19.5rem);
+    max-width: 19.5rem;
+    min-width: 0;
+    scroll-snap-align: none;
+}
+
+.ge-sig-strip--count-3 .ge-sig-card,
+.ge-sig-strip--count-4 .ge-sig-card,
+.ge-sig-strip--count-5 .ge-sig-card,
+.ge-sig-strip--count-6 .ge-sig-card {
+    flex: 0 0 min(68vw, 17.5rem);
+}
+
+.ge-sig-visual {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.ge-sig-visual--no-poster,
+.ge-sig-no-poster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    background: linear-gradient(145deg, rgba(253, 249, 244, 0.92), #ebe4d6);
+    font-family: var(--font-ui);
+    font-size: 2rem;
+    font-style: italic;
+    color: rgba(26, 20, 16, 0.55);
+}
+
+.ge-sig-no-poster span {
+    line-height: 1;
+}
+
+.ge-sig-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.ge-sig-body {
+    padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.ge-sig-name {
+    font-family: var(--font-ui);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: rgb(var(--fg));
+    line-height: 1.15;
+}
+
+.ge-sig-sub {
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(var(--muted-2));
+}
+
+.ge-sig-price {
+    margin-top: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgb(var(--fg));
+    font-variant-numeric: tabular-nums;
+}
+
+.ge-sig-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ge-btn-ghost,
+.ge-btn-solid {
+    flex: 1 1 auto;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.ge-btn-ghost {
+    background: transparent;
+    color: rgb(var(--muted));
+}
+
+.ge-btn-ghost:hover {
+    color: rgb(var(--fg));
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.ge-btn-solid {
+    background: rgb(var(--accent));
+    color: rgb(18 17 15);
+    border-color: transparent;
+    font-weight: 600;
+}

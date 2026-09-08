@@ -1,0 +1,200 @@
+/**
+ * ANNAP Phase 1 — design tokens, ambient shell, typography utilities.
+ * Single source of truth for color / space / easing / z-index (doctrine Part 2 + Part 5 Phase 1).
+ * No component rules; no keyframe animations here.
+ */
+
+:root {
+  /* —— Atmospheric foundation (hex + RGB triplets for rgb(var(--*) / <alpha>)) —— */
+  --annap-void: #0a0806;
+  --annap-depth: #12100d;
+  --annap-dusk: #1c1712;
+  --annap-ember: #2a2018;
+
+  --annap-void-rgb: 10 8 6;
+  --annap-depth-rgb: 18 16 13;
+  --annap-dusk-rgb: 28 23 18;
+  --annap-ember-rgb: 42 32 24;
+
+  /* —— Warm / mode accents —— */
+  --annap-amber: #c8843c;
+  --annap-gold: #d4a043;
+  --annap-copper: #9a6232;
+  --annap-slate: #3a4048;
+  --annap-teal: #1a3035;
+
+  --annap-amber-rgb: 200 132 60;
+  --annap-gold-rgb: 212 160 67;
+  --annap-copper-rgb: 154 98 50;
+  --annap-slate-rgb: 58 64 72;
+  --annap-teal-rgb: 26 48 53;
+
+  /* —— Text (never pure white; full values for non-Tailwind use) —— */
+  --annap-text-primary: rgba(245, 238, 228, 0.92);
+  --annap-text-secondary: rgba(245, 238, 228, 0.55);
+  --annap-text-tertiary: rgba(245, 238, 228, 0.35);
+  --annap-text-ghost: rgba(245, 238, 228, 0.18);
+
+  --annap-text-primary-rgb: 245 238 228;
+  --annap-text-secondary-rgb: 245 238 228;
+  --annap-text-tertiary-rgb: 245 238 228;
+  --annap-text-ghost-rgb: 245 238 228;
+
+  /* —— Spacing scale (4px base, rem for zoom-safe layout math) —— */
+  --annap-space-0: 0;
+  --annap-space-px: 1px;
+  --annap-space-1: 0.25rem;
+  --annap-space-2: 0.5rem;
+  --annap-space-3: 0.75rem;
+  --annap-space-4: 1rem;
+  --annap-space-5: 1.25rem;
+  --annap-space-6: 1.5rem;
+  --annap-space-8: 2rem;
+  --annap-space-10: 2.5rem;
+  --annap-space-12: 3rem;
+  --annap-space-16: 4rem;
+  --annap-space-20: 5rem;
+  --annap-space-24: 6rem;
+
+  /* —— Easing tokens (motion deferred to later phases) —— */
+  --annap-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --annap-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --annap-ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --annap-ease-room: cubic-bezier(0.25, 0.1, 0.1, 1);
+
+  /* —— Z-index stack (layout overlays use fixed values in Razor; tokens for extensions) —— */
+  --annap-z-below: -1;
+  --annap-z-ambient: 0;
+  --annap-z-content: 1;
+  --annap-z-raised: 10;
+  --annap-z-header: 40;
+  --annap-z-floating: 50;
+  --annap-z-overlay: 70;
+  --annap-z-modal: 100;
+  --annap-z-debug: 100;
+  --annap-z-boot: 250;
+
+  /* —— Ambient gradient focal point (static; future AtmosphereManager may update) —— */
+  --annap-ambient-x: 50%;
+  --annap-ambient-y: 40%;
+
+  /* —— Safe-area (static env(); consumed by future layout; documents intent) —— */
+  --annap-safe-top: env(safe-area-inset-top, 0px);
+  --annap-safe-right: env(safe-area-inset-right, 0px);
+  --annap-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --annap-safe-left: env(safe-area-inset-left, 0px);
+
+  /* VisualViewport bridge (annap-viewport.js); fallbacks until first sync */
+  --vv-w: 100vw;
+  --vv-offset-left: 0px;
+  --vv-page-top: 0px;
+  --vv-page-left: 0px;
+  --vv-scale: 1;
+}
+
+/* Prevent default light canvas flash; height follows VisualViewport when set (annap-viewport.js). */
+html {
+  background-color: rgb(var(--annap-depth-rgb));
+  color-scheme: dark light;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: var(--vv-h, 100svh);
+}
+
+/* Root shell: stacking for ambient vs content (GPU-friendly: opacity/transform on children only in later phases) */
+.annap-root {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: var(--vv-h, 100svh);
+}
+
+.annap-ambient-stack {
+  position: fixed;
+  inset: 0;
+  z-index: var(--annap-z-ambient);
+  pointer-events: none;
+  width: 100%;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: var(--vv-h, 100svh);
+  /* Isolate repaints to ambient subtree (avoid strict size quirks on some WebViews) */
+  contain: layout paint;
+}
+
+.annap-ambient-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at var(--annap-ambient-x) var(--annap-ambient-y),
+    rgb(var(--annap-dusk-rgb)) 0%,
+    rgb(var(--annap-void-rgb)) 100%
+  );
+  /* Own compositor layer; no animated filter/shadow on this node */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Lightweight grain — SVG noise tile, static (no animation), no extra HTTP */
+.annap-ambient-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.annap-root-surface {
+  position: relative;
+  z-index: var(--annap-z-content);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: var(--vv-h, 100svh);
+}
+
+@layer utilities {
+  .annap-type-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: var(--annap-text-primary);
+  }
+
+  .annap-type-narrative {
+    font-family: var(--font-ui);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0;
+    line-height: 1.55;
+    color: var(--annap-text-primary);
+  }
+
+  .annap-type-functional {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: var(--tracking-functional);
+    text-transform: uppercase;
+    color: var(--annap-text-tertiary);
+  }
+}

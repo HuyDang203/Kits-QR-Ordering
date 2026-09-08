@@ -1,0 +1,337 @@
+@page "/admin/reports"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Policy = "StaffAdmin")]
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Reports.IndexModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Báo cáo bán hàng";
+    ViewData["AdminNavSection"] = "reports";
+    ViewData["AdminEyebrow"] = "Phân tích";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    var r = Model.Report;
+    var vi = CultureInfo.GetCultureInfo("vi-VN");
+    string Money(decimal v) => VndMoneyFormatter.Format(v);
+    string RangeLabel() => r.FromLocalDate == r.ToLocalDate
+        ? Annap.CoffeeQrOrdering.Web.Internal.AnnapBusinessTime.FormatLocalDateLong(r.FromLocalDate)
+        : $"{Annap.CoffeeQrOrdering.Web.Internal.AnnapBusinessTime.FormatLocalDateLong(r.FromLocalDate)} – {Annap.CoffeeQrOrdering.Web.Internal.AnnapBusinessTime.FormatLocalDateLong(r.ToLocalDate)}";
+    var showSlowSeller = r.SlowSeller is not null
+        && (r.BestSeller is null || r.BestSeller.MenuItemId != r.SlowSeller.MenuItemId || r.BestSeller.Quantity != r.SlowSeller.Quantity);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-reports.css" asp-append-version="true" />
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<section class="admin-reports" aria-label="Báo cáo bán hàng">
+    <div class="admin-reports-sheet">
+
+        <header class="admin-reports-header">
+            <p class="admin-reports-eyebrow">Sổ quản lý</p>
+            <h1 class="admin-reports-title">Báo cáo bán hàng</h1>
+            <p class="admin-reports-lead">
+                Tổng hợp thanh toán, số ly bán ra và món nổi bật theo thời gian.
+            </p>
+        </header>
+
+        <form method="get" class="admin-reports-filters" aria-label="Bộ lọc báo cáo">
+            <div class="admin-reports-presets" role="group" aria-label="Chọn nhanh">
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "today" ? "is-active" : null)" href="@Model.BuildFilterUrl("today")">Hôm nay</a>
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "yesterday" ? "is-active" : null)" href="@Model.BuildFilterUrl("yesterday")">Hôm qua</a>
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "this-month" ? "is-active" : null)" href="@Model.BuildFilterUrl("this-month")">Tháng này</a>
+                <a class="admin-btn admin-btn--quiet @(Model.ActivePreset == "last-month" ? "is-active" : null)" href="@Model.BuildFilterUrl("last-month")">Tháng trước</a>
+            </div>
+            <div class="admin-reports-custom @(Model.ActivePreset == "custom" ? "is-active" : null)">
+                <input type="hidden" name="preset" value="custom" />
+                <label class="admin-reports-date">
+                    <span>Từ ngày</span>
+                    <input type="date" name="from" value="@Model.ReportFromLocal.ToString("yyyy-MM-dd")" required />
+                </label>
+                <label class="admin-reports-date">
+                    <span>Đến ngày</span>
+                    <input type="date" name="to" value="@Model.ReportToLocal.ToString("yyyy-MM-dd")" required />
+                </label>
+                <button type="submit" class="admin-btn admin-btn--primary">Xem báo cáo</button>
+            </div>
+            <p class="admin-reports-range">
+                Khoảng thời gian: <strong>@RangeLabel()</strong>
+                <span class="admin-reports-range__tz">· giờ Việt Nam</span>
+            </p>
+        </form>
+
+        <div class="admin-reports-kpi-grid">
+            <article class="admin-reports-kpi">
+                <p class="admin-reports-kpi__label">Doanh thu</p>
+                <p class="admin-reports-kpi__value">
+                    <span class="admin-reports-kpi__num tabular-nums">@Money(r.TotalRevenue)</span>
+                </p>
+            </article>
+            <article class="admin-reports-kpi">
+                <p class="admin-reports-kpi__label">Đơn đã thanh toán</p>
+                <p class="admin-reports-kpi__value">
+                    <span class="admin-reports-kpi__num tabular-nums">@r.PaidOrderCount</span>
+                    <span class="admin-reports-kpi__unit">đơn</span>
+                </p>
+            </article>
+            <article class="admin-reports-kpi">
+                <p class="admin-reports-kpi__label">Số ly đã bán</p>
+                <p class="admin-reports-kpi__value">
+                    <span class="admin-reports-kpi__num tabular-nums">@r.TotalQuantity</span>
+                    <span class="admin-reports-kpi__unit">ly</span>
+                </p>
+            </article>
+            <article class="admin-reports-kpi">
+                <p class="admin-reports-kpi__label">Trung bình / đơn</p>
+                <p class="admin-reports-kpi__value">
+                    <span class="admin-reports-kpi__num tabular-nums">@Money(r.AverageOrderValue)</span>
+                </p>
+            </article>
+        </div>
+
+        <aside class="admin-reports-insight" aria-label="Tóm tắt nhanh">
+            @if (r.PaidOrderCount == 0)
+            {
+                <p class="admin-reports-insight__empty">Chưa có thanh toán trong khoảng này.</p>
+            }
+            else
+            {
+                <ul class="admin-reports-insight__list">
+                    @if (r.BestSeller is not null)
+                    {
+                        <li>
+                            <span class="admin-reports-insight__key">Bán chạy nhất</span>
+                            <span class="admin-reports-insight__val">
+                                <strong>@r.BestSeller.Name</strong>
+                                · @r.BestSeller.Quantity ly · @Money(r.BestSeller.Revenue)
+                            </span>
+                        </li>
+                    }
+                    @if (showSlowSeller)
+                    {
+                        <li>
+                            <span class="admin-reports-insight__key">Bán chậm nhất</span>
+                            <span class="admin-reports-insight__val">
+                                <strong>@r.SlowSeller!.Name</strong>
+                                · @r.SlowSeller.Quantity ly
+                            </span>
+                        </li>
+                    }
+                    <li>
+                        <span class="admin-reports-insight__key">Tổng bill</span>
+                        <span class="admin-reports-insight__val tabular-nums">@r.PaidOrderCount</span>
+                    </li>
+                    <li>
+                        <span class="admin-reports-insight__key">Khoảng ngày</span>
+                        <span class="admin-reports-insight__val tabular-nums">@RangeLabel()</span>
+                    </li>
+                </ul>
+            }
+        </aside>
+
+        <section class="admin-reports-panel" aria-labelledby="admin-reports-products-heading">
+            <header class="admin-reports-panel__head">
+                <h2 id="admin-reports-products-heading" class="admin-reports-panel__title">Doanh số theo món</h2>
+                <p class="admin-reports-panel__subtitle">Món nào bán tốt, món nào cần theo dõi.</p>
+            </header>
+            @if (r.ProductSales.Count == 0)
+            {
+                <p class="admin-reports-empty">Chưa có món nào được thanh toán trong khoảng này.</p>
+            }
+            else
+            {
+                <div class="admin-reports-table-wrap">
+                    <table class="admin-reports-table admin-reports-table--products">
+                        <thead>
+                            <tr>
+                                <th scope="col">Món</th>
+                                <th scope="col" class="is-num">Số ly</th>
+                                <th scope="col" class="is-num">Số đơn</th>
+                                <th scope="col" class="is-num">Doanh thu</th>
+                                <th scope="col" class="is-num">Giá TB</th>
+                                <th scope="col" class="is-share">Tỷ trọng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in r.ProductSales)
+                            {
+                                var share = (double)row.QuantitySharePercent;
+                                <tr>
+                                    <td class="is-name"><strong>@row.Name</strong></td>
+                                    <td class="is-num tabular-nums">@row.Quantity</td>
+                                    <td class="is-num tabular-nums">@row.OrderCount</td>
+                                    <td class="is-num tabular-nums">@Money(row.Revenue)</td>
+                                    <td class="is-num tabular-nums">@Money(row.AverageUnitPrice)</td>
+                                    <td class="is-share">
+                                        <div class="admin-reports-share">
+                                            <span class="admin-reports-share__track" aria-hidden="true">
+                                                <span class="admin-reports-share__bar @(share >= 99.5 ? "is-full" : null)" style="--share:@share.ToString(CultureInfo.InvariantCulture)%"></span>
+                                            </span>
+                                            <span class="admin-reports-share__label tabular-nums">@row.QuantitySharePercent.ToString("0.#", vi)%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <section class="admin-reports-panel" aria-labelledby="admin-reports-bills-heading">
+            <header class="admin-reports-panel__head">
+                <h2 id="admin-reports-bills-heading" class="admin-reports-panel__title">Hóa đơn đã thanh toán</h2>
+                <p class="admin-reports-panel__subtitle">Danh sách bill dùng để đối chiếu cuối ngày.</p>
+            </header>
+            @if (r.PaidBills.Count == 0)
+            {
+                <p class="admin-reports-empty">Chưa có bill thanh toán trong khoảng này.</p>
+            }
+            else
+            {
+                <div class="admin-reports-table-wrap">
+                    <table class="admin-reports-table admin-reports-table--bills">
+                        <thead>
+                            <tr>
+                                <th scope="col">Mã bill</th>
+                                <th scope="col">Bàn</th>
+                                <th scope="col">Thanh toán lúc</th>
+                                <th scope="col" class="is-num">Số ly</th>
+                                <th scope="col" class="is-num">Tổng tiền</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col" class="is-action"><span class="sr-only">Thao tác</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bill in r.PaidBills)
+                            {
+                                <tr class="@(Model.Bill == bill.OrderId ? "is-selected" : null)">
+                                    <td>
+                                        <code class="admin-reports-bill-code">#@bill.BillNumber</code>
+                                    </td>
+                                    <td>@bill.TableCode</td>
+                                    <td class="tabular-nums">@Annap.CoffeeQrOrdering.Web.Internal.AnnapBusinessTime.FormatLocalDateTime(bill.PaidAtUtc)</td>
+                                    <td class="is-num tabular-nums">@bill.ItemQuantity</td>
+                                    <td class="is-num tabular-nums">@Money(bill.TotalAmount)</td>
+                                    <td>
+                                        <span class="admin-reports-badge">@bill.StatusLabel</span>
+                                    </td>
+                                    <td class="is-action">
+                                        <a class="admin-reports-pill" href="@Model.BuildBillUrl(bill.OrderId)">Xem bill</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.BillWarning))
+            {
+                <div id="bill-detail" class="admin-reports-bill-slot" aria-labelledby="admin-reports-bill-heading">
+                    <h3 id="admin-reports-bill-heading" class="admin-reports-bill-slot__title">Hóa đơn điện tử</h3>
+                    <div class="admin-reports-notice admin-reports-notice--warn" role="alert">
+                        @Model.BillWarning
+                    </div>
+                </div>
+            }
+
+            @if (Model.SelectedBill is { } sb)
+            {
+                <div id="bill-detail" class="admin-reports-bill-slot" aria-labelledby="admin-reports-bill-heading">
+                    <div class="admin-reports-bill-slot__head">
+                        <h3 id="admin-reports-bill-heading" class="admin-reports-bill-slot__title">Hóa đơn điện tử</h3>
+                        <a class="admin-reports-pill admin-reports-pill--ghost" href="@Model.BuildCloseBillUrl()">Đóng bill</a>
+                    </div>
+                    <article class="admin-reports-receipt">
+                        <p class="admin-reports-receipt__eyebrow">HÓA ĐƠN ĐIỆN TỬ</p>
+                        <p class="admin-reports-receipt__brand">@sb.ShopName</p>
+                        <p class="admin-reports-receipt__no tabular-nums">#@sb.BillNumber</p>
+                        <span class="admin-reports-badge admin-reports-badge--receipt">@sb.StatusLabel</span>
+                        <dl class="admin-reports-receipt__meta">
+                            <div><dt>Bàn</dt><dd>@sb.TableCode</dd></div>
+                            <div><dt>Thanh toán lúc</dt><dd class="tabular-nums">@(sb.PaidAtDisplay ?? "—")</dd></div>
+                        </dl>
+                        <ul class="admin-reports-receipt__items">
+                            @foreach (var line in sb.Items)
+                            {
+                                <li>
+                                    <span>@line.Name ×@line.Quantity</span>
+                                    <span class="tabular-nums">@Money(line.LineTotal)</span>
+                                </li>
+                            }
+                        </ul>
+                        <p class="admin-reports-receipt__total">
+                            <span>Tổng cộng</span>
+                            <strong class="tabular-nums">@Money(sb.TotalAmount)</strong>
+                        </p>
+                    </article>
+                </div>
+            }
+        </section>
+
+        <section class="admin-reports-panel" aria-labelledby="admin-reports-daily-heading">
+            <header class="admin-reports-panel__head">
+                <h2 id="admin-reports-daily-heading" class="admin-reports-panel__title">Tổng hợp theo ngày</h2>
+                <p class="admin-reports-panel__subtitle">Phù hợp cho báo cáo tháng hoặc đối chiếu nhiều ngày.</p>
+            </header>
+            @if (r.DailySummaryLimited && !string.IsNullOrEmpty(r.DailySummaryNotice))
+            {
+                <div class="admin-reports-notice admin-reports-notice--limit" role="status">@r.DailySummaryNotice</div>
+            }
+            else if (r.DailySummary.Count == 0)
+            {
+                <p class="admin-reports-empty">Chưa có dữ liệu theo ngày trong khoảng thời gian này.</p>
+            }
+            else
+            {
+                <div class="admin-reports-table-wrap admin-reports-table-wrap--compact">
+                    <table class="admin-reports-table admin-reports-table--daily">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ngày</th>
+                                <th scope="col" class="is-num">Doanh thu</th>
+                                <th scope="col" class="is-num">Đơn đã thanh toán</th>
+                                <th scope="col" class="is-num">Số ly</th>
+                                <th scope="col">Món bán chạy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var day in r.DailySummary)
+                            {
+                                var isQuiet = day.Revenue == 0 && day.PaidOrderCount == 0 && day.Quantity == 0;
+                                <tr class="@(isQuiet ? "is-quiet" : null)">
+                                    <td class="tabular-nums">@Annap.CoffeeQrOrdering.Web.Internal.AnnapBusinessTime.FormatLocalDateLong(day.LocalDate)</td>
+                                    <td class="is-num tabular-nums">@Money(day.Revenue)</td>
+                                    <td class="is-num tabular-nums">@day.PaidOrderCount</td>
+                                    <td class="is-num tabular-nums">@day.Quantity</td>
+                                    <td>@(day.TopProductName ?? "—")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <section class="admin-reports-panel admin-reports-copy" aria-labelledby="admin-reports-copy-heading">
+            <header class="admin-reports-panel__head">
+                <h2 id="admin-reports-copy-heading" class="admin-reports-panel__title">Bản nháp báo cáo</h2>
+                <p class="admin-reports-panel__subtitle">Sao chép đoạn này để gửi cho quản lý hoặc dán vào báo cáo ngày.</p>
+            </header>
+            <div class="admin-reports-copy__body">
+                <textarea id="admin-report-text" class="admin-reports-copy__textarea" readonly>@r.ReportText</textarea>
+                <div class="admin-reports-copy__toolbar">
+                    <button type="button" id="admin-report-copy-btn" class="admin-btn admin-btn--primary" data-copy-target="admin-report-text">
+                        Sao chép báo cáo
+                    </button>
+                    <p id="admin-report-copy-feedback" class="admin-reports-copy__feedback hidden" role="status">Đã sao chép báo cáo.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/admin-reports.js" asp-append-version="true"></script>
+}

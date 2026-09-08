@@ -1,0 +1,1047 @@
+@page
+@model IndexModel
+@using System.Text.Json
+@using Annap.CoffeeQrOrdering.Web.Services
+@{
+    ViewData["Title"] = Model.HasSeatedTable ? "Arrive" : Model.QrScanInvalid || Model.TableHandoffInvalid ? "Table" : "Order";
+    if (Model.QrScanInvalid || Model.TableHandoffInvalid)
+    {
+        ViewData["SlimSeatedChrome"] = true;
+    }
+    else if (Model.HasSeatedTable)
+    {
+        ViewData["CompactGuestHeader"] = true;
+    }
+    var cartCatalogJson = JsonSerializer.Serialize(
+        Model.CartCatalog.Select(r => new {
+            id = r.Id,
+            name = r.Name,
+            price = r.Price,
+            categoryName = r.CategoryName,
+            supportsHotIced = r.SupportsHotIced
+        }),
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+@if (Model.QrScanInvalid || Model.TableHandoffInvalid)
+{
+    <partial name="Shared/_GuestTableContextNotice" model="Model" />
+}
+else if (Model.HasSeatedTable)
+{
+    ViewData["IsArrivalPage"] = true;
+    <partial name="Shared/_KitsArrival" model="Model" />
+}
+else
+{
+<div class="space-y-14 sm:space-y-24">
+    <!-- 1) Hero -->
+    <section class="pt-4 sm:pt-8">
+        <div class="surface-paper overflow-hidden rounded-[2rem] px-7 py-12 sm:px-12 sm:py-16">
+            <div class="postal-airmail-edge postal-airmail-edge--top -mx-7 mb-8 sm:-mx-12" aria-hidden="true"></div>
+            <div class="max-w-2xl">
+                <p class="postal-hero-kicker" data-i18n="home.postalFrom">From Kinini Village, Rwanda</p>
+                <p class="mt-4 text-xs tracking-[0.32em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.brand">Kits Coffee Atelier</p>
+
+                <h1 class="mt-6 text-[2.05rem] font-semibold leading-[1.08] tracking-tight text-[rgb(var(--fg))] sm:text-[3.1rem] sm:leading-[1.02] font-display">
+                    <span data-i18n="home.heroLine1">Espresso. Filter.</span>
+                    <span class="block text-[rgb(var(--muted))] font-normal">
+                        <span data-i18n="home.heroLine2">Quiet sweetness.</span>
+                    </span>
+                </h1>
+
+                <p class="mt-7 text-base leading-[1.55] text-[rgb(var(--muted))] md:text-lg" data-i18n="home.heroLead">
+                    Warm cups. Clean finishes. Long aftertaste.
+                </p>
+
+                <div class="mt-6">
+                    <span class="postal-stamp" data-i18n="home.postalStamp">Farm to cup</span>
+                </div>
+
+                @if (!Model.HasSeatedTable)
+                {
+                    <div class="mt-8 rounded-2xl border border-[rgba(212,184,150,0.55)] bg-[rgba(253,249,244,0.55)] px-5 py-4 text-sm leading-relaxed text-[rgb(var(--muted))]">
+                        <span data-i18n="home.unseatedHint">To order and follow your tray, please scan the QR at your table. For a quiet preview of the room, you may still browse the menu.</span>
+                        @if (Model.IsDevelopment)
+                        {
+                            <span class="mt-2 block text-xs text-[rgb(var(--muted-2))]"><span data-i18n="home.devTableSetup">Development:</span> <a class="underline underline-offset-4 hover:text-[rgb(var(--fg))]" href="/table/T12" data-i18n="home.devTableLink">Open table T12</a></span>
+                        }
+                    </div>
+                }
+
+                <div class="mt-10 flex flex-col gap-3 md:flex-row md:items-center">
+                    <a asp-page="/Menu/Index" asp-route-vt="@Model.VenueTableId" class="btn-ink guest-hit w-full justify-center md:w-auto">
+                        <span data-i18n="nav.menu">Menu</span>
+                        <span aria-hidden="true" class="text-white/80">Ã¢â€ â€™</span>
+                    </a>
+                    <button type="button"
+                            class="btn-quiet guest-hit w-full justify-center md:w-auto"
+                            onclick="openCart()">
+                        <span data-i18n="home.orderCta">Order</span>
+                        <span id="cartCountPill"
+                              class="ml-2 hidden rounded-full bg-[rgb(var(--accent))] px-2 py-0.5 text-xs font-semibold text-white">0</span>
+                    </button>
+                </div>
+
+                <div class="mt-10 grid grid-cols-1 gap-3 text-sm text-[rgb(var(--muted))] md:grid-cols-2">
+                    <div class="surface-glass rounded-[1.35rem] px-5 py-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[rgb(var(--muted-2))] tracking-[0.22em] uppercase text-xs" data-i18n="home.statService">Service</span>
+                            <span class="text-[rgb(var(--fg))]" data-i18n="home.statServiceValue">Quiet Ã¢â‚¬Â¢ precise</span>
+                        </div>
+                    </div>
+                    <div class="surface-glass rounded-[1.35rem] px-5 py-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[rgb(var(--muted-2))] tracking-[0.22em] uppercase text-xs" data-i18n="home.statProfile">Profile</span>
+                            <span class="text-[rgb(var(--fg))]" data-i18n="home.statProfileValue">Citrus Ã¢â‚¬Â¢ cocoa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="postal-airmail-edge postal-airmail-edge--bottom -mx-7 mt-10 sm:-mx-12" aria-hidden="true"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2) Signature drinks preview -->
+    <section aria-labelledby="signature">
+        <div class="flex items-end justify-between gap-4">
+            <div>
+                <h2 id="signature" class="text-xl sm:text-2xl font-semibold tracking-tight text-[rgb(var(--fg))]" data-i18n="home.signatureHeading">
+                    Signature cups
+                </h2>
+                <p class="mt-2 text-sm sm:text-base text-[rgb(var(--muted))]" data-i18n="home.signatureSub">
+                    Balanced sweetness. Clean structure. Long finish.
+                </p>
+            </div>
+            <a asp-page="/Menu/Index" asp-route-vt="@Model.VenueTableId" class="text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))] underline underline-offset-4" data-i18n="home.signatureSeeAll">
+                See all
+            </a>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+            @foreach (var drink in Model.SignatureDrinks)
+            {
+                var detailHref = Model.VenueTableId is Guid vtid
+                    ? $"/menu/drink/{drink.Id}?vt={vtid:D}"
+                    : $"/menu/drink/{drink.Id}";
+                var drinkIdStr = drink.Id.ToString("D");
+                <article class="surface-paper relative rounded-[2rem] p-7 transition-transform duration-200 sm:hover:-translate-y-0.5">
+                    <div class="relative z-[1] grid grid-cols-[96px_1fr] gap-5 md:grid-cols-[112px_1fr]">
+                        <a href="@detailHref"
+                           data-ge-open-detail="@drinkIdStr"
+                           class="relative block aspect-[4/3] overflow-hidden rounded-[1.25rem] bg-[rgba(26,20,16,0.04)] ring-1 ring-[rgba(212,184,150,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))]/35"
+                           aria-label="@drink.Name Ã¢â‚¬â€ view details">
+                            @if (!string.IsNullOrWhiteSpace(drink.CardImageUrl))
+                            {
+                                <img src="@drink.CardImageUrl"
+                                     alt=""
+                                     class="absolute inset-0 z-0 h-full w-full object-cover"
+                                     loading="lazy"
+                                     decoding="async"
+                                     referrerpolicy="no-referrer" />
+                            }
+                            else
+                            {
+                                <div class="absolute inset-0 z-0 flex items-center justify-center bg-[rgba(26,20,16,0.04)] ge-sig-no-poster"
+                                     aria-hidden="true">
+                                    <span class="font-display text-3xl italic text-[rgb(var(--fg))]/70">@(string.IsNullOrEmpty(drink.Name) ? "Ã‚Â·" : drink.Name[0])</span>
+                                </div>
+                            }
+                            <div class="absolute inset-0 z-[1] bg-[radial-gradient(80px_80px_at_30%_20%,rgba(199,168,122,0.22),transparent_60%),radial-gradient(120px_100px_at_70%_80%,rgba(122,151,130,0.14),transparent_65%)]"></div>
+                            <div class="absolute inset-0 z-[1] opacity-50 mix-blend-overlay" style="background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 4px);"></div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[1] text-[10px] tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]" data-i18n="home.signatureCupBadge">
+                                Cup
+                            </div>
+                        </a>
+
+                        <div class="min-w-0">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    <p class="text-xs tracking-[0.28em] text-[rgb(var(--muted-2))] uppercase">@GuestCategoryDisplay.For(drink.CategoryName)</p>
+                                    <h3 class="mt-3 text-lg sm:text-xl font-semibold tracking-tight text-[rgb(var(--fg))]">@drink.Name</h3>
+                                    @if (!string.IsNullOrWhiteSpace(drink.Subtitle))
+                                    {
+                                        <p class="mt-1 text-[11px] tracking-[0.18em] uppercase text-[rgb(var(--muted-2))]">@drink.Subtitle</p>
+                                    }
+                                </div>
+                                <div class="text-sm font-semibold text-[rgb(var(--fg))] whitespace-nowrap pt-1">
+                                    @VndMoneyFormatter.Format(drink.Price)
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-ink guest-hit mt-5 w-full justify-center py-4 text-sm font-normal tracking-wide transition-transform active:scale-[0.99]"
+                                    onclick="quickAdd('@drink.Id', undefined, this)"
+                                    data-i18n="menu.addToTray">
+                                Send to my table
+                            </button>
+
+                            <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <a href="@detailHref"
+                                   data-ge-open-detail="@drinkIdStr"
+                                   class="guest-hit inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))]"
+                                   data-i18n="menu.discover">
+                                    Discover
+                                </a>
+                                <button type="button"
+                                        class="guest-hit min-h-11 text-left text-sm text-[rgb(var(--muted))] underline underline-offset-4 transition hover:text-[rgb(var(--fg))] sm:text-right"
+                                        onclick="openCart()"
+                                        data-i18n="cart.openSelections">
+                                    Open order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </section>
+
+    <!-- 3) Categories -->
+    <section aria-labelledby="categories">
+        <h2 id="categories" class="text-xl sm:text-2xl font-semibold tracking-tight text-[rgb(var(--fg))]" data-i18n="nav.menu">Menu</h2>
+        <p class="mt-2 text-sm sm:text-base text-[rgb(var(--muted))]" data-i18n="home.categoriesHint">Choose a direction. We'll keep it simple.</p>
+
+        <div class="mt-8 grid grid-cols-1 gap-2 md:grid-cols-3">
+            @foreach (var c in Model.Categories)
+            {
+                <a asp-page="/Menu/Index" asp-route-vt="@Model.VenueTableId"
+                   class="group surface-glass rounded-[1.5rem] px-6 py-6 transition-transform duration-200 sm:hover:-translate-y-0.5">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <div class="text-base font-semibold tracking-tight text-[rgb(var(--fg))]">@c.Name</div>
+                            <div class="mt-2 text-sm text-[rgb(var(--muted))]" data-i18n="home.tapBrowse">Tap to browse</div>
+                        </div>
+                        <div class="text-[rgb(var(--muted-2))] group-hover:text-[rgb(var(--fg))] transition">Ã¢â€ â€™</div>
+                    </div>
+                </a>
+            }
+        </div>
+    </section>
+</div>
+}
+
+<script type="application/json" id="home-cart-catalog-json">@Html.Raw(cartCatalogJson)</script>
+
+@if (!Model.HasSeatedTable)
+{
+<!-- Legacy preview-home cart sheet (non-seated only; seated uses _OrderTrayDock) -->
+<div id="cartOverlay" class="fixed inset-0 z-50 hidden">
+    <div id="cartBackdrop" class="absolute inset-0 bg-[rgba(26,20,16,0.34)] opacity-0 transition-opacity duration-200 ease-out" onclick="closeCart()"></div>
+    <div class="absolute inset-x-0 bottom-0">
+        <div class="mx-auto max-w-5xl px-4 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+var(--keyboard-inset,0px)))]">
+            <div id="cartSheet"
+                 class="guest-cart-shell surface-paper overflow-y-auto overscroll-y-contain rounded-[1.75rem] translate-y-5 opacity-0 shadow-xl ring-1 ring-[rgba(212,184,150,0.55)] transition-[transform,opacity] duration-200 ease-out sm:rounded-[2rem]">
+                <div class="flex items-start justify-between gap-4 px-5 py-5 sm:px-10 sm:py-6">
+                    <div>
+                        <div class="text-sm font-semibold leading-snug text-[rgb(var(--fg))]" data-i18n="cart.title">Order tray</div>
+                        <div class="mt-1.5 text-xs leading-relaxed text-[rgb(var(--muted))]" data-i18n="cart.subtitle">Quietly prepared. Confirm when ready.</div>
+                    </div>
+                    <button type="button" class="guest-hit -mr-2 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-xs text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.97]" onclick="closeCart()" data-i18n="cart.close">Close</button>
+                </div>
+
+                <div class="space-y-5 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-10">
+                    <input type="hidden" id="venueTableIdHome" value="@(Model.VenueTableId?.ToString("D") ?? "")" />
+                    @if (Model.HasSeatedTable)
+                    {
+                        <div class="rounded-2xl border border-[rgba(212,184,150,0.55)] bg-[rgba(253,249,244,0.55)] px-5 py-4">
+                            <p class="font-display text-2xl tracking-tight text-[rgb(var(--fg))]">
+                                <span data-i18n="cart.seatedAt">Seated at</span>
+                                <span class="text-[rgb(var(--accent))]">@Model.TableGuestLabel</span>
+                            </p>
+                            <p class="mt-2 text-xs leading-relaxed text-[rgb(var(--muted))]" data-i18n="cart.seatedHint">Your seat is set from the table QR.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="rounded-2xl border border-[rgba(212,184,150,0.6)] bg-[rgba(253,249,244,0.5)] px-5 py-4 text-sm leading-relaxed text-[rgb(var(--muted))]" data-i18n="cart.needQr">
+                            Please scan the table QR to begin.
+                        </div>
+                    }
+
+                    <div id="activeOrderBanner" class="hidden rounded-2xl border border-[rgb(var(--accent))]/25 bg-[rgb(var(--accent))]/10 px-5 py-4 text-sm text-[rgb(var(--muted))]">
+                        <p class="text-[10px] font-medium tracking-[0.26em] uppercase text-[rgb(var(--muted-2))]" data-i18n="order.inProgressKicker">In progress</p>
+                        <p class="mt-2 text-[rgb(var(--fg))]" data-i18n="order.inProgressLine">You have an open order from this table.</p>
+                        <a id="activeOrderTrackLink" href="#" class="mt-3 inline-block text-xs font-medium tracking-[0.18em] uppercase text-[rgb(var(--accent))] underline-offset-4 hover:underline"></a>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="text-xs font-medium text-[rgb(var(--muted))]" data-i18n="cart.itemsLabel">Items</div>
+                            <button type="button" class="guest-hit inline-flex min-h-10 items-center rounded-full px-3 text-xs text-[rgb(var(--muted))] transition hover:bg-[rgba(26,20,16,0.06)] hover:text-[rgb(var(--fg))] active:scale-[0.98]" onclick="clearCart()" data-i18n="cart.clear">Clear tray</button>
+                        </div>
+                        <div id="cartItemsHome" class="mt-3 space-y-2 text-sm text-[rgb(var(--muted))]"></div>
+                    </div>
+
+                    <div class="pt-4">
+                        <div class="hairline"></div>
+                        <div class="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                            <div class="order-2 text-xs leading-relaxed text-[rgb(var(--muted-2))] md:order-1" data-i18n="cart.pricesNote">Prices are confirmed when you submit.</div>
+                            <button type="button"
+                                    id="cartSubmitBtn"
+                                    class="btn-ink guest-hit order-1 w-full justify-center disabled:opacity-50 md:order-2 md:w-auto"
+                                    onclick="submitCartOrder()"
+                                    @(Model.HasSeatedTable ? null : (object)"disabled=\"disabled\"")
+                                    data-i18n="cart.submit">
+                                Place order
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="cartSubmitResult" class="text-xs text-[rgb(var(--muted))]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts
+{
+@if (Model.SlimGuestBoot && !Model.HasSeatedTable)
+{
+    <script>
+(function () {
+    function mark(n) {
+        if (window.AnnapGuestLanDebug && typeof AnnapGuestLanDebug.mark === "function") AnnapGuestLanDebug.mark(n);
+        if (window.AnnapGuestLanDebug && typeof AnnapGuestLanDebug.log === "function") AnnapGuestLanDebug.log("slim:" + n);
+    }
+    function esc(s) {
+        return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        mark("slim-js-boot");
+        var root = document.querySelector(".guest-main");
+        var t0 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+        mark("menu-fetch-start");
+        fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/menu") : "/api/menu", { headers: { Accept: "application/json" }, cache: "no-store" })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (data) {
+                var t1 = typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+                mark("menu-fetch-end");
+                var ms = Math.round(t1 - t0);
+                if (window.AnnapGuestLanDebug && AnnapGuestLanDebug.setMenu) AnnapGuestLanDebug.setMenu("OK slim " + ms + "ms");
+                var cats = Array.isArray(data) ? data : (data.categories || []);
+                var html = ["<div id=\"slim-menu-dump\" style=\"padding:12px;margin:12px 0;border:1px solid #555;border-radius:10px;background:rgba(0,0,0,0.35)\">"];
+                html.push("<p><strong>Slim guest boot</strong> Ã¢â‚¬â€ mood / sommelier / tray / queue / i18n skipped. Set <code>Diagnostics:SlimGuestBoot</code> to <code>false</code> to restore full app.</p>");
+                for (var i = 0; i < cats.length; i++) {
+                    var c = cats[i];
+                    html.push("<h3 style=\"margin:10px 0 6px;font-size:1rem\">" + esc(c.name) + "</h3><ul style=\"margin:0;padding-left:1.2rem\">");
+                    var items = c.items || [];
+                    for (var j = 0; j < items.length; j++) {
+                        var it = items[j];
+                        html.push("<li>" + esc(it.name) + " Ã¢â‚¬â€ " + esc(window.AnnapMoney ? window.AnnapMoney.format(it.price) : String(it.price)) + "</li>");
+                    }
+                    html.push("</ul>");
+                }
+                html.push("</div>");
+                if (root) root.insertAdjacentHTML("afterbegin", html.join(""));
+                mark("hydration-done");
+            })
+            .catch(function (err) {
+                var msg = err && err.message ? err.message : String(err);
+                if (window.AnnapGuestLanDebug && AnnapGuestLanDebug.setMenu) AnnapGuestLanDebug.setMenu("FAIL slim");
+                mark("menu-error");
+                if (root) {
+                    var d = document.createElement("div");
+                    d.style.cssText = "color:#f99;padding:12px;margin:12px 0";
+                    d.textContent = "Slim menu fetch failed: " + msg;
+                    root.insertBefore(d, root.firstChild);
+                }
+            });
+    });
+})();
+    </script>
+}
+else
+{
+    <script>
+        (function (w) {
+            var c = typeof w.AnnapGuestBoot !== "undefined" ? w.AnnapGuestBoot : {};
+            var on = w.__ANNAP_DEV_MODE === true && (w.__ANNAP_DEBUG === true || c.showBootChecklist === true);
+            function nop() {}
+            w.__annapGuestLog = on
+                ? function () {
+                      w.console.log.apply(w.console, arguments);
+                  }
+                : nop;
+            w.__annapGuestWarn = on
+                ? function () {
+                      w.console.warn.apply(w.console, arguments);
+                  }
+                : nop;
+            w.__annapGuestErr = on
+                ? function () {
+                      w.console.error.apply(w.console, arguments);
+                  }
+                : nop;
+        })(window);
+        const ANNAP_SERVER_VENUE_TABLE_ID = "@(Model.VenueTableId?.ToString("D") ?? "")";
+        const GE_ENTRY_ROOT = document.getElementById("guest-experience-root");
+
+        __annapGuestLog("[annap] boot step 1: guest script start");
+        function annapBootOff(key) {
+            var b = typeof window.AnnapGuestBoot !== "undefined" ? window.AnnapGuestBoot : {};
+            return b[key] === true;
+        }
+        function annapCoalesce(a, b) {
+            return a !== null && a !== undefined ? a : b;
+        }
+        function annapRenderPlainMenuFallback(reason) {
+            try {
+                __annapGuestLog("[annap] boot fallback: plain menu from /api/menu", reason);
+                var mount = document.querySelector(".guest-main");
+                if (!mount) return;
+                var box = document.getElementById("annap-plain-menu-fallback");
+                if (!box) {
+                    box = document.createElement("div");
+                    box.id = "annap-plain-menu-fallback";
+                    box.setAttribute("style", "margin:12px;padding:12px;border:1px solid #666;border-radius:8px;background:#111;color:#eee;font:14px system-ui,sans-serif");
+                    mount.insertBefore(box, mount.firstChild);
+                }
+                box.innerHTML = "<p>Loading menu...</p>";
+                fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/menu") : "/api/menu", { headers: { Accept: "application/json" }, cache: "no-store" })
+                    .then(function (r) {
+                        if (!r.ok) throw new Error("HTTP " + r.status);
+                        return r.json();
+                    })
+                    .then(function (data) {
+                        var cats = Array.isArray(data) ? data : (data.categories || []);
+                        var html = ["<h2 style=\"font-size:16px\">Menu (compatibility fallback)</h2>"];
+                        for (var fi = 0; fi < cats.length; fi++) {
+                            var c = cats[fi];
+                            html.push("<h3 style=\"margin:10px 0 4px\">" + String(c.name || "").replace(/</g, "&lt;") + "</h3><ul>");
+                            var items = c.items || [];
+                            for (var fj = 0; fj < items.length; fj++) {
+                                var it = items[fj];
+                                html.push("<li>" + String(it.name || "").replace(/</g, "&lt;") + "</li>");
+                            }
+                            html.push("</ul>");
+                        }
+                        box.innerHTML = html.join("");
+                        __annapGuestLog("[annap] boot step 99: plain menu fallback rendered");
+                    })
+                    .catch(function (e) {
+                        box.innerHTML = "<p>The menu did not arrive. Please try again in a moment.</p>";
+                    });
+            } catch (e2) {
+                __annapGuestErr("[annap] fallback failed", e2);
+            }
+        }
+
+        const HOME_CART_CATALOG = (function () {
+            const node = document.getElementById("home-cart-catalog-json");
+            if (!node) return [];
+            try {
+                return JSON.parse(node.textContent || "[]");
+            } catch (_annap) {
+                return [];
+            }
+        })();
+
+        function catalogRow(id) {
+            return HOME_CART_CATALOG.find((r) => String(r.id) === String(id));
+        }
+
+        GuestInteractionContract.bindPageContext({
+            serverVt: ANNAP_SERVER_VENUE_TABLE_ID,
+            migrateCatalog: {
+                catalogRow,
+                selectionFallback: () => LuxuryI18n.t("cart.selectionFallback")
+            }
+        });
+
+        (function rehydrateHomeVtFromSession() {
+            const srv = (ANNAP_SERVER_VENUE_TABLE_ID || "").trim();
+            try {
+                const u = new URL(window.location.href);
+                const urlVt = (u.searchParams.get("vt") || "").trim();
+                const stored = (sessionStorage.getItem("annap_venue_table_id") || "").trim();
+                if (!GuestInteractionContract.isGuid(stored)) return;
+                if (srv) return;
+                if (urlVt) {
+                    if (GuestInteractionContract.isGuid(urlVt)) sessionStorage.removeItem("annap_venue_table_id");
+                    return;
+                }
+                u.searchParams.set("vt", stored);
+                window.location.replace(u.pathname + u.search + u.hash);
+            } catch (_annap) {
+                /* ignore */
+            }
+        })();
+
+        function readCartLines() {
+            return GuestInteractionContract.getCartLines();
+        }
+
+        function writeCartLines(lines) {
+            GuestInteractionContract.setCartLines(lines);
+            updateCartPills();
+        }
+
+        function cartLineCount(lines) {
+            return lines.reduce((a, l) => a + (Number(l.qty) || 0), 0);
+        }
+
+        function updateCartPills() {
+            const lines = readCartLines();
+            const count = cartLineCount(lines);
+            const pill = document.getElementById("cartCountPill");
+            if (!pill) return;
+            if (count <= 0) {
+                pill.classList.add("hidden");
+                return;
+            }
+            pill.textContent = count;
+            pill.classList.remove("hidden");
+        }
+
+        function quickAdd(menuItemId, guestLabel, sourceEl) {
+            const gl =
+                guestLabel !== undefined && guestLabel !== null
+                    ? String(guestLabel).trim()
+                    : typeof window.__annapActiveGroupGuestLabel === "string"
+                      ? window.__annapActiveGroupGuestLabel.trim()
+                      : "";
+            const row = catalogRow(menuItemId);
+            GuestInteractionContract.addItem({
+                menuItemId,
+                name: annapCoalesce(row && row.name, LuxuryI18n.t("cart.selectionFallback")),
+                unitPrice: Number(annapCoalesce(row && row.price, 0)),
+                selectionFallback: LuxuryI18n.t("cart.selectionFallback"),
+                sourceElement: sourceEl || null,
+                guestLabel: gl
+            });
+            updateCartPills();
+            renderCart();
+        }
+
+        function clearCart() {
+            GuestInteractionContract.clearCart();
+            updateCartPills();
+            renderCart();
+            document.getElementById("cartSubmitResult").textContent = "";
+        }
+
+        let guestCartLockY = 0;
+        let homeOrderIdempotencyKey = null;
+        let homeOrderSubmitInFlight = false;
+
+        function openCart() {
+            const overlay = document.getElementById("cartOverlay");
+            const sheet = document.getElementById("cartSheet");
+            const backdrop = document.getElementById("cartBackdrop");
+            if (!overlay || !sheet || !backdrop) {
+                try {
+                    if (typeof console !== "undefined" && console.warn) {
+                        console.warn("[annap-ge-boot] openCart skipped: cart overlay DOM missing");
+                    }
+                } catch (_oc) {}
+                return;
+            }
+            renderCart();
+            guestCartLockY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.documentElement.style.setProperty("--guest-lock-y", `-${guestCartLockY}px`);
+            document.body.classList.add("guest-scroll-lock");
+            document.body.style.top = `-${guestCartLockY}px`;
+
+            overlay.classList.remove("hidden");
+            requestAnimationFrame(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                sheet.classList.remove("translate-y-5", "opacity-0");
+                sheet.classList.add("translate-y-0", "opacity-100");
+            });
+        }
+
+        function closeCart() {
+            const overlay = document.getElementById("cartOverlay");
+            const sheet = document.getElementById("cartSheet");
+            const backdrop = document.getElementById("cartBackdrop");
+            if (!overlay || !sheet || !backdrop) return;
+
+            backdrop.classList.add("opacity-0");
+            backdrop.classList.remove("opacity-100");
+            sheet.classList.add("translate-y-5", "opacity-0");
+            sheet.classList.remove("translate-y-0", "opacity-100");
+
+            window.setTimeout(() => {
+                overlay.classList.add("hidden");
+                document.body.classList.remove("guest-scroll-lock");
+                document.body.style.top = "";
+                document.documentElement.style.removeProperty("--guest-lock-y");
+                window.scrollTo(0, guestCartLockY);
+            }, 220);
+        }
+
+        function renderCart() {
+            const linesAll = readCartLines();
+            const el = document.getElementById("cartItemsHome");
+            if (!el) return;
+            el.innerHTML = "";
+
+            const guestCount =
+                typeof window.__annapGroupGuestCount !== "undefined" && window.__annapGroupGuestCount != null
+                    ? parseInt(window.__annapGroupGuestCount, 10)
+                    : 0;
+            const useGrouped =
+                typeof GuestInteractionContract.buildGroupOrderTraySections === "function" &&
+                typeof window.__annapGroupBrowseActive !== "undefined" &&
+                window.__annapGroupBrowseActive &&
+                guestCount >= 1;
+
+            if (linesAll.length === 0) {
+                const emptyMsg = LuxuryI18n.t("cart.empty");
+                el.innerHTML = `<div class="surface-glass rounded-[1.35rem] px-5 py-4 text-sm text-[rgb(var(--muted))]">${escapeHtml(emptyMsg)}</div>`;
+                return;
+            }
+
+            function appendLineRow(line) {
+                const id = line.menuItemId;
+                const qty = Number(line.qty) || 0;
+                const displayName = line.name || id;
+                const unit = Number(line.unitPrice) || 0;
+                const row = document.createElement("div");
+                row.className = "surface-glass flex items-center justify-between gap-3 rounded-[1.35rem] px-5 py-4";
+
+                const left = document.createElement("div");
+                left.className = "min-w-0";
+                const gl = (line.guestLabel && String(line.guestLabel).trim()) || "";
+                const guestHtml = gl
+                    ? `<div class="mt-0.5 text-[11px] font-medium tracking-[0.12em] text-[rgb(var(--accent))]/90">${escapeHtml(gl)}</div>`
+                    : "";
+                left.innerHTML = `<div class="truncate text-sm text-[rgb(var(--fg))]">${escapeHtml(String(displayName))}</div>${guestHtml}<div class="mt-0.5 text-xs text-[rgb(var(--muted))] tabular-nums">${GuestInteractionContract.formatMoney(unit)} ${escapeHtml(LuxuryI18n.t("cart.unitEach"))}</div>`;
+
+                const right = document.createElement("div");
+                right.className = "flex items-center gap-2";
+
+                const minus = document.createElement("button");
+                minus.className = "btn-quiet guest-hit inline-flex min-h-11 min-w-11 items-center justify-center px-0 text-sm";
+                minus.textContent = "Ã¢â‚¬â€œ";
+                minus.onclick = () => {
+                    GuestInteractionContract.adjustItemQuantity(id, -1, gl);
+                    updateCartPills();
+                    renderCart();
+                };
+
+                const qtyEl = document.createElement("span");
+                qtyEl.className = "text-xs font-semibold text-[rgb(var(--fg))] w-10 text-center";
+                qtyEl.textContent = `x${qty}`;
+
+                const plus = document.createElement("button");
+                plus.className = "btn-quiet guest-hit inline-flex min-h-11 min-w-11 items-center justify-center px-0 text-sm";
+                plus.textContent = "+";
+                plus.onclick = () => {
+                    GuestInteractionContract.adjustItemQuantity(id, 1, gl);
+                    updateCartPills();
+                    renderCart();
+                };
+
+                right.appendChild(minus);
+                right.appendChild(qtyEl);
+                right.appendChild(plus);
+                row.appendChild(left);
+                row.appendChild(right);
+                el.appendChild(row);
+            }
+
+            if (useGrouped) {
+                const sections = GuestInteractionContract.buildGroupOrderTraySections(linesAll, guestCount);
+                for (let si = 0; si < sections.length; si++) {
+                    const sec = sections[si];
+                    const head = document.createElement("div");
+                    head.className =
+                        "mb-1 mt-3 first:mt-0 text-[10px] font-medium tracking-[0.2em] text-[rgb(var(--accent))]";
+                    head.textContent = sec.label;
+                    el.appendChild(head);
+                    if (!sec.lines || sec.lines.length === 0) {
+                        const emptyRow = document.createElement("div");
+                        emptyRow.className =
+                            "surface-glass rounded-[1.35rem] px-4 py-3 text-xs text-[rgb(var(--muted))] mb-2";
+                        emptyRow.textContent =
+                            LuxuryI18n.t("cart.emptyGuestSection");
+                        el.appendChild(emptyRow);
+                        continue;
+                    }
+                    for (const line of sec.lines) appendLineRow(line);
+                }
+                return;
+            }
+
+            const lines =
+                typeof GuestInteractionContract.filterCartLinesForActiveGuest === "function"
+                    ? GuestInteractionContract.filterCartLinesForActiveGuest(linesAll)
+                    : linesAll;
+
+            if (lines.length === 0) {
+                const emptyMsg =
+                    linesAll.length > 0 &&
+                    typeof window.__annapGroupBrowseActive !== "undefined" &&
+                    window.__annapGroupBrowseActive
+                        ? LuxuryI18n.t("cart.emptyGuest")
+                        : LuxuryI18n.t("cart.empty");
+                el.innerHTML = `<div class="surface-glass rounded-[1.35rem] px-5 py-4 text-sm text-[rgb(var(--muted))]">${escapeHtml(emptyMsg)}</div>`;
+                return;
+            }
+
+            for (const line of lines) appendLineRow(line);
+        }
+
+        async function submitCartOrder() {
+            const lines = readCartLines();
+            const result = document.getElementById("cartSubmitResult");
+            const btn = document.getElementById("cartSubmitBtn");
+            result.textContent = "";
+
+            if (!GuestInteractionContract.getVenueTableId()) {
+                result.textContent = LuxuryI18n.t("order.needTableScan") || LuxuryI18n.t("order.needTable");
+                return;
+            }
+            if (lines.length === 0) {
+                result.textContent = LuxuryI18n.t("order.minOne");
+                return;
+            }
+            if (homeOrderSubmitInFlight) return;
+            homeOrderSubmitInFlight = true;
+            try {
+                if (!homeOrderIdempotencyKey && window.crypto && typeof window.crypto.randomUUID === "function")
+                    homeOrderIdempotencyKey = window.crypto.randomUUID();
+                else if (!homeOrderIdempotencyKey) homeOrderIdempotencyKey = String(Date.now());
+                if (!homeOrderIdempotencyKey) {
+                    result.textContent =
+                        LuxuryI18n.t("order.submitFailed");
+                    return;
+                }
+
+                if (btn) btn.setAttribute("disabled", "disabled");
+                const prev = btn && btn.textContent;
+                if (btn) btn.textContent = LuxuryI18n.t("order.submitting");
+
+                const items = lines.map((l) => {
+                    const g = (l.guestLabel && String(l.guestLabel).trim()) || "";
+                    return {
+                        menuItemId: l.menuItemId,
+                        quantity: l.qty,
+                        notes: g ? `Guest: ${g}` : null
+                    };
+                });
+                const vt = GuestInteractionContract.getVenueTableId();
+                let res;
+                try {
+                    res = await fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/orders") : "/api/orders", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            "Idempotency-Key": homeOrderIdempotencyKey
+                        },
+                        body: JSON.stringify({
+                            venueTableId: vt,
+                            items,
+                            idempotencyKey: homeOrderIdempotencyKey,
+                            paymentMethod: "CashOrCardAtCounter"
+                        })
+                    });
+                } catch (_annap) {
+                    if (window.GuestOrderQueue) window.GuestOrderQueue.enqueue(vt, items, homeOrderIdempotencyKey, "CashOrCardAtCounter");
+                    result.textContent =
+                        LuxuryI18n.t("order.queuedSoft");
+                    if (btn) {
+                        btn.textContent = prev;
+                        btn.removeAttribute("disabled");
+                    }
+                    return;
+                }
+
+                const payload = await res.json().catch(function () {
+                    return null;
+                });
+                if (!res.ok) {
+                    const er = String((payload && payload.error) || "").toLowerCase();
+                    let msg = LuxuryI18n.t("order.submitFailed");
+                    if (res.status === 400) {
+                        homeOrderIdempotencyKey = null;
+                        if (er.includes("scan") || er.includes("table qr") || er.includes("seat"))
+                            msg = LuxuryI18n.t("order.needTableScan") || msg;
+                        else if (er.includes("table") && (er.includes("not available") || er.includes("inactive")))
+                            msg = LuxuryI18n.t("order.tableUnavailable") || msg;
+                        else if (er.includes("menu") || er.includes("refresh"))
+                            msg = LuxuryI18n.t("order.menuChanged") || msg;
+                        else if (er.includes("at least one") || er.includes("tray"))
+                            msg = LuxuryI18n.t("order.minOne") || msg;
+                    } else if (res.status >= 500 || res.status === 429) {
+                        if (window.GuestOrderQueue) window.GuestOrderQueue.enqueue(vt, items, homeOrderIdempotencyKey, "CashOrCardAtCounter");
+                        msg =
+                            LuxuryI18n.t("order.queuedSoft");
+                    }
+                    result.textContent = msg;
+                    if (btn) {
+                        btn.textContent = prev;
+                        btn.removeAttribute("disabled");
+                    }
+                    return;
+                }
+
+                homeOrderIdempotencyKey = null;
+
+                GuestInteractionContract.writeGuestOrderSession({
+                    orderId: payload.id,
+                    token: payload.guestSessionToken,
+                    venueTableId: GuestInteractionContract.getVenueTableId(),
+                    status: "submittedPendingPayment"
+                });
+
+                const oid = escapeHtml(String(payload.id));
+                const submitted = escapeHtml(LuxuryI18n.t("order.submitted"));
+                const follow = escapeHtml(LuxuryI18n.t("order.followLink"));
+                const trackHref = payload.trackUrl || `/track/${payload.id}?token=${encodeURIComponent(payload.guestSessionToken || "")}`;
+                result.innerHTML = `${submitted} <span class="font-medium text-[rgb(var(--fg))] tabular-nums">${oid}</span>
+                <a href="${String(trackHref).replace(/"/g, "&quot;")}" class="mt-3 block text-center text-[11px] font-medium tracking-[0.18em] uppercase text-[rgb(var(--muted))] underline-offset-4 transition hover:text-[rgb(var(--accent))] hover:underline">${follow}</a>`;
+                GuestInteractionContract.clearCart();
+                updateCartPills();
+                renderCart();
+                refreshActiveOrderBanner();
+                if (typeof window.__annapRefreshTraySummary === "function") window.__annapRefreshTraySummary();
+                if (btn) {
+                    btn.textContent = prev;
+                    btn.removeAttribute("disabled");
+                }
+            } finally {
+                homeOrderSubmitInFlight = false;
+            }
+        }
+
+        function readOrderSession() {
+            return GuestInteractionContract.readGuestOrderSession();
+        }
+
+        async function refreshActiveOrderBanner() {
+            const wrap = document.getElementById("activeOrderBanner");
+            const link = document.getElementById("activeOrderTrackLink");
+            if (!wrap || !link) return;
+            const sess = readOrderSession();
+            if (!sess || !GuestInteractionContract.getVenueTableId()) {
+                wrap.classList.add("hidden");
+                return;
+            }
+            try {
+                const res = await fetch(
+                    (typeof window.__annapApiUrl === "function"
+                        ? window.__annapApiUrl(
+                              "/api/track/orders/" +
+                                  encodeURIComponent(sess.orderId) +
+                                  "?token=" +
+                                  encodeURIComponent(sess.token)
+                          )
+                        : `/api/track/orders/${encodeURIComponent(sess.orderId)}?token=${encodeURIComponent(sess.token)}`),
+                    { headers: { Accept: "application/json" } }
+                );
+                if (res.status === 404) {
+                    GuestInteractionContract.removeGuestOrderSession();
+                    wrap.classList.add("hidden");
+                    return;
+                }
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                if (data.isCancelled || data.isComplete) {
+                    wrap.classList.add("hidden");
+                    return;
+                }
+                link.href = `/track/${encodeURIComponent(sess.orderId)}?token=${encodeURIComponent(sess.token)}`;
+                link.textContent = LuxuryI18n.t("order.followPreparation");
+                wrap.classList.remove("hidden");
+            } catch (_annap) {
+                wrap.classList.add("hidden");
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise((r) => setTimeout(r, ms));
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+
+        function bootGuestExperience() {
+            __annapGuestLog("[annap] boot step 3: bootGuestExperience start");
+            var dbg = window.AnnapGuestLanDebug;
+            var H = window.AnnapGuestBootHarness;
+            try {
+                try {
+                    if (ANNAP_SERVER_VENUE_TABLE_ID) sessionStorage.setItem("annap_venue_table_id", ANNAP_SERVER_VENUE_TABLE_ID);
+                } catch (_annap) {
+                    /* ignore */
+                }
+            if (dbg && dbg.setHub) dbg.setHub("N/A");
+
+            __annapGuestLog("[annap] starting tray/vt");
+            try {
+                if (typeof console !== "undefined" && console.log) {
+                    console.log("[annap-ge-boot] bootGuestExperience", {
+                        hasGeRoot: !!GE_ENTRY_ROOT,
+                        seatedVt: (ANNAP_SERVER_VENUE_TABLE_ID || "").trim() || null,
+                        menuFirstArrival: @(Model.MenuFirstArrival ? "true" : "false")
+                    });
+                }
+                if (!GE_ENTRY_ROOT) {
+                    GuestInteractionContract.setTrayOpener(openCart);
+                } else {
+                    if (typeof console !== "undefined" && console.log) {
+                        console.log("[annap-ge-boot] skip setTrayOpener(openCart) on seated arrival; order-tray-dock wires tray");
+                    }
+                }
+                GuestInteractionContract.navigation.applyVtNavPatches();
+                __annapGuestLog("[annap] tray/vt ok");
+            } catch (eTv) {
+                __annapGuestErr("[annap] tray/vt failed", eTv);
+            }
+
+            __annapGuestLog("[annap] starting i18n DOM");
+            try {
+                LuxuryI18n.applyDom();
+                __annapGuestLog("[annap] i18n DOM ok");
+            } catch (eI18n) {
+                __annapGuestErr("[annap] i18n DOM failed", eI18n);
+            }
+            __annapGuestLog("[annap] boot step 4: i18n DOM applied");
+
+            try {
+                document.addEventListener("luxury:i18n-changed", function () {
+                    LuxuryI18n.applyDom();
+                    if (!annapBootOff("disableCartHydration")) {
+                        renderCart();
+                        refreshActiveOrderBanner();
+                    }
+                });
+            } catch (eL) {
+                __annapGuestErr("[annap] i18n listener failed", eL);
+            }
+
+            try {
+                window.addEventListener("online", function () {
+                    document.dispatchEvent(new CustomEvent("annap:network-online"));
+                    if (!annapBootOff("disableGuestQueue") && window.GuestOrderQueue && typeof window.GuestOrderQueue.flush === "function")
+                        void window.GuestOrderQueue.flush();
+                });
+            } catch (eOn) {
+                __annapGuestErr("[annap] online listener failed", eOn);
+            }
+
+            __annapGuestLog("[annap] starting cart hydration");
+            try {
+                updateCartPills();
+                if (!annapBootOff("disableCartHydration")) {
+                    renderCart();
+                    refreshActiveOrderBanner();
+                    if (H) H.row("hydration", "ok");
+                    __annapGuestLog("[annap] cart hydration ok");
+                } else {
+                    if (H) H.markSkipped("hydration");
+                    __annapGuestLog("[annap] cart hydration skipped (diag/safe)");
+                }
+            } catch (eC) {
+                __annapGuestErr("[annap] cart hydration failed", eC);
+                if (H) H.row("hydration", "fail");
+            }
+            __annapGuestLog("[annap] boot step 7: cart init + hydration pass done");
+
+            if (H) {
+                H.row("signalr", "skip");
+                if (annapBootOff("disableGuestQueue")) H.markSkipped("queue");
+                H.markSkipped("observers");
+            }
+            if (H && typeof H.markHydrationDone === "function") H.markHydrationDone();
+            } catch (eBoot) {
+                __annapGuestErr("[annap] guest boot failed", eBoot);
+                if (dbg && dbg.log) dbg.log("boot err");
+                annapRenderPlainMenuFallback(eBoot);
+                if (H && typeof H.markHydrationDone === "function") H.markHydrationDone();
+            }
+        }
+
+        function annapStartHomeGuestBoot() {
+            if (annapBootOff("disableI18n")) {
+                __annapGuestLog("[annap] starting i18n (skipped diag/safe)");
+                if (window.AnnapGuestBootHarness) AnnapGuestBootHarness.markSkipped("i18n");
+                try {
+                    bootGuestExperience();
+                } catch (bootErr0) {
+                    __annapGuestErr("[annap] bootGuestExperience threw", bootErr0);
+                    annapRenderPlainMenuFallback(bootErr0);
+                }
+                return;
+            }
+            var H = window.AnnapGuestBootHarness;
+            __annapGuestLog("[annap] starting i18n");
+            var i18nPromise = window.LuxuryI18n && window.LuxuryI18n.ready ? window.LuxuryI18n.ready : Promise.resolve();
+            var gate =
+                H && typeof H.runTimed === "function"
+                    ? H.runTimed("i18n", 5000, function () {
+                          return i18nPromise;
+                      })
+                    : i18nPromise;
+            gate.then(
+                function () {
+                    __annapGuestLog("[annap] i18n ok");
+                    __annapGuestLog("[annap] boot step 2: i18n bundles ready");
+                    try {
+                        bootGuestExperience();
+                    } catch (bootErr) {
+                        __annapGuestErr("[annap] bootGuestExperience threw", bootErr);
+                        annapRenderPlainMenuFallback(bootErr);
+                    }
+                },
+                function (e) {
+                    __annapGuestErr("[annap] i18n failed or timeout", e);
+                    try {
+                        bootGuestExperience();
+                    } catch (bootErr2) {
+                        annapRenderPlainMenuFallback(bootErr2);
+                    }
+                }
+            );
+        }
+
+        document.addEventListener("annap:guest-interaction", function (ev) {
+            var d = ev && ev.detail;
+            if (!d || (d.type !== "cartUpdated" && d.type !== "activeGuestChanged")) return;
+            try {
+                if (typeof updateCartPills === "function") updateCartPills();
+                if (typeof renderCart === "function") renderCart();
+            } catch (_cartUi) {
+                /* ignore */
+            }
+        });
+
+        try {
+            annapStartHomeGuestBoot();
+        } catch (topBootErr) {
+            __annapGuestErr("[annap] boot outer failure", topBootErr);
+            annapRenderPlainMenuFallback(topBootErr);
+        }
+    </script>
+@if (Model.HasSeatedTable && !(ViewData["IsArrivalPage"] is true))
+{
+    <script src="~/js/guest-experience.js" asp-append-version="true"></script>
+    <script src="~/js/annap-runtime-report.js" asp-append-version="true"></script>
+    <script src="~/js/drink-detail-renderer.js" asp-append-version="true"></script>
+    <script src="~/js/drink-detail-modal.js" asp-append-version="true"></script>
+    <script src="~/js/guest-bank-transfer.js" asp-append-version="true"></script>
+    <script src="~/js/order-tray-dock.js" asp-append-version="true"></script>
+    <script>
+        if (typeof window.annapStartOrderTrayDock === "function") window.annapStartOrderTrayDock();
+    </script>
+    <script src="~/js/menu-browse-cards.js" asp-append-version="true"></script>
+}
+}
+}

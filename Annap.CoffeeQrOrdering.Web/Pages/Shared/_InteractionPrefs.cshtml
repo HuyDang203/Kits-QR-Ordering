@@ -1,0 +1,30 @@
+@* Guest-only sound / haptic preference toggles. *@
+<div class="annap-if-prefs" role="group" data-i18n-aria="feedback.prefsLabel" aria-label="Sound and haptics">
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="sound"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.soundToggle"
+            title="Sound"
+            aria-label="Sound">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 10v4h3l5 4V6L7 10H4z" />
+            <path d="M16 9.5a3.5 3.5 0 0 1 0 5" />
+            <path d="M18.2 7.2a6.2 6.2 0 0 1 0 9.6" />
+        </svg>
+    </button>
+    <button type="button"
+            class="annap-if-pref guest-hit annap-if-pref--on"
+            data-if-pref="haptic"
+            data-feedback="none"
+            aria-pressed="true"
+            data-i18n-aria="feedback.hapticToggle"
+            title="Haptics"
+            aria-label="Haptics">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="3" width="8" height="18" rx="2" />
+            <path d="M4 9v6M20 9v6" />
+        </svg>
+    </button>
+</div>

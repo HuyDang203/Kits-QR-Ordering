@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none" aria-hidden="true">
+  <g stroke="rgba(232, 222, 202, 0.9)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="rgba(232, 222, 202, 0.06)"
+          d="M 56 124 C 96 88 168 76 236 92 C 292 104 334 132 348 152 C 300 128 244 116 188 120 C 132 124 88 144 56 124 Z"/>
+    <path fill="none" opacity="0.85"
+          d="M 188 120 C 152 108 112 118 78 138"/>
+    <path fill="none" opacity="0.75"
+          d="M 236 92 C 272 84 308 96 332 124"/>
+    <path fill="none" opacity="0.55"
+          d="M 120 108 Q 88 96 64 112 Q 84 124 120 108"/>
+    <path fill="none" opacity="0.5"
+          d="M 200 124 L 196 168"/>
+  </g>
+</svg>

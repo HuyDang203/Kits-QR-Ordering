@@ -1,0 +1,211 @@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostEnvironment
+
+@inject Microsoft.Extensions.Options.IOptions<DiagnosticsOptions> DiagOptions
+
+@using Annap.CoffeeQrOrdering.Web.Internal
+
+@using Annap.CoffeeQrOrdering.Web.Security
+
+@{
+
+    var useDevUi = HostEnvironment.IsDevelopment() || DiagOptions.Value.DeveloperOverlays;
+
+    var isStaffAdmin = User.IsInRole(StaffRoleNames.Admin);
+
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+
+    var floorIdentity = StaffFloorIdentityHelper.Resolve(User);
+
+    var staffSubtitle = ViewData["StaffSubtitle"] as string;
+
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>@ViewData["Title"] · Nhân viên</title>
+
+    <partial name="Shared/_AnnapRuntimeHead" model="useDevUi" />
+
+    <partial name="Shared/_AnnapFonts" model="@("ops")" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/css/staff-board.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/Annap.CoffeeQrOrdering.Web.styles.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
+
+    <link rel="stylesheet" href="~/css/staff-correspondence.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/typography-brand.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/kits-identity.css" asp-append-version="true" />
+
+</head>
+
+<body class="staff-shell min-h-dvh antialiased font-sans font-light text-[rgb(var(--fg))] @(ViewData["StaffBodyClass"] as string ?? "")">
+
+    <header class="staff-topbar sticky top-0 z-40 border-b border-white/[0.06] bg-[rgb(var(--bg))]/95 backdrop-blur-md">
+
+        <div class="staff-topbar__inner mx-auto max-w-[1800px] px-4 py-3 sm:px-6">
+
+            <div class="staff-topbar__row staff-topbar__row--main">
+
+                <div class="staff-topbar__brand min-w-0">
+
+                    <a class="staff-topbar__atelier shrink-0"
+
+                       asp-page="/Index" title="Trang khách">Kits</a>
+
+                    <div class="staff-topbar__titles min-w-0">
+
+                        <h1 class="staff-topbar__title truncate">@ViewData["Title"]</h1>
+
+                        @if (!string.IsNullOrEmpty(staffSubtitle))
+
+                        {
+
+                            <p class="staff-topbar__subtitle">@staffSubtitle</p>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+
+                @if (isAuthenticated && floorIdentity is not null)
+
+                {
+
+                    <div class="staff-topbar__identity" aria-label="Tài khoản đang đăng nhập">
+
+                        <p class="staff-topbar__identity-headline">@floorIdentity.Headline</p>
+
+                        @if (!string.IsNullOrEmpty(floorIdentity.Subline))
+
+                        {
+
+                            <p class="staff-topbar__identity-sub">@floorIdentity.Subline</p>
+
+                        }
+
+                    </div>
+
+                }
+
+
+
+                <nav class="staff-topbar__actions" aria-label="Thao tác nhân viên">
+
+                    @if (isAuthenticated)
+
+                    {
+
+                        @if (isStaffAdmin)
+
+                        {
+
+                            <a class="staff-topbar__link staff-topbar__link--admin"
+
+                               asp-page="/Admin/Index" title="Quản trị quán">Quản lý</a>
+
+                        }
+
+                        <form method="post" asp-page="/Staff/Logout" asp-route-returnToLogin="true" asp-route-returnUrl="/staff/orders" class="staff-topbar__form">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="staff-topbar__btn staff-topbar__btn--switch">Đổi nhân viên</button>
+
+                        </form>
+
+                        <form method="post" asp-page="/Staff/Logout" class="staff-topbar__form staff-topbar__form--logout">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="staff-topbar__link staff-topbar__link--quiet">Đăng xuất</button>
+
+                        </form>
+
+                    }
+
+                    else
+
+                    {
+
+                        <a class="staff-topbar__btn staff-topbar__btn--switch"
+
+                           href="/staff/login">Đăng nhập nhân viên</a>
+
+                    }
+
+                    <a class="staff-topbar__link staff-topbar__link--menu"
+
+                       asp-page="/Menu/Index">Thực đơn</a>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <main role="main" class="mx-auto max-w-[1800px] px-4 py-4 sm:px-6 sm:py-5">
+
+        @RenderBody()
+
+    </main>
+
+
+
+    <script src="~/js/annap-money.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @if (useDevUi && DiagOptions.Value.ShowLanDebugOverlay)
+
+    {
+
+        <div id="annap-lan-debug"
+
+             class="fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] left-2 right-2 z-[100] max-h-[38vh] overflow-auto rounded-lg border border-amber-500/30 bg-black/85 p-2 font-mono text-[10px] leading-snug text-amber-100/95 shadow-lg sm:left-auto sm:right-3 sm:max-w-sm sm:text-[11px]"
+
+             aria-live="polite"></div>
+
+        <script src="~/js/guest-lan-debug.js" asp-append-version="true"></script>
+
+        <script>
+
+            try {
+
+                if (window.AnnapGuestLanDebug) {
+
+                    window.AnnapGuestLanDebug.setMenu("—");
+
+                    window.AnnapGuestLanDebug.setHub("—");
+
+                }
+
+            } catch { /* ignore */ }
+
+        </script>
+
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
+

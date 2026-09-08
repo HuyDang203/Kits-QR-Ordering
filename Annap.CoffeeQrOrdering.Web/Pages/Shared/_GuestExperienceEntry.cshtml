@@ -1,0 +1,54 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.IndexModel
+@{
+    var vt = Model.VenueTableId;
+    var sigN = Model.SignatureDrinks.Count;
+}
+<link rel="stylesheet" href="~/css/guest-experience.css" asp-append-version="true" />
+
+<div id="guest-experience-root"
+     class="ge-root@(Model.CalmArrivalAnimations ? " ge-root--calm" : "")"
+     data-vt="@(vt?.ToString("D") ?? "")"
+     data-table-label="@(Model.TableGuestLabel ?? "")">
+    <div class="ge-sig-strip-wrap">
+        <div class="ge-sig-strip@(sigN > 0 ? " ge-sig-strip--count-" + Math.Min(sigN, 6) : "")" role="region" data-i18n-aria="ge.group.signatureDrinksAria" tabindex="0">
+            @foreach (var drink in Model.SignatureDrinks)
+            {
+                var detailHref = vt is Guid vtid
+                    ? $"/menu/drink/{drink.Id}?vt={vtid:D}"
+                    : $"/menu/drink/{drink.Id}";
+                <article class="ge-sig-card surface-paper">
+                    <div class="ge-sig-visual @(string.IsNullOrWhiteSpace(drink.CardImageUrl) ? "ge-sig-visual--no-poster" : "")">
+                        @if (!string.IsNullOrWhiteSpace(drink.CardImageUrl))
+                        {
+                            <img src="@drink.CardImageUrl"
+                                 alt=""
+                                 width="640"
+                                 height="480"
+                                 loading="eager"
+                                 decoding="async"
+                                 referrerpolicy="no-referrer" />
+                        }
+                        else
+                        {
+                            <div class="ge-sig-no-poster" aria-hidden="true">
+                                <span>@(string.IsNullOrEmpty(drink.Name) ? "·" : drink.Name[0])</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="ge-sig-body">
+                        <p class="ge-sig-name">@drink.Name</p>
+                        @if (!string.IsNullOrWhiteSpace(drink.Subtitle))
+                        {
+                            <p class="ge-sig-sub">@drink.Subtitle</p>
+                        }
+                        <p class="ge-sig-price">@VndMoneyFormatter.Format(drink.Price)</p>
+                        <div class="ge-sig-actions">
+                            <button type="button" class="ge-btn-ghost guest-hit" data-ge-open-detail="@drink.Id.ToString("D")" data-i18n="ge.group.sigDetail">Detail</button>
+                            <button type="button" class="ge-btn-solid guest-hit" data-ge-add="@drink.Id" data-item-name="@drink.Name" data-i18n="ge.group.sigAddToTray">Send to my table</button>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</div>

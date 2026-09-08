@@ -1,0 +1,36 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.IndexModel
+<link rel="stylesheet" href="~/css/guest-table-notice.css" asp-append-version="true" />
+
+<div class="guest-table-notice guest-table-notice--alert" role="alert">
+    <header class="guest-table-notice__head">
+        <p class="guest-table-notice__brand font-display" data-i18n="home.brand">Kits Coffee Atelier</p>
+        <div class="guest-table-notice__lang flex min-h-11 items-center gap-1">
+            <div class="guest-lang-register flex min-h-11 items-center gap-0 border border-[rgba(190,165,130,0.42)] bg-[rgba(253,249,244,0.4)] p-px"
+                 role="group"
+                 data-i18n-aria="langSwitcher.label">
+                <button type="button" data-lang-set="en" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))]" data-i18n="langSwitcher.en">EN</button>
+                <button type="button" data-lang-set="vi" class="guest-hit inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs tracking-[0.16em] transition hover:text-[rgb(var(--fg))]" data-i18n="langSwitcher.vi">VI</button>
+            </div>
+            <partial name="Shared/_InteractionPrefs" />
+        </div>
+    </header>
+
+    <div class="guest-table-notice__body">
+        @if (Model.QrScanInvalid)
+        {
+            <h1 class="guest-table-notice__title font-display" data-i18n="guest.tableNotice.qrInvalidTitle">Không nhận diện được bàn</h1>
+            <p class="guest-table-notice__lead" data-i18n="order.needTableScan">Vui lòng quét mã QR tại bàn để gọi món.</p>
+        }
+        else
+        {
+            <h1 class="guest-table-notice__title font-display" data-i18n="guest.tableNotice.handoffInvalidTitle">Liên kết bàn không còn hiệu lực</h1>
+            <p class="guest-table-notice__lead" data-i18n="order.needTableScan">Vui lòng quét mã QR tại bàn để gọi món.</p>
+        }
+        <a class="guest-table-notice__cta guest-table-notice__cta--secondary guest-hit"
+           asp-page="/Menu/Index"
+           data-i18n="nav.menu">Xem thực đơn</a>
+        <p class="guest-table-notice__browse-note text-xs leading-relaxed text-[rgb(var(--muted))]" data-i18n="guest.tableNotice.browseOnlyNote">
+            Bạn có thể xem thực đơn, nhưng cần quét QR tại bàn để gửi đơn.
+        </p>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+/**
+ * ANNAP mode atmosphere — global thermal layer + registered custom properties
+ * for smooth transitions (doctrine Phase 3). No particles; no menu rules.
+ */
+
+@property --thermal-tint-r {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 28;
+}
+
+@property --thermal-tint-g {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 23;
+}
+
+@property --thermal-tint-b {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 18;
+}
+
+@property --thermal-strength {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --annap-ambient-tempo {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+:root {
+  --thermal-tint-r: 28;
+  --thermal-tint-g: 23;
+  --thermal-tint-b: 18;
+  --thermal-strength: 0;
+  --annap-ambient-tempo: 1;
+}
+
+html {
+  transition:
+    --thermal-tint-r 700ms var(--annap-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+    --thermal-tint-g 700ms var(--annap-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+    --thermal-tint-b 700ms var(--annap-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+    --thermal-strength 700ms var(--annap-ease-enter, cubic-bezier(0.16, 1, 0.3, 1)),
+    --annap-ambient-tempo 700ms var(--annap-ease-enter, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+html.annap-guest-no-motion {
+  transition:
+    --thermal-tint-r 0s,
+    --thermal-tint-g 0s,
+    --thermal-tint-b 0s,
+    --thermal-strength 0s,
+    --annap-ambient-tempo 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition:
+      --thermal-tint-r 0.001ms,
+      --thermal-tint-g 0.001ms,
+      --thermal-tint-b 0.001ms,
+      --thermal-strength 0.001ms,
+      --annap-ambient-tempo 0.001ms;
+  }
+}
+
+/* Thermal wash above base void gradient, below grain */
+.annap-ambient-thermal {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--thermal-strength);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  background: radial-gradient(
+    ellipse 88% 72% at var(--annap-ambient-x, 50%) var(--annap-ambient-y, 40%),
+    rgb(
+        calc(var(--thermal-tint-r, 28)) calc(var(--thermal-tint-g, 23)) calc(var(--thermal-tint-b, 18)) / 0.52
+      )
+      0%,
+    transparent 58%
+  );
+  mix-blend-mode: soft-light;
+}

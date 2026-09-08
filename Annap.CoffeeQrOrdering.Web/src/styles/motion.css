@@ -1,0 +1,34 @@
+/**
+ * ANNAP — motion vocabulary (durations + easings as CSS variables only).
+ * Do not define keyframes here for Phase 0; use src/motion/variants.js for JS-driven motion APIs.
+ */
+
+:root {
+  /* Doctrine micro / brief / standard labels (milliseconds) */
+  --motion-micro: 120ms;
+  --motion-brief: 280ms;
+  --motion-standard: 450ms;
+  --motion-deliberate: 650ms;
+  --motion-ceremonial: 900ms;
+
+  /* Unified interaction scale (InteractionFeedback) */
+  --motion-fast: 100ms;
+  --motion-normal: 220ms;
+  --motion-slow: 420ms;
+  --motion-press: 100ms;
+
+  /* Aliases to correspond naming */
+  --motion-ink: var(--duration-ink);
+  --motion-rustle: var(--duration-rustle);
+  --motion-turn: var(--duration-turn);
+  --motion-open: var(--duration-open);
+  --motion-seal: var(--duration-seal);
+
+  /* Easing — press is ease-out (no bounce); arrive keeps ceremonial curve */
+  --ease-out-press: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --motion-ease-arrive: var(--ease-unfold);
+  --motion-ease-release: var(--ease-fold);
+  --motion-ease-settle: var(--ease-out-press);
+  --motion-ease-drift: linear;
+  --motion-ease-press: var(--ease-out-press);
+}

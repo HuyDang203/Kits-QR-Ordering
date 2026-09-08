@@ -1,0 +1,87 @@
+@using Annap.CoffeeQrOrdering.Domain.Entities
+@using Annap.CoffeeQrOrdering.Web
+@using Annap.CoffeeQrOrdering.Web.Services
+@model (MenuItem Item, string CategoryName, bool IsHero, int CardIndex, int RevealDelayMs)
+@{
+    var (item, categoryName, isHero, cardIndex, revealDelayMs) = Model;
+    var guestCategoryLabel = GuestCategoryDisplay.For(categoryName);
+    var badgeLabel = item.IsSignature ? "Đặc trưng quán" : (item.IsFeatured ? "Khách yêu thích" : null);
+    var badgeI18n = item.IsSignature ? "menu.ribbonSignature" : (item.IsFeatured ? "menu.ribbonFeatured" : null);
+    var cardImg = MenuMediaResolver.TryResolveCardImageUrl(item, categoryName);
+    var priceDisplay = item.Price > 0
+        ? VndMoneyFormatter.Format(item.Price)
+        : "—";
+    var tasteLine = item.Subtitle;
+    if (!string.IsNullOrWhiteSpace(tasteLine) && tasteLine.Length > 72)
+    {
+        tasteLine = tasteLine[..69] + "…";
+    }
+}
+<article style="--reveal-delay: @(revealDelayMs)ms"
+         data-drink-card="@item.Id"
+         class="menu-card-reveal menu-editorial-card@(isHero ? " menu-editorial-card--hero" : " menu-editorial-card--support")"
+         tabindex="0"
+         role="button"
+         aria-label="@item.Name">
+    <div class="menu-editorial-card__frame @(string.IsNullOrEmpty(cardImg) ? "menu-editorial-card__frame--no-poster" : "")"
+         data-frame="@item.Id"
+         style="--card-accent: @DrinkSlugGenerator.AccentColorForCategory(categoryName)">
+        @if (!string.IsNullOrEmpty(cardImg))
+        {
+            <img src="@cardImg"
+                 alt=""
+                 class="menu-editorial-card__img"
+                 loading="@(cardIndex < 7 ? "eager" : "lazy")"
+                 fetchpriority="@(cardIndex < 3 ? "high" : null)"
+                 decoding="async"
+                 referrerpolicy="no-referrer" />
+        }
+        else
+        {
+            <div class="menu-editorial-card__no-poster" aria-hidden="true">
+                <span class="menu-editorial-card__no-poster-glyph">@(string.IsNullOrEmpty(item.Name) ? "·" : char.ToUpper(item.Name[0]))</span>
+                <span class="menu-editorial-card__no-poster-lbl">@guestCategoryLabel</span>
+            </div>
+        }
+        @if (isHero)
+        {
+            <span class="menu-editorial-card__badge"
+                  data-i18n="@(badgeI18n ?? "menu.ribbonSignature")"
+                  aria-hidden="true">@(badgeLabel ?? "Đặc trưng quán")</span>
+        }
+    </div>
+    <div class="menu-editorial-card__label@(isHero ? " menu-editorial-card__label--hero" : " menu-editorial-card__label--support")">
+        @if (isHero)
+        {
+            <div class="menu-editorial-card__hero-meta">
+                <h3 class="menu-editorial-card__name">@item.Name</h3>
+                <div class="menu-editorial-card__hero-row">
+                    <p class="menu-editorial-card__price tabular-nums">@priceDisplay</p>
+                    @if (!string.IsNullOrWhiteSpace(tasteLine))
+                    {
+                        <p class="menu-editorial-card__taste">@tasteLine</p>
+                    }
+                </div>
+                <p class="menu-editorial-card__cta">
+                    <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                    <span class="menu-editorial-card__cta-glyph" aria-hidden="true">→</span>
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="menu-editorial-card__passport-row">
+                <div class="menu-editorial-card__caption">
+                    <h3 class="menu-editorial-card__name">@item.Name</h3>
+                    <div class="menu-editorial-card__passport-foot">
+                        <p class="menu-editorial-card__price tabular-nums">@priceDisplay</p>
+                        <span class="menu-editorial-card__action">
+                            <span data-i18n="menu.viewDetail">Xem chi tiết</span>
+                            <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</article>

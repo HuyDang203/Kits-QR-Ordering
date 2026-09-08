@@ -1,0 +1,69 @@
+@page "/admin/system/infrastructure"
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.Connectivity.InfrastructureModel
+@{
+    ViewData["Title"] = "Hạ tầng";
+    ViewData["AdminNavSection"] = "system-infrastructure";
+    ViewData["AdminEyebrow"] = "Hệ thống";
+    ViewData["AdminReturnHref"] = Url.Content("~/admin");
+    ViewData["AdminReturnLabel"] = "← Quay lại";
+    var dbOk = Model.Report.SocketReachable && Model.Report.EfReachable;
+}
+
+<partial name="Admin/_AdminEditorialReturn" />
+<div class="ah ah-wrap max-w-4xl">
+    <header class="ah-hero">
+        <div>
+            <p class="ah-hero__kicker">Hệ thống</p>
+            <h1 class="ah-hero__title">Kiểm tra hạ tầng</h1>
+            <p class="ah-hero__lede">
+                Một trang tĩnh lặng để nhìn ngay app đang trỏ về PostgreSQL nào, qua cổng nào, và đang chạy theo chế độ nào.
+            </p>
+        </div>
+    </header>
+
+    <section class="mt-10 grid gap-4 md:grid-cols-2">
+        <div class="exp-card p-6">
+            <p class="exp-muted text-xs tracking-wide">PostgreSQL</p>
+            <h2 class="mt-2 text-lg font-semibold text-[rgb(var(--fg))]">@(dbOk ? "Kết nối ổn định" : "Cần kiểm tra kết nối")</h2>
+            <dl class="mt-5 space-y-3 text-sm">
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Host</dt><dd class="font-mono">@Model.Report.DatabaseHost</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Port</dt><dd class="font-mono">@Model.Report.DatabasePort</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Database</dt><dd class="font-mono">@Model.Report.DatabaseName</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Socket</dt><dd>@(Model.Report.SocketReachable ? "reachable" : "not reachable")</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">EF Core</dt><dd>@(Model.Report.EfReachable ? "connected" : "not connected")</dd></div>
+            </dl>
+        </div>
+
+        <div class="exp-card p-6">
+            <p class="exp-muted text-xs tracking-wide">Docker topology</p>
+            <h2 class="mt-2 text-lg font-semibold text-[rgb(var(--fg))]">@Model.Report.DatabaseMode</h2>
+            <dl class="mt-5 space-y-3 text-sm">
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Compose mode</dt><dd class="font-mono">@Model.Report.ComposeMode</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">DB container</dt><dd class="font-mono">@Model.Report.ExpectedPostgresContainer</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Web container</dt><dd class="font-mono">@Model.Report.ExpectedWebContainer</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">DB port</dt><dd class="font-mono">@Model.Report.PostgresPortMapping</dd></div>
+                <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Web port</dt><dd class="font-mono">@Model.Report.WebPortMapping</dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">Recovery guidance</p>
+        <p class="mt-3 text-sm leading-relaxed text-[rgb(var(--muted))]">@Model.Report.PortHint</p>
+        <p class="mt-3 text-sm leading-relaxed text-[rgb(var(--muted))]">@Model.Report.DockerVisibility</p>
+        <div class="mt-5 rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-xs leading-relaxed text-[rgb(var(--fg))]">
+            @foreach (var command in Model.Report.RecoveryCommands)
+            {
+                <div>@command</div>
+            }
+        </div>
+    </section>
+
+    <section class="exp-card mt-4 p-6">
+        <p class="exp-muted text-xs tracking-wide">Request</p>
+        <dl class="mt-4 space-y-3 text-sm">
+            <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Environment</dt><dd class="font-mono">@Model.Report.EnvironmentName</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-[rgb(var(--muted))]">Public URL</dt><dd class="break-all font-mono">@Model.Report.PublicBaseUrl</dd></div>
+        </dl>
+    </section>
+</div>

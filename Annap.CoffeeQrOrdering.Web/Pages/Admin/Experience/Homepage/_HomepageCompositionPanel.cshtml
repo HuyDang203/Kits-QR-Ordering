@@ -1,0 +1,174 @@
+@model Annap.CoffeeQrOrdering.Web.Pages.Admin.IndexModel
+@{
+    var visibleCount = Model.HomepageModesVisible;
+    var initialCountClass = "exp-hp-mini-preview--" + visibleCount;
+    var initialStackClass = "exp-hp-mini-preview__stack--" + visibleCount;
+    var initialCards = new System.Collections.Generic.List<(string Id, string Short, bool On)>
+    {
+        ("group", "Đi nhóm", Model.HomepageForm.IsGroupEnabled),
+        ("sommelier", "Một mình", Model.HomepageForm.IsSoloEnabled),
+        ("discovery", "Bất ngờ", Model.HomepageForm.IsSommelierEnabled)
+    };
+    string LayoutLabel(int c) => c switch
+    {
+        0 => "Tạm dừng sắp đặt",
+        1 => "Một lối · trung tâm",
+        2 => "Hai lối · đối xứng",
+        _ => "Ba lối · tam giác biên tập"
+    };
+    string Kicker(int c) => c == 1 ? "Hành trình gợi ý hôm nay" : "Sảnh chính";
+    var formId = Model.HomepageCompositionFormId;
+}
+
+<section class="exp-homepage-panel"
+         data-homepage-composition
+         aria-labelledby="exp-homepage-panel-title">
+    <header class="exp-homepage-panel__head">
+        <div>
+            <p class="exp-kicker">Sảnh · bố cục</p>
+            <h2 id="exp-homepage-panel-title" class="exp-homepage-panel__title">
+                Bật/tắt các lối vào sảnh khách
+            </h2>
+            <p class="exp-muted">
+                Chọn những cách khách có thể bư�c vào sảnh — đi nhóm, một mình, hoặc để
+                quán chọn hộ. Cấu hình lưu vào cơ sở dữ liệu và áp dụng ngay khi khách
+                quét QR mới.
+            </p>
+        </div>
+        <div class="exp-homepage-panel__status" aria-live="polite">
+            <span class="exp-homepage-panel__status-label">Lối đang hiện</span>
+            <span class="exp-homepage-panel__status-count"
+                  data-hp-status-count>@visibleCount</span>
+            <span class="exp-homepage-panel__status-layout"
+                  data-hp-status-layout>@LayoutLabel(visibleCount)</span>
+        </div>
+    </header>
+
+    <form id="@formId"
+          class="exp-homepage-panel__form"
+          data-homepage-preview-form
+          method="post"
+          asp-page="/Admin/Index"
+          asp-page-handler="@Model.HomepageCompositionPostHandler">
+
+        <div class="exp-homepage-panel__grid">
+            <div class="exp-hp-mini-preview @initialCountClass"
+                 data-exp-hp-mini-preview
+                 data-hp-count="@visibleCount"
+                 aria-label="Xem trước thu nhỏ">
+                <div class="exp-hp-mini-preview__device">
+                    <p class="exp-hp-mini-preview__kicker"
+                       data-hp-preview-kicker>@Kicker(visibleCount)</p>
+                    <div class="exp-hp-mini-preview__stack @initialStackClass"
+                         data-hp-preview-stack>
+                        @{
+                            var renderedIdx = 0;
+                        }
+                        @foreach (var card in initialCards)
+                        {
+                            if (!card.On)
+                            {
+                                continue;
+                            }
+                            renderedIdx++;
+                            var lbl = renderedIdx < 10 ? ("0" + renderedIdx) : renderedIdx.ToString();
+                            <div class="exp-hp-mini-preview__card"
+                                 data-hp-card="@card.Id">
+                                <span>@lbl</span>
+                                <strong>@card.Short</strong>
+                            </div>
+                        }
+                    </div>
+                    <p class="exp-hp-mini-preview__empty"
+                       data-hp-preview-empty
+                       hidden="@(visibleCount > 0)">
+                        Chưa có lối nào được bật — khách sẽ thấy sảnh trống.
+                    </p>
+                </div>
+            </div>
+
+            <div class="exp-mode-lamps" role="group" aria-label="Các lối vào sảnh">
+                <label class="exp-mode-lamp" for="hp-flow-group">
+                    <input id="hp-flow-group"
+                           class="exp-mode-lamp__input"
+                           type="checkbox"
+                           data-homepage-flow="group"
+                           name="HomepageForm.IsGroupEnabled"
+                           value="true"
+                           checked="@Model.HomepageForm.IsGroupEnabled" />
+                    <span class="exp-mode-lamp__bezel" aria-hidden="true">
+                        <span class="exp-mode-lamp__glow"></span>
+                        <span class="exp-mode-lamp__filament"></span>
+                    </span>
+                    <span class="exp-mode-lamp__copy">
+                        <span class="exp-mode-lamp__title">Đi nhóm</span>
+                        <span class="exp-mode-lamp__hint">
+                            Đường ray cho cả bàn — mỗi khách tự chọn một ly.
+                        </span>
+                    </span>
+                </label>
+
+                <label class="exp-mode-lamp" for="hp-flow-sommelier">
+                    <input id="hp-flow-sommelier"
+                           class="exp-mode-lamp__input"
+                           type="checkbox"
+                           data-homepage-flow="sommelier"
+                           name="HomepageForm.IsSoloEnabled"
+                           value="true"
+                           checked="@Model.HomepageForm.IsSoloEnabled" />
+                    <span class="exp-mode-lamp__bezel" aria-hidden="true">
+                        <span class="exp-mode-lamp__glow"></span>
+                        <span class="exp-mode-lamp__filament"></span>
+                    </span>
+                    <span class="exp-mode-lamp__copy">
+                        <span class="exp-mode-lamp__title">Một mình</span>
+                        <span class="exp-mode-lamp__hint">
+                            Nếm thử có hướng dẫn — sommelier hỏi, gợi ý, rót.
+                        </span>
+                    </span>
+                </label>
+
+                <label class="exp-mode-lamp" for="hp-flow-discovery">
+                    <input id="hp-flow-discovery"
+                           class="exp-mode-lamp__input"
+                           type="checkbox"
+                           data-homepage-flow="discovery"
+                           name="HomepageForm.IsSommelierEnabled"
+                           value="true"
+                           checked="@Model.HomepageForm.IsSommelierEnabled" />
+                    <span class="exp-mode-lamp__bezel" aria-hidden="true">
+                        <span class="exp-mode-lamp__glow"></span>
+                        <span class="exp-mode-lamp__filament"></span>
+                    </span>
+                    <span class="exp-mode-lamp__copy">
+                        <span class="exp-mode-lamp__title">Bất ngờ</span>
+                        <span class="exp-mode-lamp__hint">
+                            Để quán chọn hộ — nghi thức khám phá mỗi lần quét.
+                        </span>
+                    </span>
+                </label>
+
+                <p class="exp-hp-zero-warning"
+                   data-hp-zero-warning
+                   hidden="@(visibleCount > 0)"
+                   role="status">
+                    Cả ba lối đều tắt — sảnh sẽ trống cho đến khi bạn bật lại ít nhất một.
+                </p>
+            </div>
+        </div>
+
+        <div class="exp-actions">
+            <button type="submit" class="exp-btn exp-btn--primary">
+                Lưu bố cục sảnh
+            </button>
+            @if (!string.IsNullOrEmpty(Model.HomepageCompositionStatus))
+            {
+                <p class="exp-homepage-panel__status"
+                   style="text-align:left;"
+                   role="status">
+                    @Model.HomepageCompositionStatus
+                </p>
+            }
+        </div>
+    </form>
+</section>

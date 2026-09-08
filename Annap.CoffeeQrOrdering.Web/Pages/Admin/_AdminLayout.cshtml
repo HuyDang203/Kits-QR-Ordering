@@ -1,0 +1,69 @@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostEnvironment
+@inject Microsoft.Extensions.Options.IOptions<DiagnosticsOptions> DiagOptions
+@{
+    Layout = null;
+    var useDevUi = HostEnvironment.IsDevelopment() || DiagOptions.Value.DeveloperOverlays;
+}
+<!DOCTYPE html>
+<html lang="vi" class="text-[rgb(var(--fg))]">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="color-scheme" content="light" />
+    <title>@ViewData["Title"] · Kits — Quản trị</title>
+    <partial name="Shared/_AnnapRuntimeHead" model="useDevUi" />
+    <partial name="Shared/_AnnapFonts" model="@("guest")" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-atelier.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Annap.CoffeeQrOrdering.Web.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="~/css/admin-correspondence.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/typography-brand.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/kits-identity.css" asp-append-version="true" />
+</head>
+<body class="admin-root min-h-dvh overflow-x-hidden antialiased font-sans">
+    <div class="admin-ambient" aria-hidden="true"></div>
+
+    <div id="admin-drawer-backdrop" class="admin-drawer-backdrop lg:hidden" aria-hidden="true"></div>
+    <aside id="admin-drawer"
+           class="admin-drawer lg:hidden"
+           aria-label="Điều hướng di động"
+           aria-hidden="true">
+        <div class="flex items-center justify-between gap-3">
+            <p class="text-[10px] font-medium tracking-[0.28em] uppercase text-[rgb(var(--muted-2))]">Điều hướng</p>
+            <button type="button"
+                    id="admin-drawer-close"
+                    class="admin-btn admin-btn--quiet min-h-11 rounded-full ring-1 ring-white/[0.08]">
+                Đóng
+            </button>
+        </div>
+        <div class="mt-8 overflow-y-auto overscroll-y-contain pr-1" style="max-height: calc(100dvh - 6rem);">
+            <partial name="_AdminNavigation" />
+        </div>
+    </aside>
+
+    <div class="admin-frame flex min-h-dvh">
+        <aside class="admin-sidebar hidden lg:flex" aria-label="Primary">
+            <div class="admin-sidebar__inner w-full">
+                <partial name="_AdminNavigation" />
+            </div>
+        </aside>
+
+        <div class="flex min-w-0 flex-1 flex-col">
+            <partial name="_AdminTopBar" />
+            <main id="admin-main" class="admin-main flex-1" role="main">
+                <div id="admin-main-surface" class="admin-main-surface mx-auto w-full max-w-[120rem]">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="~/js/annap-money.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/admin-shell.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
