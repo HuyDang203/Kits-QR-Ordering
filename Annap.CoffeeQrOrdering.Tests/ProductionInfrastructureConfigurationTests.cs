@@ -12,6 +12,87 @@ namespace Annap.CoffeeQrOrdering.Tests;
 
 public sealed class ProductionInfrastructureConfigurationTests
 {
+    // ── NormalizeConnectionString (ConnectionStrings__DefaultConnection path) ──
+
+    [Fact]
+    public void NormalizeConnectionString_accepts_standard_Npgsql_key_value_string()
+    {
+        var result = InfrastructureEnvironment.NormalizeConnectionString(
+            "Host=db.example.com;Database=mydb;Username=myuser;Password=secret",
+            enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal("db.example.com", csb.Host);
+        Assert.Equal("mydb", csb.Database);
+        Assert.Equal("myuser", csb.Username);
+        Assert.Equal("secret", csb.Password);
+    }
+
+    [Theory]
+    [InlineData("postgresql://user:pass@host.example.com/db")]
+    [InlineData("postgres://user:pass@host.example.com/db")]
+    [InlineData("postgresql://user:pass@host.example.com:5432/db")]
+    public void NormalizeConnectionString_converts_postgres_uri(string uri)
+    {
+        var result = InfrastructureEnvironment.NormalizeConnectionString(uri, enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal("host.example.com", csb.Host);
+        Assert.Equal("db", csb.Database);
+        Assert.Equal("user", csb.Username);
+        Assert.Equal("pass", csb.Password);
+        if (uri.Contains(":5432"))
+            Assert.Equal(5432, csb.Port);
+    }
+
+    [Fact]
+    public void NormalizeConnectionString_enforces_ssl_when_flag_is_true()
+    {
+        var result = InfrastructureEnvironment.NormalizeConnectionString(
+            "postgresql://user:pass@neon.example.com/neondb",
+            enforceSsl: true);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal(SslMode.Require, csb.SslMode);
+    }
+
+    [Fact]
+    public void NormalizeConnectionString_applies_sslmode_from_uri_query()
+    {
+        var result = InfrastructureEnvironment.NormalizeConnectionString(
+            "postgresql://user:pass@neon.example.com/neondb?sslmode=require",
+            enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal(SslMode.Require, csb.SslMode);
+    }
+
+    [Fact]
+    public void NormalizeConnectionString_applies_channel_binding_from_uri_query()
+    {
+        var result = InfrastructureEnvironment.NormalizeConnectionString(
+            "postgresql://user:pass@neon.example.com/neondb?sslmode=require&channel_binding=require",
+            enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal(SslMode.Require, csb.SslMode);
+        Assert.Equal(ChannelBinding.Require, csb.ChannelBinding);
+    }
+
+    [Fact]
+    public void NormalizeConnectionString_decodes_url_encoded_password()
+    {
+        // password = "p@ss:word/"  →  percent-encoded = "p%40ss%3Aword%2F"
+        var uri = "postgresql://user:p%40ss%3Aword%2F@host.example.com/mydb";
+        var result = InfrastructureEnvironment.NormalizeConnectionString(uri, enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal("p@ss:word/", csb.Password);
+        Assert.Equal("host.example.com", csb.Host);
+    }
+
+    // ── ConvertDatabaseUrlToNpgsql (DATABASE_URL path) ──
+
     [Fact]
     public void Database_url_enforces_ssl_in_production()
     {
@@ -21,6 +102,31 @@ public sealed class ProductionInfrastructureConfigurationTests
 
         var csb = new NpgsqlConnectionStringBuilder(value);
         Assert.Equal(SslMode.Require, csb.SslMode);
+    }
+
+    [Fact]
+    public void ConvertDatabaseUrlToNpgsql_applies_channel_binding_require()
+    {
+        var value = InfrastructureEnvironment.ConvertDatabaseUrlToNpgsql(
+            "postgresql://user:pass@host/db?sslmode=require&channel_binding=require",
+            enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(value);
+        Assert.Equal(SslMode.Require, csb.SslMode);
+        Assert.Equal(ChannelBinding.Require, csb.ChannelBinding);
+    }
+
+    [Fact]
+    public void ConvertDatabaseUrlToNpgsql_decodes_url_encoded_credentials()
+    {
+        // username = "user@name"  →  "user%40name"
+        // password = "pass:word"  →  "pass%3Aword"
+        var uri = "postgresql://user%40name:pass%3Aword@host.example.com/db";
+        var result = InfrastructureEnvironment.ConvertDatabaseUrlToNpgsql(uri, enforceSsl: false);
+
+        var csb = new NpgsqlConnectionStringBuilder(result);
+        Assert.Equal("user@name", csb.Username);
+        Assert.Equal("pass:word", csb.Password);
     }
 
     [Fact]

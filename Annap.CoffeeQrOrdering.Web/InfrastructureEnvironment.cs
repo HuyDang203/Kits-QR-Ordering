@@ -144,7 +144,7 @@ internal static class InfrastructureEnvironment
             Timeout = 15
         };
 
-        ApplySslFromQuery(csb, uri.Query);
+        ApplySecuritySettingsFromQuery(csb, uri.Query);
 
         EnforceSslIfRequired(csb, enforceSsl || IsRenderDeployment);
 
@@ -153,10 +153,24 @@ internal static class InfrastructureEnvironment
 
     internal static string NormalizeConnectionString(string connectionString, bool enforceSsl)
     {
+        if (string.IsNullOrWhiteSpace(connectionString))
+            throw new ArgumentException("Connection string is empty.", nameof(connectionString));
+
+        // Railway / Neon supply ConnectionStrings__DefaultConnection as a postgres:// URI.
+        // Npgsql's connection-string builder expects key/value syntax, so convert the URI here.
+        if (IsPostgresUri(connectionString))
+        {
+            return ConvertDatabaseUrlToNpgsql(connectionString.Trim(), enforceSsl);
+        }
+
         var csb = new NpgsqlConnectionStringBuilder(connectionString);
         EnforceSslIfRequired(csb, enforceSsl);
         return csb.ConnectionString;
     }
+
+    private static bool IsPostgresUri(string value) =>
+        value.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase)
+        || value.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase);
 
     private static void EnforceSslIfRequired(NpgsqlConnectionStringBuilder csb, bool enforceSsl)
     {
@@ -184,7 +198,7 @@ internal static class InfrastructureEnvironment
             || host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase)
             || host.Equals("::1", StringComparison.OrdinalIgnoreCase));
 
-    private static void ApplySslFromQuery(NpgsqlConnectionStringBuilder csb, string query)
+    private static void ApplySecuritySettingsFromQuery(NpgsqlConnectionStringBuilder csb, string query)
     {
         if (string.IsNullOrWhiteSpace(query))
             return;
@@ -195,18 +209,30 @@ internal static class InfrastructureEnvironment
             if (kv.Length != 2)
                 continue;
 
-            if (!kv[0].Equals("sslmode", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            csb.SslMode = kv[1].Trim().ToLowerInvariant() switch
+            switch (kv[0].ToLowerInvariant())
             {
-                "require" => SslMode.Require,
-                "verify-ca" => SslMode.VerifyCA,
-                "verify-full" => SslMode.VerifyFull,
-                "prefer" => SslMode.Prefer,
-                "disable" => SslMode.Disable,
-                _ => csb.SslMode
-            };
+                case "sslmode":
+                    csb.SslMode = kv[1].Trim().ToLowerInvariant() switch
+                    {
+                        "require" => SslMode.Require,
+                        "verify-ca" => SslMode.VerifyCA,
+                        "verify-full" => SslMode.VerifyFull,
+                        "prefer" => SslMode.Prefer,
+                        "allow" => SslMode.Allow,
+                        "disable" => SslMode.Disable,
+                        _ => csb.SslMode
+                    };
+                    break;
+                case "channel_binding":
+                    csb.ChannelBinding = kv[1].Trim().ToLowerInvariant() switch
+                    {
+                        "require" => ChannelBinding.Require,
+                        "prefer" => ChannelBinding.Prefer,
+                        "disable" => ChannelBinding.Disable,
+                        _ => csb.ChannelBinding
+                    };
+                    break;
+            }
         }
     }
 
