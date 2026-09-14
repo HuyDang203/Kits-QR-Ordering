@@ -76,6 +76,7 @@
                     @if (Model.IsArchived)
                     {
                         <form method="post" asp-page-handler="Restore" asp-route-id="@Model.MenuItemId" class="inline">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-11 px-5 text-xs tracking-[0.1em]">
                                 Khôi phục món
                             </button>
@@ -84,7 +85,8 @@
                     else
                     {
                         <form method="post" asp-page-handler="Archive" asp-route-id="@Model.MenuItemId" class="inline"
-                              onsubmit="return confirm('Lưu trữ món này? Món sẽ không còn hiện trên thực đơn nhưng vẫn giữ trong danh sách quản lý.');">
+                              onsubmit="return confirm('Lưu trữ món này? Món sẽ ẩn khỏi thực đơn của khách và vẫn giữ trong danh sách quản lý. Ảnh không bị xóa.');">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="admin-btn admin-btn--ghost guest-hit min-h-11 px-5 text-xs tracking-[0.1em] text-[rgb(var(--muted))] ring-white/[0.12]">
                                 Lưu trữ món
                             </button>

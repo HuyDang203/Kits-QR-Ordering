@@ -6,11 +6,23 @@
     ViewData["AdminEyebrow"] = "Vận hành";
     ViewData["AdminReturnHref"] = Url.Content("~/admin");
     ViewData["AdminReturnLabel"] = "← Quay lại";
+
+    // Stable URL keys for the status filter. Must match ParseStatus in the
+    // page model. Keep them English so bookmarks and shared links survive
+    // localization changes.
+    var statusOptions = new[]
+    {
+        new { Value = "all", Label = "Tất cả" },
+        new { Value = "available", Label = "Đang bán" },
+        new { Value = "soldout", Label = "Tạm hết" },
+        new { Value = "archived", Label = "Đã lưu trữ" }
+    };
+    var currentStatusRaw = Model.StatusFilterRaw?.Trim().ToLowerInvariant();
+    var currentSearch = Model.NormalizedSearch ?? string.Empty;
 }
 
 <partial name="Admin/_AdminEditorialReturn" />
-<section class="menu-operator space-y-6 sm:space-y-8" id="menu-operator-root"
-         data-categories='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Categories.Select(c => new { id = c.Id.ToString("D"), name = c.Name }).ToArray()))'>
+<section class="menu-operator space-y-6 sm:space-y-8" id="menu-operator-root">
 
     <header class="menu-operator__head">
         <div class="min-w-0">
@@ -40,48 +52,132 @@
         <div class="menu-operator-toast" role="status">@toast</div>
     }
 
-    <div class="menu-operator__toolbar">
-        <label class="admin-search menu-operator__search">
-            <span class="admin-search__icon" aria-hidden="true">⌕</span>
-            <input id="menu-operator-search"
-                   class="admin-search__input"
-                   type="search"
-                   placeholder="Tìm món..."
-                   autocomplete="off"
-                   inputmode="search" />
-        </label>
+    @*
+        Phase 2 — server-side filter / search form.
 
-        <div class="menu-operator__filters" role="tablist" aria-label="Lọc theo danh mục">
-            <button type="button"
-                    class="menu-operator__chip is-active"
-                    data-category-filter=""
-                    role="tab"
-                    aria-selected="true">
-                Tất cả
-            </button>
-            @foreach (var c in Model.Categories)
-            {
-                <button type="button"
-                        class="menu-operator__chip"
-                        data-category-filter="@c.Id.ToString("D")"
-                        role="tab"
-                        aria-selected="false">
-                    @c.Name
+        GET form targeting /admin/menu. Every filter is bound from the URL
+        query string by the page model, so reload, browser back/forward and
+        shared links all reproduce the same result set. JavaScript is not
+        required for this to work.
+    *@
+    <form method="get"
+          action="/admin/menu"
+          class="menu-operator__filters-form"
+          role="search"
+          aria-label="Lọc và tìm món">
+        <div class="menu-operator__filters-grid">
+            <label class="admin-search menu-operator__search">
+                <span class="admin-search__icon" aria-hidden="true">⌕</span>
+                <input id="menu-operator-search"
+                       name="q"
+                       class="admin-search__input"
+                       type="search"
+                       value="@currentSearch"
+                       placeholder="Tìm theo tên, mô tả..."
+                       autocomplete="off"
+                       inputmode="search"
+                       aria-label="Tìm món" />
+            </label>
+
+            <label class="menu-operator__field">
+                <span class="menu-operator__field-label">Danh mục</span>
+                <select name="category"
+                        class="admin-select menu-operator__select"
+                        aria-label="Lọc theo danh mục">
+                    <option value="">Tất cả danh mục</option>
+                    @foreach (var c in Model.Categories)
+                    {
+                        var selected = Model.CategoryFilter.HasValue && Model.CategoryFilter.Value == c.Id;
+                        <option value="@c.Id.ToString("D")" selected="@(selected ? "selected" : null)">@c.Name</option>
+                    }
+                </select>
+            </label>
+
+            <label class="menu-operator__field">
+                <span class="menu-operator__field-label">Trạng thái</span>
+                <select name="status"
+                        class="admin-select menu-operator__select"
+                        aria-label="Lọc theo trạng thái">
+                    @foreach (var opt in statusOptions)
+                    {
+                        var selected = string.Equals(currentStatusRaw, opt.Value, StringComparison.Ordinal)
+                            || (string.IsNullOrEmpty(currentStatusRaw) && opt.Value == "all");
+                        <option value="@opt.Value" selected="@(selected ? "selected" : null)">@opt.Label</option>
+                    }
+                </select>
+            </label>
+
+            <div class="menu-operator__filters-actions">
+                <button type="submit"
+                        class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs tracking-[0.12em]">
+                    <span aria-hidden="true">⌕</span>
+                    <span>Lọc</span>
                 </button>
-            }
+                @if (Model.HasActiveFilters)
+                {
+                    <a href="/admin/menu"
+                       class="admin-btn admin-btn--ghost menu-operator__clear-filters min-h-11 px-4 text-xs tracking-[0.06em]"
+                       aria-label="Xóa tất cả bộ lọc">
+                        Xóa lọc
+                    </a>
+                }
+            </div>
         </div>
 
-        <label class="menu-operator__archive-toggle">
-            <input type="checkbox" id="menu-operator-archive-toggle" />
-            <span>Hiển thị món đã lưu trữ</span>
-        </label>
-    </div>
+        @if (Model.HasActiveFilters)
+        {
+            <p class="menu-operator__filters-summary" aria-live="polite">
+                <span class="menu-operator__filters-summary-label">Đang lọc:</span>
+                @if (!string.IsNullOrEmpty(Model.NormalizedSearch))
+                {
+                    <span class="menu-operator__filter-chip">
+                        <span class="menu-operator__filter-chip-key">Tìm</span>
+                        <span class="menu-operator__filter-chip-val">“@Model.NormalizedSearch”</span>
+                    </span>
+                }
+                @if (Model.CategoryFilter.HasValue)
+                {
+                    var catName = Model.Categories.FirstOrDefault(c => c.Id == Model.CategoryFilter.Value)?.Name ?? "—";
+                    <span class="menu-operator__filter-chip">
+                        <span class="menu-operator__filter-chip-key">Danh mục</span>
+                        <span class="menu-operator__filter-chip-val">@catName</span>
+                    </span>
+                }
+                @if (Model.StatusFilter != IndexModel.MenuStatusFilter.All)
+                {
+                    var statusLabel = Model.StatusFilter switch
+                    {
+                        IndexModel.MenuStatusFilter.Available => "Đang bán",
+                        IndexModel.MenuStatusFilter.SoldOut => "Tạm hết",
+                        IndexModel.MenuStatusFilter.Archived => "Đã lưu trữ",
+                        _ => "Tất cả"
+                    };
+                    <span class="menu-operator__filter-chip">
+                        <span class="menu-operator__filter-chip-key">Trạng thái</span>
+                        <span class="menu-operator__filter-chip-val">@statusLabel</span>
+                    </span>
+                }
+            </p>
+        }
+    </form>
+
+    <p class="menu-operator__result-count" aria-live="polite">
+        @if (Model.HasActiveFilters)
+        {
+            <span>@Model.ResultCount món khớp bộ lọc.</span>
+        }
+        else
+        {
+            <span>@Model.ResultCount món trong thực đơn.</span>
+        }
+    </p>
 
     <section id="menu-operator-category-panel"
              class="menu-operator__category-panel"
              hidden
              aria-label="Sắp xếp danh mục">
         <form method="post" asp-page="/Admin/Menu/Categories" class="space-y-4">
+            @Html.AntiForgeryToken()
             <div class="menu-operator__category-panel-head">
                 <div>
                     <p class="menu-operator__panel-eyebrow">Sắp xếp danh mục</p>
@@ -136,10 +232,20 @@
     @if (Model.Items.Count == 0)
     {
         <div class="menu-operator__empty-state">
-            <p>Chưa có món nào trong thực đơn.</p>
-            <a asp-page="/Admin/Menu/Create" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs">
-                Thêm món đầu tiên
-            </a>
+            @if (Model.HasActiveFilters)
+            {
+                <p>Không có món nào khớp với bộ lọc hiện tại.</p>
+                <a href="/admin/menu" class="admin-btn admin-btn--ghost guest-hit min-h-11 px-6 text-xs">
+                    Xóa lọc
+                </a>
+            }
+            else
+            {
+                <p>Chưa có món nào trong thực đơn.</p>
+                <a asp-page="/Admin/Menu/Create" class="admin-btn admin-btn--primary guest-hit min-h-11 px-6 text-xs">
+                    Thêm món đầu tiên
+                </a>
+            }
         </div>
     }
     else
@@ -175,13 +281,27 @@
                             <span class="menu-operator__row-meta">
                                 <span class="menu-operator__pill menu-operator__pill--cat">@item.CategoryName</span>
                                 <span class="menu-operator__row-meta-status">
-                                    @if (item.IsAvailable)
+                                    @* Always render the visibility badge first so staff can read it at a glance. *@
+                                    @if (item.IsArchived)
                                     {
-                                        <span class="menu-operator__pill menu-operator__pill--ok">Đang bán</span>
+                                        <span class="menu-operator__pill menu-operator__pill--arch"
+                                              title="Món đã được lưu trữ — không hiện trên thực đơn của khách.">
+                                            Đã lưu trữ
+                                        </span>
+                                    }
+                                    else if (item.IsAvailable)
+                                    {
+                                        <span class="menu-operator__pill menu-operator__pill--ok"
+                                              title="Món đang hiển thị và khách có thể gọi.">
+                                            Đang bán
+                                        </span>
                                     }
                                     else
                                     {
-                                        <span class="menu-operator__pill menu-operator__pill--warn">Tạm hết</span>
+                                        <span class="menu-operator__pill menu-operator__pill--warn"
+                                              title="Món vẫn hiển thị nhưng khách không gọi được — dùng cho món tạm hết trong ngày.">
+                                            Tạm hết
+                                        </span>
                                     }
                                     @if (item.IsFeatured)
                                     {
@@ -191,30 +311,125 @@
                                     {
                                         <span class="menu-operator__pill menu-operator__pill--sig">Đặc trưng</span>
                                     }
-                                    @if (item.IsArchived)
-                                    {
-                                        <span class="menu-operator__pill menu-operator__pill--arch">Đã lưu trữ</span>
-                                    }
                                 </span>
                             </span>
                         </span>
                     </a>
                     <span class="menu-operator__row-price">@VndMoneyFormatter.Format(item.Price)</span>
-                    <a class="admin-btn admin-btn--ghost menu-operator__row-edit"
-                       asp-page="/Admin/Menu/Edit"
-                       asp-route-id="@item.Id">
-                        Chỉnh sửa
-                    </a>
+
+                    @* Per-row quick actions. POST forms include the antiforgery token
+                       explicitly; they are routed to the same /admin/menu page via
+                       page handler attributes. GET links (Edit) remain untouched. *@
+                    <span class="menu-operator__row-actions" aria-label="Thao tác nhanh">
+                        <a class="admin-btn admin-btn--ghost menu-operator__row-edit"
+                           asp-page="/Admin/Menu/Edit"
+                           asp-route-id="@item.Id">
+                            Chỉnh sửa
+                        </a>
+
+                        @if (!item.IsArchived)
+                        {
+                            if (item.IsAvailable)
+                            {
+                                <form method="post"
+                                      asp-page="/Admin/Menu/Index"
+                                      asp-page-handler="SetSoldOut"
+                                      asp-route-id="@item.Id"
+                                      class="menu-operator__row-action-form"
+                                      data-confirm="Đánh dấu món này là tạm hết? Món vẫn hiển thị trong thực đơn nhưng khách không gọi được.">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="admin-btn admin-btn--quiet guest-hit menu-operator__row-action"
+                                            title="Món vẫn hiển thị nhưng khách không gọi được">
+                                        Tạm hết
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post"
+                                      asp-page="/Admin/Menu/Index"
+                                      asp-page-handler="SetAvailable"
+                                      asp-route-id="@item.Id"
+                                      class="menu-operator__row-action-form">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="admin-btn admin-btn--quiet guest-hit menu-operator__row-action"
+                                            title="Cho phép khách gọi món này trở lại">
+                                        Mở bán lại
+                                    </button>
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            @* Quick availability actions are intentionally hidden
+                               for archived rows: the row is hidden from guests, so
+                               a sold-out/available toggle is meaningless until the
+                               item is restored. *@
+                            <span class="menu-operator__row-action menu-operator__row-action--disabled"
+                                  aria-disabled="true"
+                                  title="Khôi phục món trước rồi mới đổi trạng thái bán">
+                                Tạm hết
+                            </span>
+                        }
+
+                        @if (item.IsArchived)
+                        {
+                            <form method="post"
+                                  asp-page="/Admin/Menu/Edit"
+                                  asp-page-handler="Restore"
+                                  asp-route-id="@item.Id"
+                                  class="menu-operator__row-action-form">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="admin-btn admin-btn--ghost guest-hit menu-operator__row-action"
+                                        title="Khôi phục món để khách thấy lại">
+                                    Khôi phục
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post"
+                                  asp-page="/Admin/Menu/Edit"
+                                  asp-page-handler="Archive"
+                                  asp-route-id="@item.Id"
+                                  class="menu-operator__row-action-form"
+                                  data-confirm="Lưu trữ món này? Món sẽ ẩn khỏi thực đơn của khách nhưng vẫn giữ trong danh sách quản lý.">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="admin-btn admin-btn--quiet guest-hit menu-operator__row-action menu-operator__row-action--archive"
+                                        title="Ẩn món khỏi thực đơn của khách — không xóa ảnh">
+                                    Lưu trữ
+                                </button>
+                            </form>
+                        }
+                    </span>
                 </li>
             }
         </ul>
-        <p class="menu-operator__no-results" id="menu-operator-no-results" hidden>
-            Không tìm thấy món phù hợp.
-        </p>
     }
 </section>
 
 @section Scripts
 {
     <script src="~/js/menu-operator.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            "use strict";
+            // Soft confirm on archive/sold-out forms so staff gets a guard rail
+            // without leaving the page. Server-side validation still enforces
+            // correctness — this is purely UX.
+            document.addEventListener("submit", function (e) {
+                var form = e.target;
+                if (!(form instanceof HTMLFormElement)) return;
+                var msg = form.getAttribute("data-confirm");
+                if (!msg) return;
+                if (typeof window.confirm === "function" && !window.confirm(msg)) {
+                    e.preventDefault();
+                }
+            });
+        })();
+    </script>
 }

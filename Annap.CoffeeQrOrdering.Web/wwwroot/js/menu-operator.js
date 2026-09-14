@@ -1,77 +1,28 @@
 /**
- * Menu operator — list filtering, archive toggle, category ordering panel.
- * No framework. No server round-trips beyond the category-ordering POST.
+ * Menu operator — Phase 2: server-side filtering.
+ *
+ * The page now owns filter state via the URL query string (q, category,
+ * status). Filtering and search no longer happen in the browser. This file
+ * only keeps the interactive bits that the GET form cannot do on its own:
+ *
+ *   - Toggle the category-ordering panel.
+ *   - Drag categories up / down inside that panel.
+ *   - The data-confirm UX guard is rendered inline on Index.cshtml.
+ *
+ * Do NOT reintroduce a client-side filter cache here. The URL is the only
+ * source of truth for "what is the user currently looking at".
  */
 (function () {
     "use strict";
-
-    function normalize(s) {
-        return (s || "")
-            .toString()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
-    }
 
     function init() {
         var root = document.getElementById("menu-operator-root");
         if (!root) return;
 
-        var searchInput = document.getElementById("menu-operator-search");
-        var filterChips = root.querySelectorAll("[data-category-filter]");
-        var archiveToggle = document.getElementById("menu-operator-archive-toggle");
-        var list = document.getElementById("menu-operator-list");
-        var noResults = document.getElementById("menu-operator-no-results");
         var panel = document.getElementById("menu-operator-category-panel");
         var catList = document.getElementById("menu-operator-category-list");
 
-        var activeCategory = "";
-
-        function applyFilters() {
-            if (!list) return;
-            var q = normalize(searchInput && searchInput.value);
-            var showArchived = !!(archiveToggle && archiveToggle.checked);
-            var rows = list.querySelectorAll(".menu-operator__row");
-            var visible = 0;
-            rows.forEach(function (row) {
-                var name = normalize(row.getAttribute("data-name"));
-                var sub = normalize(row.getAttribute("data-subtitle"));
-                var cat = normalize(row.getAttribute("data-category"));
-                var catId = row.getAttribute("data-category-id") || "";
-                var archived = row.getAttribute("data-archived") === "1";
-                var matchesText = !q || name.indexOf(q) >= 0 || sub.indexOf(q) >= 0 || cat.indexOf(q) >= 0;
-                var matchesCat = !activeCategory || catId === activeCategory;
-                var matchesArchived = showArchived || !archived;
-                var show = matchesText && matchesCat && matchesArchived;
-                row.hidden = !show;
-                if (show) visible++;
-            });
-            if (noResults) noResults.hidden = visible > 0;
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener("input", applyFilters);
-        }
-
-        filterChips.forEach(function (chip) {
-            chip.addEventListener("click", function () {
-                filterChips.forEach(function (c) {
-                    c.classList.remove("is-active");
-                    c.setAttribute("aria-selected", "false");
-                });
-                chip.classList.add("is-active");
-                chip.setAttribute("aria-selected", "true");
-                activeCategory = chip.getAttribute("data-category-filter") || "";
-                applyFilters();
-            });
-        });
-
-        if (archiveToggle) {
-            archiveToggle.addEventListener("change", applyFilters);
-        }
-
-        // Category ordering panel toggle
+        // Category ordering panel toggle (unchanged from Phase 1)
         var toggles = root.querySelectorAll("[data-action='toggle-category-order']");
         toggles.forEach(function (btn) {
             btn.addEventListener("click", function () {
@@ -82,7 +33,7 @@
             });
         });
 
-        // Category up/down
+        // Category up/down inside the ordering panel (unchanged from Phase 1)
         if (catList) {
             catList.addEventListener("click", function (e) {
                 var btn = e.target.closest("[data-action]");
@@ -114,6 +65,10 @@
                 if (downBtn) downBtn.disabled = idx === rows.length - 1;
             });
         }
+
+        // Clear-filters link is a normal anchor; nothing else needs to happen.
+        // Phase 1 quick-action forms (sold-out, available, archive, restore)
+        // remain real POST forms with antiforgery tokens — untouched.
     }
 
     if (document.readyState === "loading") {

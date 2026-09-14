@@ -13,8 +13,7 @@ namespace Annap.CoffeeQrOrdering.Web.Pages.Admin.Menu;
 [Authorize(Policy = "Staff")]
 public sealed class EditModel(
     IApplicationDbContext db,
-    IMenuImageStorage imageStorage,
-    MenuMediaMaintenanceService mediaMaintenance) : PageModel
+    IMenuImageStorage imageStorage) : PageModel
 {
     [BindProperty]
     public MenuCurationFormModel Input { get; set; } = new();
@@ -193,24 +192,51 @@ public sealed class EditModel(
 
     public async Task<IActionResult> OnPostArchiveAsync(Guid id, CancellationToken cancellationToken)
     {
+        // Production safety: archiving must NEVER clear image URLs, image metadata,
+        // or delete Cloudinary/local assets. Restore must be safe to invoke repeatedly
+        // without losing any prior image binding.
         var item = await db.MenuItems.FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
         if (item is null)
             return NotFound();
 
+        if (item.IsArchived)
+        {
+            // Idempotent: already archived — do not emit a duplicate audit row.
+            TempData["MenuCurationToast"] = "Món đã được lưu trữ trước đó.";
+            return RedirectToPage("/Admin/Menu/Index");
+        }
+
+        var previousIsAvailable = item.IsAvailable;
+        var previousHeroUrl = item.ImageUrl;
+        var previousPosterUrl = item.DetailPosterImagePath;
+
         item.IsArchived = true;
-        var archivedHeroUrl = item.ImageUrl;
-        var archivedPosterUrl = item.DetailPosterImagePath;
-        item.ImageUrl = null;
-        item.DetailPosterImagePath = null;
+        // Deliberately NOT clearing ImageUrl, DetailPosterImagePath, or any image
+        // metadata. Images stay bound to the row so restore is lossless.
+        // Deliberately NOT calling mediaMaintenance.PurgeManagedAssetsForItemAsync —
+        // Cloudinary/local assets stay in place.
+
         var actor = User.Identity?.Name?.Trim();
-        await OperationalAudit.AppendAsync(db, "menu.archived", actor, null,
-            $"menuItemId={item.Id};name={Summarize(item.Name)}", cancellationToken);
-        await db.SaveChangesAsync(cancellationToken);
-        await mediaMaintenance.PurgeManagedAssetsForItemAsync(
-            item.Id,
-            archivedHeroUrl,
-            archivedPosterUrl,
+        await OperationalAudit.AppendAsync(
+            db,
+            "menu.archived",
+            actor,
+            null,
+            BuildMenuStateSummary(
+                "archive",
+                item.Id,
+                item.Name,
+                previousIsAvailable,
+                newIsAvailable: item.IsAvailable,
+                previousIsArchived: false,
+                newIsArchived: item.IsArchived,
+                previousHeroUrl,
+                previousPosterUrl,
+                newHeroUrl: item.ImageUrl,
+                newPosterUrl: item.DetailPosterImagePath),
             cancellationToken);
+        await db.SaveChangesAsync(cancellationToken);
+
         TempData["MenuCurationToast"] = "Đã lưu trữ món.";
         return RedirectToPage("/Admin/Menu/Index");
     }
@@ -221,13 +247,80 @@ public sealed class EditModel(
         if (item is null)
             return NotFound();
 
+        if (!item.IsArchived)
+        {
+            // Idempotent: already restored — do not emit a duplicate audit row.
+            TempData["MenuCurationToast"] = "Món đã được khôi phục trước đó.";
+            return RedirectToPage("/Admin/Menu/Index");
+        }
+
+        var previousIsAvailable = item.IsAvailable;
+        var previousHeroUrl = item.ImageUrl;
+        var previousPosterUrl = item.DetailPosterImagePath;
+
         item.IsArchived = false;
+        // Restore preserves the existing availability state, the existing image URLs,
+        // and does not attempt to re-upload or recreate any image asset.
+
         var actor = User.Identity?.Name?.Trim();
-        await OperationalAudit.AppendAsync(db, "menu.restored", actor, null,
-            $"menuItemId={item.Id};name={Summarize(item.Name)}", cancellationToken);
+        await OperationalAudit.AppendAsync(
+            db,
+            "menu.restored",
+            actor,
+            null,
+            BuildMenuStateSummary(
+                "restore",
+                item.Id,
+                item.Name,
+                previousIsAvailable,
+                newIsAvailable: item.IsAvailable,
+                previousIsArchived: true,
+                newIsArchived: item.IsArchived,
+                previousHeroUrl,
+                previousPosterUrl,
+                newHeroUrl: item.ImageUrl,
+                newPosterUrl: item.DetailPosterImagePath),
+            cancellationToken);
         await db.SaveChangesAsync(cancellationToken);
+
         TempData["MenuCurationToast"] = "Đã khôi phục món.";
         return RedirectToPage("/Admin/Menu/Index");
+    }
+
+    private static string BuildMenuStateSummary(
+        string action,
+        Guid menuItemId,
+        string? menuItemName,
+        bool previousIsAvailable,
+        bool newIsAvailable,
+        bool previousIsArchived,
+        bool newIsArchived,
+        string? previousHeroUrl,
+        string? previousPosterUrl,
+        string? newHeroUrl,
+        string? newPosterUrl)
+    {
+        var name = Summarize(menuItemName);
+        return string.Concat(
+            "action=", action,
+            ";menuItemId=", menuItemId.ToString("D"),
+            ";name=", name,
+            ";prevIsAvailable=", previousIsAvailable ? "true" : "false",
+            ";newIsAvailable=", newIsAvailable ? "true" : "false",
+            ";prevIsArchived=", previousIsArchived ? "true" : "false",
+            ";newIsArchived=", newIsArchived ? "true" : "false",
+            ";prevImageUrl=", SummarizeUrl(previousHeroUrl),
+            ";newImageUrl=", SummarizeUrl(newHeroUrl),
+            ";prevPosterUrl=", SummarizeUrl(previousPosterUrl),
+            ";newPosterUrl=", SummarizeUrl(newPosterUrl));
+    }
+
+    private static string SummarizeUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return "<null>";
+        var t = url.Trim();
+        return t.Length <= 200 ? t : t[..197] + "…";
     }
 
     private MenuCurationPreviewVm BuildPreview(MenuItem item)
