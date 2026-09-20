@@ -35,6 +35,7 @@ internal static IResult IdempotentOrderResponse(Order order, string token, bool 
             order.TableCode,
             order.Status,
             order.TotalAmount,
+            order.FulfillmentMode,
             guestSessionToken = token,
             trackUrl = $"/track/{order.Id:D}?token={Uri.EscapeDataString(token)}",
             replay = isReplay

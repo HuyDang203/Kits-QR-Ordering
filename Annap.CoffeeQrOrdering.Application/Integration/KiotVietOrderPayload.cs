@@ -10,16 +10,18 @@ public sealed class KiotVietOrderPayload
 {
     /// <summary>Increment when the shape changes to allow versioned deserialization in the worker.</summary>
     [JsonPropertyName("schemaVersion")]
-    public int SchemaVersion { get; init; } = 1;
+    public int SchemaVersion { get; init; } = 2;
 
     [JsonPropertyName("orderId")]
     public Guid OrderId { get; init; }
 
+    /// <summary>Null for takeaway orders.</summary>
     [JsonPropertyName("venueTableId")]
-    public Guid VenueTableId { get; init; }
+    public Guid? VenueTableId { get; init; }
 
+    /// <summary>Null for takeaway orders.</summary>
     [JsonPropertyName("tableCode")]
-    public string TableCode { get; init; } = null!;
+    public string? TableCode { get; init; }
 
     /// <summary>KiotViet table ID at snapshot time; null when table is not yet mapped in POS.</summary>
     [JsonPropertyName("kiotVietTableId")]

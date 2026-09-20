@@ -680,6 +680,7 @@
     "bankTransfer": "Bank transfer",
     "bankTransferHint": "QR for exact amount",
     "continueToPayment": "Choose payment method",
+    "continueToFulfillment": "Continue",
     "submitWithPayment": "Send order and choose payment",
     "submitAtCounter": "Send order — pay at counter",
     "submitCash": "Send order — pay cash",
@@ -755,5 +756,15 @@
     "submitFailedStaff": "We could not send your order — please ask a staff member.",
     "serverMaintenance": "The system is being updated — please ask a staff member to place your order.",
     "queuedSoft": "The line softened for a moment — we will place this tray when the room is steady again."
+  },
+  "fulfillment": {
+    "chooseMode": "How would you like to receive your order?",
+    "chooseModeAria": "Choose fulfillment mode",
+    "chooseRequired": "Please choose how to receive your order before continuing.",
+    "dineIn": "Dine in",
+    "dineInDesc": "For here",
+    "takeAway": "Take away",
+    "takeAwayDesc": "To go",
+    "unknown": "Unknown"
   }
 }

@@ -20,7 +20,7 @@ internal static class OrderSubmitLimits
     public const int MaxLineItems = 20;
 }
 
-internal sealed record CreateOrderRequest(Guid VenueTableId, List<CreateOrderItemRequest> Items)
+internal sealed record CreateOrderRequest(Guid? VenueTableId, List<CreateOrderItemRequest> Items)
 {
     public List<CreateOrderItemRequest> Items { get; init; } = Items ?? [];
 
@@ -28,6 +28,9 @@ internal sealed record CreateOrderRequest(Guid VenueTableId, List<CreateOrderIte
 
     /// <summary>Cash, Card, BankTransfer, or legacy CashOrCardAtCounter.</summary>
     public string? PaymentMethod { get; init; }
+
+    /// <summary>"DineIn" or "Takeaway". Required for new orders.</summary>
+    public string? FulfillmentMode { get; init; }
 }
 
 internal sealed record CreateOrderItemRequest(

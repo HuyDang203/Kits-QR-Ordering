@@ -732,6 +732,23 @@
   color: var(--checkout-sheet-muted);
 }
 
+/* ── Fulfillment mode checkout ─────────────────────────────────────────────── */
+.order-tray-root--checkout-fulfillment .order-tray-sheet {
+  border-top-color: var(--checkout-sheet-border-active);
+}
+
+/* Fulfillment option inherits payment option styles */
+.order-tray-fulfillment-option {
+  /* Shares .order-tray-payment-option styles via Razor class list */
+}
+
+/* Selected fulfillment option — highlight with accent */
+.order-tray-fulfillment-option.order-tray-payment-option--selected {
+  border-color: var(--checkout-sheet-accent, rgb(var(--accent)));
+  background: color-mix(in srgb, var(--checkout-sheet-accent, rgb(var(--bg))) 08%;
+}
+
+
 /* ---------- Collapsed chip (sole layout owner: lead | price | chevron) ---------- */
 #order-tray-chip.order-tray-chip,
 #order-tray-chip.checkout-sheet-chip {

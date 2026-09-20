@@ -680,6 +680,7 @@
     "bankTransfer": "Chuyển khoản",
     "bankTransferHint": "QR theo đúng số tiền",
     "continueToPayment": "Chọn phương thức thanh toán",
+    "continueToFulfillment": "Tiếp tục",
     "submitWithPayment": "Gửi đơn và chọn thanh toán",
     "submitAtCounter": "Gửi đơn — thanh toán tại quầy",
     "submitCash": "Gửi đơn — thanh toán tiền mặt",
@@ -755,5 +756,15 @@
     "submitFailedStaff": "Không gửi được đơn, vui lòng gọi nhân viên.",
     "serverMaintenance": "Hệ thống đang cập nhật — vui lòng gọi nhân viên để gửi đơn.",
     "queuedSoft": "Kết nối yếu một chút — chúng tôi sẽ gửi lựa chọn này khi phòng ổn định trở lại."
+  },
+  "fulfillment": {
+    "chooseMode": "Bạn muốn nhận món như thế nào?",
+    "chooseModeAria": "Chọn hình thức nhận món",
+    "chooseRequired": "Vui lòng chọn hình thức nhận món trước khi tiếp tục.",
+    "dineIn": "Uống tại bàn",
+    "dineInDesc": "Dùng tại bàn",
+    "takeAway": "Take away",
+    "takeAwayDesc": "Mang đi",
+    "unknown": "Không xác định"
   }
 }

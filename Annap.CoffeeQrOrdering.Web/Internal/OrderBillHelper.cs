@@ -36,7 +36,12 @@ internal sealed record OrderBillDto(
     string? PaymentConfirmedBy = null,
     string? CompletedBy = null,
     string? ProvisionalNoteVi = null,
-    string? ProvisionalNoteEn = null);
+    string? ProvisionalNoteEn = null,
+    string? FulfillmentMode = null,
+    string? FulfillmentModeLabelVi = null,
+    string? FulfillmentModeLabelEn = null,
+    string? ServingLocationVi = null,
+    string? ServingLocationEn = null);
 
 internal static class OrderBillHelper
 {
@@ -60,6 +65,8 @@ internal static class OrderBillHelper
     {
         var core = BuildCore(order);
         var (methodVi, methodEn) = OrderPaymentMethods.Labels(order.PaymentMethod);
+        var (fulfillmentVi, fulfillmentEn) = FulfillmentModes.Labels(order.FulfillmentMode);
+        var (servingVi, servingEn) = ResolveServingLocation(order);
         return core with
         {
             BillKind = "provisional",
@@ -76,7 +83,12 @@ internal static class OrderBillHelper
             ProvisionalNoteVi = "Phiếu này dùng để kiểm tra món, chưa phải hóa đơn đã thanh toán.",
             ProvisionalNoteEn = "This check bill is for review only and is not a paid receipt.",
             ThankYouMessageVi = "",
-            ThankYouMessageEn = ""
+            ThankYouMessageEn = "",
+            FulfillmentMode = order.FulfillmentMode,
+            FulfillmentModeLabelVi = fulfillmentVi,
+            FulfillmentModeLabelEn = fulfillmentEn,
+            ServingLocationVi = servingVi,
+            ServingLocationEn = servingEn
         };
     }
 
@@ -85,6 +97,8 @@ internal static class OrderBillHelper
         var core = BuildCore(order);
         var (status, labelVi, labelEn) = ResolvePaymentLabels(order.Status);
         var (methodVi, methodEn) = OrderPaymentMethods.Labels(order.PaymentMethod);
+        var (fulfillmentVi, fulfillmentEn) = FulfillmentModes.Labels(order.FulfillmentMode);
+        var (servingVi, servingEn) = ResolveServingLocation(order);
         return core with
         {
             BillKind = "paid",
@@ -101,8 +115,37 @@ internal static class OrderBillHelper
             PaymentConfirmedBy = order.PaymentConfirmedBy,
             CompletedBy = order.CompletedBy,
             ThankYouMessageVi = "Cảm ơn bạn đã ghé Kits.",
-            ThankYouMessageEn = "Thank you for visiting Kits."
+            ThankYouMessageEn = "Thank you for visiting Kits.",
+            FulfillmentMode = order.FulfillmentMode,
+            FulfillmentModeLabelVi = fulfillmentVi,
+            FulfillmentModeLabelEn = fulfillmentEn,
+            ServingLocationVi = servingVi,
+            ServingLocationEn = servingEn
         };
+    }
+
+    /// <summary>
+    /// Returns the customer-facing "serving location" label.
+    /// For Takeaway orders, this is always "Take away" — never a table code.
+    /// For Dine-in orders, this is "Bàn {TableCode}".
+    /// For legacy null orders, defaults to the table code.
+    /// </summary>
+    private static (string Vi, string En) ResolveServingLocation(Order order)
+    {
+        if (string.Equals(order.FulfillmentMode, FulfillmentModes.Takeaway, StringComparison.Ordinal))
+        {
+            return ("Take away", "Take away");
+        }
+        if (string.Equals(order.FulfillmentMode, FulfillmentModes.DineIn, StringComparison.Ordinal))
+        {
+            return ($"Bàn {order.TableCode}", $"Table {order.TableCode}");
+        }
+        // Legacy null: preserve historical table code.
+        if (!string.IsNullOrWhiteSpace(order.TableCode))
+        {
+            return ($"Bàn {order.TableCode}", $"Table {order.TableCode}");
+        }
+        return ("Không xác định", "Unknown");
     }
 
     private static OrderBillDto BuildCore(Order order)

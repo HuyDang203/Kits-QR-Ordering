@@ -379,6 +379,13 @@
                 ? `<span class="staff-order-card__payment-badge staff-order-card__payment-badge--desktop">${pendingBadge}</span>`
                 : "";
         const stepIso = o.statusChangedAtUtc || o.updatedAtUtc || o.createdAtUtc;
+        const isTakeaway = o.isTakeaway === true || o.isTakeaway === "true";
+        const fulfillmentBadge = o.fulfillmentModeLabelVi
+            ? `<span class="staff-order-card__fulfillment-badge${isTakeaway ? " staff-order-card__fulfillment-badge--takeaway" : ""}">${escapeHtml(o.fulfillmentModeLabelVi)}</span>`
+            : "";
+        const tableCodeDisplay = isTakeaway
+            ? `<span class="staff-order-card__table-code staff-order-card__table-code--takeaway">—</span>`
+            : escapeHtml(o.tableCode || "—");
         const tableCode = escapeHtml(o.tableCode || "—");
         const waitBadge =
             column === "submitted"
@@ -445,10 +452,11 @@
                 <div class="staff-order-card__top">
                     <div class="staff-order-card__table-row">
                         <span class="staff-order-card__table-prefix">Bàn</span>
-                        <span class="staff-order-card__table-code">${tableCode}</span>
+                        <span class="staff-order-card__table-code">${tableCodeDisplay}</span>
                         ${waitBadge}
                     </div>
                     <div class="staff-order-card__badges-row">
+                        ${fulfillmentBadge}
                         ${paymentBadge}
                         ${paidStatusBadge}
                         ${columnBadge}
@@ -778,6 +786,9 @@
             completedByRaw
                 ? `<div><dt>Hoàn thành bởi</dt><dd>${escapeHtml(completedByRaw)}${completedAt ? ` · ${completedAt}` : ""}</dd></div>`
                 : "";
+        const servingLocationLine = bill.servingLocationVi
+            ? `<div><dt>Hình thức</dt><dd>${escapeHtml(bill.servingLocationVi)}</dd></div>`
+            : "";
         const methodLine =
             bill.paidAtUtc
                 ? `<div><dt>Phương thức</dt><dd>${escapeHtml(methodLabel)}</dd></div>`
@@ -788,7 +799,7 @@
                 <p class="staff-bill-receipt__bill-no">#${escapeHtml(bill.billNumber || "—")}</p>
             </div>
             <dl class="staff-bill-receipt__meta">
-                <div><dt>Bàn</dt><dd>${escapeHtml(bill.tableCode || "—")}</dd></div>
+                ${servingLocationLine}
                 <div><dt>Gửi lúc</dt><dd>${fmtClock(bill.submittedAtUtc)}</dd></div>
                 <div><dt>Thanh toán lúc</dt><dd>${paidAt}</dd></div>
                 <div><dt>Trạng thái</dt><dd>${escapeHtml(statusLabel)}</dd></div>

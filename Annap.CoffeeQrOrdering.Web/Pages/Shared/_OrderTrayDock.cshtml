@@ -58,6 +58,30 @@
 
                 <div id="order-tray-sheet-footer" class="order-tray-sheet-footer shrink-0">
                     <div id="order-tray-checkout-body" class="order-tray-checkout-body min-h-0">
+                    <div id="order-tray-checkout-fulfillment" class="order-tray-checkout hidden" hidden>
+                        <p class="order-tray-checkout__kicker" data-i18n="fulfillment.chooseMode">Chọn hình thức nhận món</p>
+                        <div class="order-tray-payment-options order-tray-fulfillment-options grid grid-cols-2" role="radiogroup" data-i18n-aria="fulfillment.chooseModeAria">
+                            <button type="button"
+                                    class="order-tray-fulfillment-option order-tray-payment-option guest-hit"
+                                    data-fulfillment-mode="DineIn"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="fulfillment.dineIn">Uống tại bàn</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="fulfillment.dineInDesc">Dùng tại bàn</span>
+                                </span>
+                            </button>
+                            <button type="button"
+                                    class="order-tray-fulfillment-option order-tray-payment-option guest-hit"
+                                    data-fulfillment-mode="Takeaway"
+                                    aria-pressed="false">
+                                <span class="order-tray-payment-option__label">
+                                    <span class="order-tray-payment-option__title" data-i18n="fulfillment.takeAway">Take away</span>
+                                    <span class="order-tray-payment-option__subtitle" data-i18n="fulfillment.takeAwayDesc">Mang đi</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
                     <div id="order-tray-checkout-review" class="order-tray-checkout hidden" hidden>
                         <p class="order-tray-checkout__kicker" data-i18n="checkout.checkBillTitle">Kiểm tra đơn</p>
                         <p class="order-tray-checkout__note" data-i18n="checkout.reviewNoteShort">Kiểm tra món trước khi thanh toán.</p>

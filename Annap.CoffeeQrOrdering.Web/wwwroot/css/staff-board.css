@@ -1763,6 +1763,27 @@ body.staff-bill-open {
     font-size: 1.15rem;
   }
 
+/* Fulfillment mode badge */
+.staff-order-card__fulfillment-badge {
+  display: inline-flex;
+  padding: 0.2rem 0.45rem;
+  border-radius: 9999px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgb(111, 90, 64);
+  color: rgb(253, 249, 244);
+  white-space: nowrap;
+}
+
+.staff-order-card__fulfillment-badge--takeaway {
+  background: rgb(185, 80, 50);
+}
+
+.staff-order-card__table-code--takeaway {
+  opacity: 0.35;
+}
+
   .staff-order-card__ops {
     margin-top: 0.55rem;
     padding-bottom: env(safe-area-inset-bottom, 0);

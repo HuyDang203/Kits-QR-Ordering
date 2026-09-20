@@ -21,6 +21,12 @@
         "Cold Brew" => "menu.editorialColdBrew",
         "Vietnamese Coffee" => "menu.editorialVietnamese",
         "Bánh" => "menu.editorialBakery",
+        "Banh" => "menu.editorialBakery",
+        "BANH" => "menu.editorialBakery",
+        "Tea & Juice" => "menu.editorialBakery",
+        "Trà" => "menu.editorialBakery",
+        "Tra" => "menu.editorialBakery",
+        "Cake & Ice Cream" => "menu.editorialBakery",
         _ => "menu.editorialFallback"
     };
     string ChapterEditorialDefault(string categoryName) => categoryName.Trim() switch
@@ -35,6 +41,12 @@
         "Cold Brew" => "Cà phê ủ lạnh chậm. Êm và ít đắng, uống mát cả ngày.",
         "Vietnamese Coffee" => "Cà phê Việt Nam pha phin. Đậm và ngọt sữa, quen thuộc và chắc chắn.",
         "Bánh" => "Bánh ngọt kèm cà phê hoặc trà. Chọn khi muốn ăn nhẹ cùng ly uống.",
+        "Banh" => "Bánh ngọt kèm cà phê hoặc trà. Chọn khi muốn ăn nhẹ cùng ly uống.",
+        "BANH" => "Bánh ngọt kèm cà phê hoặc trà. Chọn khi muốn ăn nhẹ cùng ly uống.",
+        "Tea & Juice" => "Trà nguyên lá, trà trái cây và nước ép tươi. Nhẹ caffeine, hậu vị sạch.",
+        "Trà" => "Trà nguyên lá, trà trái cây và nước ép tươi. Nhẹ caffeine, hậu vị sạch.",
+        "Tra" => "Trà nguyên lá, trà trái cây và nước ép tươi. Nhẹ caffeine, hậu vị sạch.",
+        "Cake & Ice Cream" => "Bánh ngọt và kem kèm cà phê hoặc trà. Chọn khi muốn ăn nhẹ cùng ly uống.",
         _ => "Các món trong nhóm này. Hỏi barista nếu bạn cần gợi ý."
     };
     var catList = Model.Categories.ToList();

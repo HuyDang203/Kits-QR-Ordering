@@ -11,9 +11,10 @@ public static class KitsMenuCatalog
     public static class Categories
     {
         public const string Cafe = "CAFE";
-        public const string Tra = "TRÀ";
-        public const string Banh = "BÁNH";
+        public const string Tra = "Tea & Juice";
+        public const string Banh = "Cake & Ice Cream";
         public const string Combo = "COMBO";
+        public const string Smoothie = "Smoothie";
     }
 
     public static class ItemTypes
@@ -30,6 +31,7 @@ public static class KitsMenuCatalog
     public const int SortTra = 2;
     public const int SortBanh = 3;
     public const int SortCombo = 4;
+    public const int SortSmoothie = 5;
 
     public const string CatalogKeyPrefix = "kits-";
 }

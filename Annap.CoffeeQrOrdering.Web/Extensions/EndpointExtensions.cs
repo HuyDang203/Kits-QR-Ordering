@@ -169,9 +169,74 @@ public static class EndpointExtensions
             var sw = Stopwatch.StartNew();
             try
             {
-            if (request.VenueTableId == Guid.Empty)
-                return Results.BadRequest(new { error = "Please scan the table QR at your seat to continue." });
-        
+            // ── Fulfillment mode ─────────────────────────────────────────────────────
+            // Normalize and validate fulfillment mode.
+            var rawFulfillment = request.FulfillmentMode;
+            var fulfillmentMode = FulfillmentModes.Normalize(rawFulfillment);
+            if (fulfillmentMode is null && !string.IsNullOrWhiteSpace(rawFulfillment))
+            {
+                return Results.BadRequest(new
+                {
+                    error = "Invalid fulfillmentMode. Use DineIn or Takeaway."
+                });
+            }
+
+            // Fulfillment mode is required for new orders.
+            if (string.IsNullOrEmpty(fulfillmentMode))
+            {
+                return Results.BadRequest(new
+                {
+                    error = "fulfillmentMode is required. Use DineIn or Takeaway."
+                });
+            }
+
+            var isTakeaway = string.Equals(fulfillmentMode, FulfillmentModes.Takeaway, StringComparison.Ordinal);
+
+            // ── Table resolution ───────────────────────────────────────────────────
+            // Dine-in requires a real active table. Takeaway may omit the table entirely.
+            VenueTable? table = null;
+            if (isTakeaway)
+            {
+                // Takeaway: table is optional. If the guest happened to scan a QR, preserve it
+                // in the DB (historical context) but the staff UI will show Takeaway as the mode.
+                if (request.VenueTableId is not null && request.VenueTableId != Guid.Empty)
+                {
+                    table = await db.VenueTables.AsNoTracking()
+                        .FirstOrDefaultAsync(t => t.Id == request.VenueTableId && t.IsActive, ct);
+                    // Non-existent/inactive table with Takeaway: reject gracefully.
+                    if (table is null)
+                    {
+                        return Results.BadRequest(new
+                        {
+                            error = "Invalid table for takeaway order."
+                        });
+                    }
+                }
+                // table may be null — that is valid for Takeaway.
+            }
+            else
+            {
+                // Dine-in: table is required.
+                if (request.VenueTableId == Guid.Empty || request.VenueTableId is null)
+                {
+                    return Results.BadRequest(new
+                    {
+                        error = "Please scan the table QR at your seat to continue."
+                    });
+                }
+
+                table = await db.VenueTables.AsNoTracking()
+                    .FirstOrDefaultAsync(t => t.Id == request.VenueTableId && t.IsActive, ct);
+                if (table is null)
+                {
+                    return Results.BadRequest(new
+                    {
+                        error = "This table is not available right now."
+                    });
+                }
+            }
+
+            // ── Cart validation ───────────────────────────────────────────────────
             if (request.Items.Count == 0)
                 return Results.BadRequest(new { error = "Add at least one cup to your tray." });
 
@@ -182,7 +247,7 @@ public static class EndpointExtensions
                     error = $"Your tray can hold at most {OrderSubmitLimits.MaxLineItems} lines — please send two smaller trays."
                 });
             }
-        
+
             foreach (var line in request.Items)
             {
                 if (line.Quantity <= 0 || line.Quantity > 99)
@@ -202,20 +267,15 @@ public static class EndpointExtensions
                     });
                 }
             }
-        
-            var venueTableId = request.VenueTableId;
-            var table = await db.VenueTables.AsNoTracking().FirstOrDefaultAsync(t => t.Id == venueTableId && t.IsActive, ct);
-            if (table is null)
-                return Results.BadRequest(new { error = "This table is not available right now." });
-        
+
             var menuItemIds = request.Items.Select(i => i.MenuItemId).Distinct().ToArray();
             var menuItems = await db.MenuItems
                 .Where(mi => menuItemIds.Contains(mi.Id) && mi.IsAvailable && !mi.IsArchived)
                 .ToDictionaryAsync(mi => mi.Id, ct);
-        
+
             if (menuItems.Count != menuItemIds.Length)
                 return Results.BadRequest(new { error = "Something on the menu has changed. Refresh and try again." });
-        
+
             var idemKey = OrderSubmitHelper.NormalizeIdempotencyKey(http.Request, request.IdempotencyKey);
             if (string.IsNullOrEmpty(idemKey))
             {
@@ -237,6 +297,7 @@ public static class EndpointExtensions
                 }
             }
 
+            // ── Payment method ────────────────────────────────────────────────────
             string? paymentMethodRaw = request.PaymentMethod;
             if (!string.IsNullOrWhiteSpace(paymentMethodRaw))
             {
@@ -272,13 +333,14 @@ public static class EndpointExtensions
                     var token = GuestSessionTokens.Create();
                     var order = new Order
                     {
-                        VenueTableId = table.Id,
-                        TableCode = table.DisplayCode,
+                        VenueTableId = table?.Id,
+                        TableCode = table?.DisplayCode ?? "Takeaway",
                         GuestSessionToken = token,
                         SubmitIdempotencyKey = idemKey,
                         Status = OrderStatus.Submitted,
                         StatusChangedAtUtc = DateTimeOffset.UtcNow,
                         PaymentMethod = paymentMethodRaw,
+                        FulfillmentMode = fulfillmentMode,
                         Items = request.Items.Select(i => new OrderItem
                         {
                             MenuItemId = i.MenuItemId,
@@ -310,7 +372,7 @@ public static class EndpointExtensions
                     await db.Orders.AddAsync(order, ct);
                     await db.KiotVietOutboxMessages.AddAsync(outboxMessage, ct);
                     await OperationalAudit.AppendAsync(db, "order.created", null, order.Id,
-                        $"table={order.TableCode};items={order.Items.Count}", ct);
+                        $"table={order.TableCode};items={order.Items.Count};fulfillment={fulfillmentMode}", ct);
                     await db.SaveChangesAsync(ct);
                     await tx.CommitAsync(ct);
         
@@ -378,6 +440,7 @@ public static class EndpointExtensions
                 order.TableCode,
                 order.Status,
                 order.TotalAmount,
+                order.FulfillmentMode,
                 Items = order.Items.Select(i => new
                 {
                     i.MenuItemId,
@@ -424,11 +487,15 @@ public static class EndpointExtensions
             var checkBill = pendingPayment ? OrderBillHelper.BuildCheckBill(order) : null;
             var (pendingStatusVi, pendingStatusEn) = OrderPaymentMethods.PendingStatusLabels(order.PaymentMethod);
             var (methodVi, methodEn) = OrderPaymentMethods.Labels(order.PaymentMethod);
+            var (fulfillmentVi, fulfillmentEn) = FulfillmentModes.Labels(order.FulfillmentMode);
             var transferQr = bankTransferQr.BuildForTrack(order);
             return Results.Ok(new
             {
                 order.Id,
                 order.TableCode,
+                order.FulfillmentMode,
+                fulfillmentModeLabelVi = fulfillmentVi,
+                fulfillmentModeLabelEn = fulfillmentEn,
                 order.CreatedAtUtc,
                 order.UpdatedAtUtc,
                 order.PaidAtUtc,

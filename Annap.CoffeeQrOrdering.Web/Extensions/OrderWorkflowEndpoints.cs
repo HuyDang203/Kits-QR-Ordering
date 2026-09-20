@@ -358,6 +358,7 @@ internal static class OrderWorkflowEndpoints
         var checkBill = pendingPayment ? OrderBillHelper.BuildCheckBill(order) : null;
         var (pendingStatusVi, pendingStatusEn) = OrderPaymentMethods.PendingStatusLabels(order.PaymentMethod);
         var (methodVi, methodEn) = OrderPaymentMethods.Labels(order.PaymentMethod);
+        var (fulfillmentLabelVi, fulfillmentLabelEn) = FulfillmentModes.Labels(order.FulfillmentMode);
         return new
         {
             atUtc = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -367,6 +368,9 @@ internal static class OrderWorkflowEndpoints
             boardColumn = StaffOrderBoardColumnHelper.ToColumn(order.Status),
             staffStatus = StaffOrderStatusHelper.ToStaffStatus(order.Status),
             tableCode = order.TableCode,
+            fulfillmentMode = order.FulfillmentMode,
+            fulfillmentModeLabelVi = fulfillmentLabelVi,
+            fulfillmentModeLabelEn = fulfillmentLabelEn,
             paymentMethod = order.PaymentMethod,
             paymentMethodLabelVi = methodVi,
             paymentMethodLabelEn = methodEn,
@@ -415,12 +419,17 @@ internal static class OrderWorkflowEndpoints
         if (string.Equals(o.PaymentMethod, OrderPaymentMethods.BankTransfer, StringComparison.Ordinal))
             transferMemo = bankTransferQr.BuildMemoForOrder(o);
         var (paymentMethodLabelVi, paymentMethodLabelEn) = OrderPaymentMethods.Labels(o.PaymentMethod);
+        var (fulfillmentLabelVi, fulfillmentLabelEn) = FulfillmentModes.Labels(o.FulfillmentMode);
         return new
         {
             o.Id,
             orderNumber = reference,
             transferMemo,
             o.TableCode,
+            o.FulfillmentMode,
+            fulfillmentModeLabelVi = fulfillmentLabelVi,
+            fulfillmentModeLabelEn = fulfillmentLabelEn,
+            isTakeaway = string.Equals(o.FulfillmentMode, FulfillmentModes.Takeaway, StringComparison.Ordinal),
             staffStatus = StaffOrderStatusHelper.ToStaffStatus(o.Status),
             boardColumn = StaffOrderBoardColumnHelper.ToColumn(o.Status),
             phaseLabelVi = CustomerTrackStatusHelper.Resolve(o.Status).titleVi,

@@ -29,6 +29,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(x => x.CompletedByAccountId);
         builder.Property(x => x.BrewingOwnerStaffName).HasMaxLength(120);
         builder.Property(x => x.ServingOwnerStaffName).HasMaxLength(120);
+        builder.Property(x => x.FulfillmentMode).HasMaxLength(20);
 
         builder.HasOne(x => x.VenueTable)
             .WithMany()

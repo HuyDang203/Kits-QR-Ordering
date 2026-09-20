@@ -106,6 +106,10 @@
                 job.paymentMethod && String(job.paymentMethod).trim()
                     ? String(job.paymentMethod).trim()
                     : "Cash";
+            const fulfillmentMode =
+                job.fulfillmentMode && String(job.fulfillmentMode).trim()
+                    ? String(job.fulfillmentMode).trim()
+                    : null;
             try {
                 const ac = new AbortController();
                 const flushTo = setTimeout(function () {
@@ -113,6 +117,13 @@
                 }, 25000);
                 let res;
                 try {
+                    const body = {
+                        items: job.items,
+                        idempotencyKey: idem,
+                        paymentMethod: paymentMethod
+                    };
+                    if (fulfillmentMode) body.fulfillmentMode = fulfillmentMode;
+                    if (job.venueTableId) body.venueTableId = job.venueTableId;
                     res = await fetch(typeof window.__annapApiUrl === "function" ? window.__annapApiUrl("/api/orders") : "/api/orders", {
                         method: "POST",
                         headers: {
@@ -120,12 +131,7 @@
                             Accept: "application/json",
                             "Idempotency-Key": idem
                         },
-                        body: JSON.stringify({
-                            venueTableId: job.venueTableId,
-                            items: job.items,
-                            idempotencyKey: idem,
-                            paymentMethod: paymentMethod
-                        }),
+                        body: JSON.stringify(body),
                         signal: ac.signal
                     });
                 } finally {
@@ -135,10 +141,10 @@
                     notify("A held tray just found the floor again — your order went through.");
                     continue;
                 }
-                remaining.push({ ...job, idempotencyKey: idem, paymentMethod: paymentMethod });
+                remaining.push({ ...job, idempotencyKey: idem, paymentMethod: paymentMethod, fulfillmentMode: fulfillmentMode });
             } catch (e) {
                 queueWarn("[annap] order queue flush: job failed (will retry)", e);
-                remaining.push({ ...job, idempotencyKey: idem, paymentMethod: paymentMethod });
+                remaining.push({ ...job, idempotencyKey: idem, paymentMethod: paymentMethod, fulfillmentMode: fulfillmentMode });
             }
         }
         writeQueue(remaining);
@@ -153,12 +159,13 @@
 
     window.GuestOrderQueue = {
         /**
-         * @param {string} venueTableId
+         * @param {string|null} venueTableId
          * @param {object[]} items
          * @param {string} [idempotencyKey] stable key so retries / flush dedupe with server
          * @param {string} [paymentMethod] Cash | Card | BankTransfer
+         * @param {string} [fulfillmentMode] DineIn | Takeaway
          */
-        enqueue(venueTableId, items, idempotencyKey, paymentMethod) {
+        enqueue(venueTableId, items, idempotencyKey, paymentMethod, fulfillmentMode) {
             const idem = idempotencyKey && String(idempotencyKey).trim() ? String(idempotencyKey).trim() : "";
             if (!idem) {
                 queueWarn("[annap] order queue enqueue: idempotency key required — job not queued");
@@ -168,8 +175,12 @@
                 paymentMethod && String(paymentMethod).trim()
                     ? String(paymentMethod).trim()
                     : "Cash";
+            const mode =
+                fulfillmentMode && String(fulfillmentMode).trim()
+                    ? String(fulfillmentMode).trim()
+                    : null;
             const q = readQueue().filter((j) => j.idempotencyKey !== idem);
-            q.push({ venueTableId, items, idempotencyKey: idem, paymentMethod: method, at: Date.now() });
+            q.push({ venueTableId, items, idempotencyKey: idem, paymentMethod: method, fulfillmentMode: mode, at: Date.now() });
             writeQueue(q);
             notify("The line softened for a moment — we will place this tray when the room is steady again.");
         },

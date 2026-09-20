@@ -38,7 +38,12 @@ const CHECKOUT_UI = {
     PAYMENT_BANK_READY: "payment-bank-ready",
     SUBMITTED: "submitted",
     PAID: "paid",
-    COMPLETED: "completed"
+    COMPLETED: "completed",
+    FULFILLMENT_MODE: "fulfillment-mode"
+};
+const FULFILLMENT_MODE = {
+    DINE_IN: "DineIn",
+    TAKEAWAY: "Takeaway"
 };
 const PAYMENT_METHOD = {
     CASH: "Cash",
@@ -46,9 +51,10 @@ const PAYMENT_METHOD = {
     BANK: "BankTransfer",
     LEGACY_CASH_CARD: "CashOrCardAtCounter"
 };
-const TRAY_PAYMENT_FLOW_VERSION = "v6-single-owner";
+const TRAY_PAYMENT_FLOW_VERSION = "v7-fulfillment-mode";
 let checkoutUi = CHECKOUT_UI.EDITING;
 let selectedPaymentMethod = PAYMENT_METHOD.CASH;
+let selectedFulfillmentMode = null;
 let trayStatusFingerprint = "";
 const expandedItemNoteKeys = new Set();
 let bankTransferConfigured = null;
@@ -788,6 +794,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
 
         function domainStateFromCheckoutUi(ui) {
             if (ui === CHECKOUT_UI.REVIEW) return TRAY_STATE.REVIEW;
+            if (ui === CHECKOUT_UI.FULFILLMENT_MODE) return TRAY_STATE.REVIEW;
             if (ui === CHECKOUT_UI.PAYMENT_SELECTION) return TRAY_STATE.PAYMENT_CHOICE;
             if (isBankCheckoutUi(ui)) return TRAY_STATE.SUBMITTED_BANK;
             if (ui === CHECKOUT_UI.SUBMITTED) {
@@ -840,11 +847,12 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const prev = checkoutUi;
             checkoutUi = next;
             if (next === CHECKOUT_UI.REVIEW) selectedPaymentMethod = PAYMENT_METHOD.CASH;
+            if (next === CHECKOUT_UI.REVIEW) selectedFulfillmentMode = null;
             if (next === CHECKOUT_UI.PAYMENT_SELECTION && typeof refreshBankTransferAvailability === "function") {
                 refreshBankTransferAvailability();
             }
             renderCheckoutTray(opts);
-            if (next === CHECKOUT_UI.PAYMENT_SELECTION && prev !== next) {
+            if ((next === CHECKOUT_UI.PAYMENT_SELECTION || next === CHECKOUT_UI.FULFILLMENT_MODE) && prev !== next) {
                 window.requestAnimationFrame(function () {
                     scrollCheckoutCtaIntoView();
                 });
@@ -1308,8 +1316,14 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 return;
             }
             if (checkoutUi === CHECKOUT_UI.REVIEW) {
-                btn.textContent = tOrder("checkout.continueToPayment") || trayCopy("checkout.continueToPayment");
+                btn.textContent = tOrder("checkout.continueToFulfillment") || trayCopy("checkout.continueToFulfillment") || (tOrder("checkout.continueToPayment") || trayCopy("checkout.continueToPayment"));
                 if (VENUE_TABLE_ID) btn.removeAttribute("disabled");
+                else btn.setAttribute("disabled", "disabled");
+                return;
+            }
+            if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) {
+                btn.textContent = tOrder("checkout.continueToPayment") || trayCopy("checkout.continueToPayment");
+                if (selectedFulfillmentMode) btn.removeAttribute("disabled");
                 else btn.setAttribute("disabled", "disabled");
                 return;
             }
@@ -1353,6 +1367,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
 
         function updatePanelVisibility() {
             const review = document.getElementById("order-tray-checkout-review");
+            const fulfillment = document.getElementById("order-tray-checkout-fulfillment");
             const payment = document.getElementById("order-tray-checkout-payment");
             const cartFooter = document.getElementById("order-tray-cart-footer");
             const backRow = document.getElementById("order-tray-checkout-actions");
@@ -1364,14 +1379,19 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const linesWrap = document.getElementById("order-tray-lines-wrap");
 
             const inReview = checkoutUi === CHECKOUT_UI.REVIEW;
+            const inFulfillment = checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE;
             const inPayment = checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION;
-            const inCheckout = inReview || inPayment;
+            const inCheckout = inReview || inFulfillment || inPayment;
             const postOrder = isPostOrderCheckoutUi(checkoutUi);
 
             if (review) {
-                review.classList.toggle("hidden", !inCheckout);
-                review.hidden = !inCheckout;
-                review.classList.toggle("order-tray-checkout--compact", inPayment);
+                review.classList.toggle("hidden", !inReview);
+                review.hidden = !inReview;
+                review.classList.toggle("order-tray-checkout--compact", inPayment || inFulfillment);
+            }
+            if (fulfillment) {
+                fulfillment.classList.toggle("hidden", !inFulfillment);
+                fulfillment.hidden = !inFulfillment;
             }
             if (payment) {
                 payment.classList.toggle("hidden", !inPayment);
@@ -1386,7 +1406,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 backRow.classList.toggle("hidden", !inCheckout);
                 backRow.hidden = !inCheckout;
             }
-            if (stickyBar) stickyBar.classList.toggle("order-tray-checkout-sticky--pinned", inPayment);
+            if (stickyBar) stickyBar.classList.toggle("order-tray-checkout-sticky--pinned", inPayment || inFulfillment);
             if (clearBtn) clearBtn.classList.toggle("hidden", inCheckout || postOrder);
 
             if (cartEl) {
@@ -1406,6 +1426,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
             if (orderTrayRoot) {
                 orderTrayRoot.classList.toggle("order-tray-root--checkout", inCheckout);
                 orderTrayRoot.classList.toggle("order-tray-root--checkout-payment", inPayment);
+                orderTrayRoot.classList.toggle("order-tray-root--checkout-fulfillment", inFulfillment);
             }
         }
 
@@ -1481,6 +1502,8 @@ function __annapMenuRuntimeJsonSelfCheck() {
             updateTotals();
             refreshTableIdentityUi();
             updateCTA();
+            if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) renderPayment();
+            if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) renderFulfillment();
 
             if (checkoutUi === CHECKOUT_UI.REVIEW || checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) {
                 renderReceipt();
@@ -1513,6 +1536,14 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 return;
             }
             if (checkoutUi === CHECKOUT_UI.REVIEW) {
+                setCheckoutUi(CHECKOUT_UI.FULFILLMENT_MODE);
+                return;
+            }
+            if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) {
+                if (!selectedFulfillmentMode) {
+                    // Defensive: button should be disabled, but guard against race.
+                    return;
+                }
                 setCheckoutUi(CHECKOUT_UI.PAYMENT_SELECTION);
                 return;
             }
@@ -2625,11 +2656,18 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 if (orderResult) orderResult.textContent = tOrder("checkout.choosePayment");
                 return;
             }
+            if (!selectedFulfillmentMode) {
+                if (orderResult) orderResult.textContent = tOrder("fulfillment.chooseRequired") || tOrder("checkout.choosePayment");
+                return;
+            }
             if (menuOrderSubmitInFlight) return;
             menuOrderSubmitInFlight = true;
             const prepLabel = getPaymentSubmitLabel(selectedPaymentMethod);
             const submitPaymentMethod = selectedPaymentMethod;
-            __annapTrayPaymentDevLog("submit start", { paymentMethod: submitPaymentMethod });
+            const submitFulfillmentMode = selectedFulfillmentMode;
+            const submitVenueTableId =
+                submitFulfillmentMode === FULFILLMENT_MODE.TAKEAWAY ? null : VENUE_TABLE_ID;
+            __annapTrayPaymentDevLog("submit start", { paymentMethod: submitPaymentMethod, fulfillmentMode: submitFulfillmentMode });
             try {
                 if (!menuOrderIdempotencyKey && window.crypto && typeof window.crypto.randomUUID === "function")
                     menuOrderIdempotencyKey = window.crypto.randomUUID();
@@ -2678,16 +2716,17 @@ function __annapMenuRuntimeJsonSelfCheck() {
                             "Idempotency-Key": menuOrderIdempotencyKey
                         },
                         body: JSON.stringify({
-                            venueTableId: VENUE_TABLE_ID,
+                            venueTableId: submitVenueTableId,
                             items,
                             idempotencyKey: menuOrderIdempotencyKey,
-                            paymentMethod: submitPaymentMethod
+                            paymentMethod: submitPaymentMethod,
+                            fulfillmentMode: submitFulfillmentMode
                         })
                     });
                     __annapTrayPaymentDevLog("POST /api/orders status", res.status);
                 } catch (_net) {
                     if (window.GuestOrderQueue)
-                        window.GuestOrderQueue.enqueue(VENUE_TABLE_ID, items, menuOrderIdempotencyKey, submitPaymentMethod);
+                        window.GuestOrderQueue.enqueue(submitVenueTableId, items, menuOrderIdempotencyKey, submitPaymentMethod, submitFulfillmentMode);
                     if (orderResult)
                         orderResult.textContent =
                             tOrder("order.queuedSoft");
@@ -2719,7 +2758,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
                             tOrder("order.serverMaintenance");
                     } else if (res.status === 429) {
                         if (window.GuestOrderQueue)
-                            window.GuestOrderQueue.enqueue(VENUE_TABLE_ID, items, menuOrderIdempotencyKey, submitPaymentMethod);
+                            window.GuestOrderQueue.enqueue(submitVenueTableId, items, menuOrderIdempotencyKey, submitPaymentMethod, submitFulfillmentMode);
                         msg =
                             tOrder("order.queuedSoft");
                     } else if (res.status >= 500) {
@@ -2767,23 +2806,44 @@ function __annapMenuRuntimeJsonSelfCheck() {
             document.querySelectorAll(".order-tray-payment-option").forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     const method = btn.getAttribute("data-payment-method");
-                    if (!method) return;
-                    if (method === PAYMENT_METHOD.BANK && bankTransferConfigured === false) return;
-                    selectedPaymentMethod = method;
-                    if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) {
-                        renderPayment();
-                        updateCTA();
+                    if (method) {
+                        if (method === PAYMENT_METHOD.BANK && bankTransferConfigured === false) return;
+                        selectedPaymentMethod = method;
+                        if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) {
+                            renderPayment();
+                            updateCTA();
+                        }
+                        scrollCheckoutCtaIntoView();
+                        return;
                     }
-                    scrollCheckoutCtaIntoView();
+                    const mode = btn.getAttribute("data-fulfillment-mode");
+                    if (mode) {
+                        selectedFulfillmentMode = mode;
+                        if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) {
+                            renderFulfillment();
+                            updateCTA();
+                        }
+                        scrollCheckoutCtaIntoView();
+                    }
                 });
             });
             const backBtn = document.getElementById("order-tray-checkout-back");
             if (backBtn) {
                 backBtn.addEventListener("click", function () {
-                    if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) setCheckoutUi(CHECKOUT_UI.REVIEW);
+                    if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) setCheckoutUi(CHECKOUT_UI.FULFILLMENT_MODE);
+                    else if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) setCheckoutUi(CHECKOUT_UI.REVIEW);
                     else setCheckoutUi(CHECKOUT_UI.EDITING);
                 });
             }
+        }
+
+        function renderFulfillment() {
+            document.querySelectorAll(".order-tray-fulfillment-option").forEach(function (btn) {
+                const mode = btn.getAttribute("data-fulfillment-mode");
+                const on = mode && mode === selectedFulfillmentMode;
+                btn.classList.toggle("order-tray-payment-option--selected", !!on);
+                btn.setAttribute("aria-pressed", on ? "true" : "false");
+            });
         }
 
         function bootMenuTray() {

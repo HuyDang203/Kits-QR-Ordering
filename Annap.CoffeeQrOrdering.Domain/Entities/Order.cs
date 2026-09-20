@@ -58,6 +58,12 @@ public sealed class Order : AuditableEntity
 
     public decimal TotalAmount { get; set; }
 
+    /// <summary>
+    /// How the guest wants to receive their order: "DineIn" or "Takeaway".
+    /// Null on legacy orders — treat as "Không xác định".
+    /// </summary>
+    public string? FulfillmentMode { get; set; }
+
     public void RecalculateTotals()
     {
         TotalAmount = Items.Sum(i => i.UnitPrice * i.Quantity);

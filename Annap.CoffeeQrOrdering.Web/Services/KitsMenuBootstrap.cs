@@ -61,7 +61,7 @@ public static class KitsMenuBootstrap
     /// </summary>
     internal static readonly string[] LegacyBakeryCategoryVariants = ["Bánh", "Banh", "BANH"];
 
-    /// <summary>Ensures the four required categories exist (no duplicates, stable sort order).</summary>
+    /// <summary>Ensures the five required categories exist (no duplicates, stable sort order).</summary>
     public static async Task EnsureCategoriesAsync(
         IApplicationDbContext db,
         ILogger? logger = null,
@@ -75,10 +75,13 @@ public static class KitsMenuBootstrap
         var changed = false;
 
         // Idempotent category upserts with explicit sort order.
+        // If the database still holds a row with the legacy name (e.g. "TRÀ" or "BÁNH"),
+        // UpsertCategoryAsync will rename it to the canonical display value below.
         await UpsertCategoryAsync(db, byName, KitsMenuCatalog.Categories.Cafe, KitsMenuCatalog.SortCafe, cancellationToken);
         await UpsertCategoryAsync(db, byName, KitsMenuCatalog.Categories.Tra, KitsMenuCatalog.SortTra, cancellationToken);
         await UpsertBakeryCategoryAsync(db, byName, cancellationToken, logger).ConfigureAwait(false);
         await UpsertCategoryAsync(db, byName, KitsMenuCatalog.Categories.Combo, KitsMenuCatalog.SortCombo, cancellationToken);
+        await UpsertCategoryAsync(db, byName, KitsMenuCatalog.Categories.Smoothie, KitsMenuCatalog.SortSmoothie, cancellationToken);
 
         if (changed)
             await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -142,6 +145,11 @@ public static class KitsMenuBootstrap
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Idempotent category upsert. Looks up the row by canonical name first; if not found,
+    /// checks legacy names (e.g. <c>TRÀ</c> or <c>BÁNH</c>) and heals the row to the
+    /// canonical display value + sort order. Adds a new row only when no legacy variant exists.
+    /// </summary>
     private static async Task UpsertCategoryAsync(
         IApplicationDbContext db,
         Dictionary<string, MenuCategory> byName,
@@ -158,6 +166,23 @@ public static class KitsMenuBootstrap
             return;
         }
 
+        // Heal legacy variant in place if a row with one of the legacy names exists.
+        var legacyNames = LegacyCategoryDisplayAliases.TryGetValue(name, out var aliases)
+            ? aliases
+            : Array.Empty<string>();
+        foreach (var legacy in legacyNames)
+        {
+            if (byName.TryGetValue(legacy, out var legacyRow))
+            {
+                legacyRow.Name = name;
+                legacyRow.SortOrder = sortOrder;
+                await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                byName[name] = legacyRow;
+                byName.Remove(legacy);
+                return;
+            }
+        }
+
         db.MenuCategories.Add(new MenuCategory
         {
             Name = name,
@@ -168,6 +193,19 @@ public static class KitsMenuBootstrap
             .FirstAsync(c => c.Name == name, cancellationToken)
             .ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Legacy display aliases keyed by canonical category name. Used by the bootstrap to heal
+    /// legacy rows in place so the FK graph stays intact for any <c>MenuItem</c> rows already
+    /// attached. This is a one-way migration — running the bootstrap converges the database
+    /// to the canonical names without creating duplicates.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string[]> LegacyCategoryDisplayAliases =
+        new Dictionary<string, string[]>(StringComparer.Ordinal)
+        {
+            ["Tea & Juice"] = ["TRÀ", "Trà", "Tra"],
+            ["Cake & Ice Cream"] = ["BÁNH", "Bánh", "BANH", "Banh"],
+        };
 
     private static async Task<int> UpsertAsync(
         IApplicationDbContext db,
