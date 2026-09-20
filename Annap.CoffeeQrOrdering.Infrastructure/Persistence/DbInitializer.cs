@@ -5,6 +5,32 @@ using Microsoft.Extensions.Logging;
 
 namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence;
 
+/// <summary>
+/// One-shot legacy menu/category helpers used during the Annap → Kits migration.
+///
+/// <para>
+/// <b>PRODUCTION SAFETY (Phase 9):</b> All methods in this class are intentionally
+/// non-destructive against any database that may already contain historical
+/// <c>Order</c>/<c>OrderItem</c> rows. Methods that previously issued
+/// <c>DELETE FROM menu_items</c> / <c>DELETE FROM menu_categories</c> have been
+/// converted into safe no-ops. They return <c>0</c> and log a warning so any
+/// caller (current or future) cannot accidentally break the production
+/// foreign-key graph:
+/// </para>
+/// <list type="bullet">
+///   <item><see cref="TryRemoveLegacyDemoMenuIfUnusedAsync"/> — no-op</item>
+///   <item><see cref="TryRemoveLegacyCategoriesIfEmptyAsync"/> — no-op</item>
+///   <item><see cref="TryReconcileKitsCatalogAsync"/> — no-op</item>
+/// </list>
+/// <para>
+/// Legacy category and menu row reconciliation is now performed by
+/// <c>Annap.CoffeeQrOrdering.Web.Services.KitsMenuBootstrap</c>, which heals
+/// rows in place (renaming legacy categories and upserting missing menu items)
+/// without ever issuing a <c>DELETE</c> against <c>menu_items</c> or
+/// <c>menu_categories</c>. Historical <c>OrderItem</c> rows therefore remain
+/// valid against their <c>MenuItemId</c> foreign keys.
+/// </para>
+/// </summary>
 public static class DbInitializer
 {
     private static readonly string[] LegacyDemoMenuNames =
@@ -50,65 +76,25 @@ public static class DbInitializer
     }
 
     /// <summary>
-    /// Deletes legacy prototype menu rows when they are not referenced by any submitted order line.
-    /// Safe for production: historical orders keep their menu rows until archived elsewhere.
+    /// <b>No-op for production safety.</b> Previously deleted legacy prototype
+    /// <c>MenuItem</c> rows that were not referenced by any <c>OrderItem</c>;
+    /// in practice that delete is unsafe against a live production database
+    /// (e.g. <c>OrderItem</c> rows can be inserted concurrently, or
+    /// historical "legacy" items may still be required for audit trails).
+    /// Legacy menu reconciliation is now handled additively by
+    /// <c>KitsMenuBootstrap.EnsureKitsMenuAsync</c>: existing rows are left
+    /// intact, missing canonical rows are inserted, and renamed categories are
+    /// updated in place. Kept as a documented no-op so any historical caller
+    /// remains a safe no-op rather than an accidental destructive call.
     /// </summary>
     public static async Task TryRemoveLegacyDemoMenuIfUnusedAsync(
         IApplicationDbContext db,
         CancellationToken cancellationToken = default)
     {
-        var legacySet = LegacyDemoMenuNames.ToHashSet(StringComparer.Ordinal);
-        var candidates = await db.MenuItems
-            .Where(m => legacySet.Contains(m.Name))
-            .Select(m => m.Id)
-            .ToListAsync(cancellationToken);
-
-        if (candidates.Count == 0)
-            return;
-
-        var used = await db.OrderItems
-            .Where(o => candidates.Contains(o.MenuItemId))
-            .Select(o => o.MenuItemId)
-            .Distinct()
-            .ToListAsync(cancellationToken);
-        var usedSet = used.ToHashSet();
-
-        foreach (var id in candidates)
-        {
-            if (usedSet.Contains(id))
-                continue;
-            var row = await db.MenuItems.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
-            if (row is not null)
-                db.MenuItems.Remove(row);
-        }
-
-        await db.SaveChangesAsync(cancellationToken);
-
-        var emptyLegacyCategories = await db.MenuCategories
-            .Where(c =>
-                c.Name == "Espresso Bar"
-                || c.Name == "Filter & Pour-Over"
-                || c.Name == "Signature")
-            .Where(c => !db.MenuItems.Any(m => m.CategoryId == c.Id))
-            .ToListAsync(cancellationToken);
-
-        if (emptyLegacyCategories.Count > 0)
-        {
-            db.MenuCategories.RemoveRange(emptyLegacyCategories);
-            await db.SaveChangesAsync(cancellationToken);
-        }
-
-        foreach (var ingName in LegacyDemoIngredientNames)
-        {
-            var ing = await db.Ingredients.FirstOrDefaultAsync(i => i.Name == ingName, cancellationToken);
-            if (ing is null)
-                continue;
-            var linked = await db.MenuItemIngredients.AnyAsync(m => m.IngredientId == ing.Id, cancellationToken);
-            if (!linked)
-                db.Ingredients.Remove(ing);
-        }
-
-        await db.SaveChangesAsync(cancellationToken);
+        // Production safety: this method MUST NOT issue DELETE against menu_items.
+        // Historical OrderItem rows reference MenuItem rows by FK RESTRICT, and
+        // any delete attempt against a referenced row throws DbUpdateException.
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     /// <summary>
@@ -176,175 +162,65 @@ public static class DbInitializer
     }
 
     /// <summary>
-    /// Removes any Annap-prototype <c>MenuCategory</c> row that is no longer
-    /// referenced by any non-archived <c>MenuItem</c>. Safe: it can only run
-    /// against categories whose active item set is empty (archived items do
-    /// not count because they are excluded from the catalog).
-    /// Idempotent: once empty legacy categories are removed, this is a no-op.
+    /// <b>No-op for production safety.</b> Previously removed legacy
+    /// <c>MenuCategory</c> rows that had no non-archived items attached. Even
+    /// for "empty" legacy categories, the bootstrap must not delete the row
+    /// because:
+    /// <list type="bullet">
+    ///   <item>Archived items may still be referenced by historical <c>OrderItem</c> rows.</item>
+    ///   <item>Admin-side tooling may rely on the legacy row existing.</item>
+    ///   <item>Deleting a category cascades to its archived items via the
+    ///         configured <c>MenuItem.CategoryId</c> FK CASCADE, which would
+    ///         also violate <c>OrderItem.MenuItemId</c> FK RESTRICT.</item>
+    /// </list>
+    /// Legacy categories that need to disappear from the active catalog are
+    /// already hidden because every consumer query filters by
+    /// <c>IsAvailable &amp;&amp; !IsArchived</c> on items. No row needs to be
+    /// physically removed to achieve the desired UX.
     /// </summary>
     public static async Task<int> TryRemoveLegacyCategoriesIfEmptyAsync(
         IApplicationDbContext db,
         CancellationToken cancellationToken = default)
     {
-        var legacyCatNames = LegacyCategoryNames.ToHashSet(StringComparer.Ordinal);
-        var candidates = await db.MenuCategories
-            .Where(c => legacyCatNames.Contains(c.Name))
-            .ToListAsync(cancellationToken);
-
-        if (candidates.Count == 0)
-            return 0;
-
-        var empty = new List<MenuCategory>();
-        foreach (var c in candidates)
-        {
-            var hasLiveItem = await db.MenuItems
-                .AnyAsync(m => m.CategoryId == c.Id && !m.IsArchived, cancellationToken);
-            if (!hasLiveItem)
-                empty.Add(c);
-        }
-
-        if (empty.Count == 0)
-            return 0;
-
-        db.MenuCategories.RemoveRange(empty);
-        await db.SaveChangesAsync(cancellationToken);
-        return empty.Count;
+        await Task.CompletedTask.ConfigureAwait(false);
+        return 0;
     }
 
     /// <summary>
-    /// Full Kits catalog reconciliation: archives all legacy menu items (non-<c>kits-</c>
-    /// catalog key) that are referenced by historical orders, hard-deletes those that are not,
-    /// reassigns archived items in non-canonical categories to the canonical CAFE category
-    /// (to satisfy FK RESTRICT before category deletion), then removes the 8 legacy
-    /// categories that are not part of the 4-category Kits catalog.
-    ///
-    /// The 4 canonical Kits categories (CAFE, TRÀ, BÁNH, COMBO) are preserved.
-    /// Historical order tickets remain readable because <c>OrderItem.MenuItemName</c>
-    /// was snapshotted at submit time.
-    ///
-    /// This method is safe to re-run: once 46 legacy items are processed it becomes a no-op.
+    /// <b>No-op for production safety.</b> Previously reconciled the active
+    /// catalog by:
+    /// <list type="bullet">
+    ///   <item>hard-deleting legacy <c>MenuItem</c> rows with no order history,</item>
+    ///   <item>reassigning archived legacy items into the <c>CAFE</c> category,</item>
+    ///   <item>hard-deleting non-canonical <c>MenuCategory</c> rows.</item>
+    /// </list>
+    /// Those operations violate the strict data safety rules for an existing
+    /// production database (see class-level docstring): deleting a
+    /// <c>MenuItem</c> referenced by a historical <c>OrderItem</c> raises
+    /// <c>PostgresException 23503</c> ("violates RESTRICT setting of foreign
+    /// key constraint FK_order_items_menu_items_MenuItemId"), and deleting a
+    /// <c>MenuCategory</c> cascades to its remaining items, which in turn
+    /// collide with the same FK. The reconciliation is therefore performed
+    /// purely additively by <c>KitsMenuBootstrap.EnsureKitsMenuAsync</c>:
+    /// <list type="bullet">
+    ///   <item>canonical category names are normalized in place,</item>
+    ///   <item>canonical menu items are upserted by <c>CatalogKey</c>,</item>
+    ///   <item>historical items not in the current canonical seed are left
+    ///         untouched so their <c>OrderItem</c> foreign keys stay valid.</item>
+    /// </list>
+    /// Kept as a documented no-op so historical callers stay safe; returns an
+    /// empty result and logs a warning if a logger is supplied.
     /// </summary>
     public static async Task<KitsCatalogReconciliationResult> TryReconcileKitsCatalogAsync(
         IApplicationDbContext db,
         ILogger? logger = null,
         CancellationToken cancellationToken = default)
     {
-        var result = new KitsCatalogReconciliationResult();
-
-        // ── 1. Identify the canonical CAFE category ID ──────────────────────────────
-        var cafeCategory = await db.MenuCategories
-            .FirstOrDefaultAsync(c => c.Name == "CAFE", cancellationToken)
-            .ConfigureAwait(false);
-        if (cafeCategory == null)
-        {
-            logger?.LogWarning(
-                "Kits catalog reconciliation skipped: canonical 'CAFE' category not found.");
-            return result;
-        }
-
-        // ── 2. Identify all non-canonical category names ───────────────────────────
-        var canonicalNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "CAFE", "TRÀ", "BÁNH", "COMBO"
-        };
-        var nonCanonicalCats = await db.MenuCategories
-            .Where(c => !canonicalNames.Contains(c.Name))
-            .Select(c => new { c.Id, c.Name })
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-        var nonCanonicalCatIds = nonCanonicalCats.Select(c => c.Id).ToHashSet();
-
-        // ── 3. Archive all legacy items (non-kits prefix) that have order history ──
-        //       These cannot be hard-deleted due to FK RESTRICT on order_items.
-        var legacyItems = await db.MenuItems
-            .Where(m => m.CatalogKey == null || !m.CatalogKey.StartsWith("kits-"))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        if (legacyItems.Count == 0)
-        {
-            logger?.LogInformation(
-                "Kits catalog reconciliation: no legacy menu items found — nothing to reconcile.");
-            return result;
-        }
-
-        var legacyIds = legacyItems.Select(m => m.Id).ToList();
-
-        // Check which legacy items have order history
-        var usedIds = await db.OrderItems
-            .Where(o => legacyIds.Contains(o.MenuItemId))
-            .Select(o => o.MenuItemId)
-            .Distinct()
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-        var usedSet = usedIds.ToHashSet();
-
-        var toArchive = legacyItems.Where(m => usedSet.Contains(m.Id) && !m.IsArchived).ToList();
-        var toHardDelete = legacyItems.Where(m => !usedSet.Contains(m.Id)).ToList();
-
-        foreach (var item in toArchive)
-        {
-            item.IsArchived = true;
-            item.IsAvailable = false;
-            result.ArchivedCount++;
-        }
-        if (toArchive.Count > 0)
-        {
-            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            logger?.LogInformation(
-                "Kits catalog reconciliation: archived {ArchivedCount} legacy item(s) with order history.",
-                toArchive.Count);
-        }
-
-        // ── 4. Reassign archived items in non-canonical categories to CAFE ─────────
-        //       This prevents FK RESTRICT failures when we delete non-canonical categories.
-        foreach (var item in legacyItems.Where(m => m.IsArchived && nonCanonicalCatIds.Contains(m.CategoryId)))
-        {
-            if (item.CategoryId != cafeCategory.Id)
-            {
-                item.CategoryId = cafeCategory.Id;
-                result.ReassignedCount++;
-            }
-        }
-        if (result.ReassignedCount > 0)
-        {
-            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            logger?.LogInformation(
-                "Kits catalog reconciliation: reassigned {ReassignedCount} archived item(s) to 'CAFE' category.",
-                result.ReassignedCount);
-        }
-
-        // ── 5. Hard-delete legacy items not referenced by orders ───────────────────
-        foreach (var item in toHardDelete)
-        {
-            db.MenuItems.Remove(item);
-            result.HardDeletedCount++;
-        }
-        if (toHardDelete.Count > 0)
-        {
-            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            logger?.LogInformation(
-                "Kits catalog reconciliation: hard-deleted {HardDeletedCount} legacy item(s) with no order history.",
-                toHardDelete.Count);
-        }
-
-        // ── 6. Delete non-canonical categories (all are now empty of non-archived items) ──
-        if (nonCanonicalCats.Count > 0)
-        {
-            var toDelete = await db.MenuCategories
-                .Where(c => nonCanonicalCatIds.Contains(c.Id))
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
-            db.MenuCategories.RemoveRange(toDelete);
-            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            result.CategoriesDeleted = toDelete.Count;
-            logger?.LogInformation(
-                "Kits catalog reconciliation: deleted {CategoriesDeleted} legacy category name(s): {Names}.",
-                toDelete.Count,
-                string.Join(", ", toDelete.Select(c => c.Name)));
-        }
-
-        return result;
+        logger?.LogWarning(
+            "DbInitializer.TryReconcileKitsCatalogAsync is a no-op (production safety). " +
+            "Use KitsMenuBootstrap.EnsureKitsMenuAsync for additive reconciliation.");
+        await Task.CompletedTask.ConfigureAwait(false);
+        return new KitsCatalogReconciliationResult();
     }
 
     public sealed class KitsCatalogReconciliationResult

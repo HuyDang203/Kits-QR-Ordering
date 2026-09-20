@@ -99,11 +99,14 @@ public static class AnnapBootstrapExtensions
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             if (!await db.Database.CanConnectAsync(cancellationToken))
                 return;
+
+            // PRODUCTION SAFETY: only the additive KitsMenuBootstrap runs here.
+            // Legacy menu/category reconciliation methods on DbInitializer have been
+            // converted to no-ops because they previously issued destructive
+            // DELETE statements against menu_items / menu_categories, which crash
+            // on production databases that already contain historical OrderItem
+            // rows referencing those menu items (FK RESTRICT 23503).
             await KitsMenuBootstrap.EnsureKitsMenuAsync(db, log, cancellationToken);
-            await DbInitializer.TryArchiveLegacyDemoMenuIfReferencedAsync(db, cancellationToken);
-            await DbInitializer.TryRemoveLegacyDemoMenuIfUnusedAsync(db, cancellationToken);
-            await DbInitializer.TryRemoveLegacyCategoriesIfEmptyAsync(db, cancellationToken);
-            var reconciled = await DbInitializer.TryReconcileKitsCatalogAsync(db, log, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -145,13 +148,21 @@ public static class AnnapBootstrapExtensions
             DatabaseStartupDiagnostics.MarkMigrationsApplied(true);
 
             var menuLog = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup.MenuCatalog");
+
+            // PRODUCTION SAFETY: only the additive KitsMenuBootstrap and the
+            // archive-only TryArchiveLegacyDemoMenuIfReferencedAsync run here.
+            // The hard-delete helpers (TryRemoveLegacyDemoMenuIfUnusedAsync,
+            // TryRemoveLegacyCategoriesIfEmptyAsync, TryReconcileKitsCatalogAsync)
+            // used to follow, but each one issued DELETE against menu_items
+            // and/or menu_categories. On a production database with historical
+            // OrderItem rows that raises PostgresException 23503 against the
+            // FK_order_items_menu_items_MenuItemId constraint. They are now
+            // documented no-ops on DbInitializer and must not be re-introduced
+            // to the startup path.
             await KitsMenuBootstrap.EnsureKitsMenuAsync(db, menuLog, cancellationToken);
             var legacyArchived = await DbInitializer.TryArchiveLegacyDemoMenuIfReferencedAsync(db, cancellationToken);
             if (legacyArchived > 0)
                 logger.LogInformation("Archived {Count} legacy Annap menu item(s) still referenced by historical orders.", legacyArchived);
-            await DbInitializer.TryRemoveLegacyDemoMenuIfUnusedAsync(db, cancellationToken);
-            await DbInitializer.TryRemoveLegacyCategoriesIfEmptyAsync(db, cancellationToken);
-            var reconciled = await DbInitializer.TryReconcileKitsCatalogAsync(db, menuLog, cancellationToken);
             await DbInitializer.EnsureVenueTablesAsync(db, cancellationToken);
 
             var mediaMaintenance = scope.ServiceProvider.GetRequiredService<MenuMediaMaintenanceService>();

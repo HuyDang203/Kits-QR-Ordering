@@ -9,19 +9,50 @@ namespace Annap.CoffeeQrOrdering.Web.Services;
 /// <summary>
 /// First-install / heal-missing bootstrap for the canonical KitsQR menu.
 ///
-/// Creates the four required categories (CAFE / TRÀ / BÁNH / COMBO) and seeds the
-/// 29 expected menu items using stable <c>kits-*</c> catalog keys. After a row exists,
-/// the database is the source of truth — admin edits and the inventory pipeline take
-/// over. The bootstrap is fully idempotent: rows are inserted only when the catalog key
-/// is absent, and categories are aligned (not duplicated) on every run.
-///
-/// This class intentionally replaces the legacy Annap-specialty bootstrap. It does not
-/// touch ordering, payment, signalr, staff, shift, QR/table, or inventory deduction logic.
-/// Recipe lines for inventory are NOT populated here — that is an explicit later step.
+/// <para>
+/// <b>PRODUCTION SAFETY GUARANTEES (Phase 9):</b> This class is intentionally
+/// additive and idempotent. It MUST NOT issue any <c>DELETE</c> against
+/// <c>menu_items</c> or <c>menu_categories</c>:
+/// </para>
+/// <list type="bullet">
+///   <item><b>Categories</b> are reconciled by name. A canonical row is
+///         inserted only when no row exists; a legacy row (e.g. <c>TRÀ</c>
+///         or <c>BÁNH</c>) is renamed in place to the canonical display value
+///         so the primary key and any attached <c>MenuItem</c> foreign keys
+///         stay intact. The primary key of an existing category is never
+///         changed.</item>
+///   <item><b>Menu items</b> are upserted by stable <c>kits-</c> catalog key.
+///         An existing canonical row is left as the source of truth — only
+///         the <c>CategoryId</c> is healed if it drifted from the canonical
+///         category. A new row is inserted only when the catalog key is
+///         absent. Historical items not in the current canonical seed are
+///         left untouched so any <c>OrderItem.MenuItemId</c> foreign keys
+///         referencing them remain valid.</item>
+///   <item>Re-running the bootstrap is a no-op once the canonical rows exist:
+///         no duplicates, no data loss, fully idempotent.</item>
+/// </list>
+/// <para>
+/// This bootstrap replaces the legacy Annap-specialty bootstrap. It does not
+/// touch ordering, payment, signalr, staff, shift, QR/table, or inventory
+/// deduction logic. Recipe lines for inventory are NOT populated here — that
+/// is an explicit later step.
+/// </para>
 /// </summary>
 public static class KitsMenuBootstrap
 {
-    /// <summary>Ensures categories exist and the canonical 29 menu items are seeded.</summary>
+    /// <summary>
+    /// Ensures categories exist and the canonical Kits menu items are seeded.
+    /// Safe to run against:
+    /// <list type="number">
+    ///   <item>an empty database,</item>
+    ///   <item>a freshly seeded database,</item>
+    ///   <item>an existing production database with historical orders,</item>
+    ///   <item>an existing database containing legacy category names
+    ///         (<c>TRÀ</c>, <c>Bánh</c>, <c>Banh</c>, <c>BANH</c>),</item>
+    ///   <item>an existing database containing menu items that are no longer
+    ///         present in the current canonical seed.</item>
+    /// </list>
+    /// </summary>
     public static async Task<int> EnsureKitsMenuAsync(
         IApplicationDbContext db,
         ILogger logger,
@@ -38,15 +69,13 @@ public static class KitsMenuBootstrap
         if (inserted > 0)
         {
             logger.LogInformation(
-                "Kits menu bootstrap inserted {Count} new menu item(s) across {Categories} categories.",
-                inserted,
-                KitsMenuCatalog.Categories.Cafe + ", " + KitsMenuCatalog.Categories.Tra +
-                ", " + KitsMenuCatalog.Categories.Banh + ", " + KitsMenuCatalog.Categories.Combo);
+                "Kits menu bootstrap inserted {Count} new menu item(s) across the canonical categories.",
+                inserted);
         }
         else
         {
             logger.LogInformation(
-                "Kits menu bootstrap: database already contains the canonical 29 items — no inserts.");
+                "Kits menu bootstrap: database already contains the canonical Kits items — no inserts.");
         }
 
         return inserted;
