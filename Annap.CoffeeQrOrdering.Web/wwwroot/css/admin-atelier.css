@@ -284,6 +284,7 @@ body.admin-scroll-lock {
 /* —— Main canvas + page transition —— */
 .admin-main {
   flex: 1;
+  min-height: 0; /* Force flex item to shrink; enables proper page-level scroll */
   padding: var(--admin-space-6) var(--admin-space-4) max(var(--admin-space-12), env(safe-area-inset-bottom));
   max-width: 100%;
 }
