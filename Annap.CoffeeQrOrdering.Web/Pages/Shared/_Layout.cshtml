@@ -64,6 +64,7 @@
     <link rel="stylesheet" href="~/css/typography-brand.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/interaction-feedback.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/kits-identity.css" asp-append-version="true" />
+    <script src="~/js/scroll-lock.js" asp-append-version="true"></script>
     <script src="~/js/annap-viewport.js" asp-append-version="true"></script>
     @if (!isSeatedContext)
     {
@@ -100,7 +101,7 @@
         html.annap-guest-no-motion #annap-boot-overlay .annap-boot-spinbar > i { animation: none; }
     </style>
 </head>
-<body class="guest-app min-h-dvh overflow-x-hidden antialiased font-normal text-[rgb(var(--fg))]">
+<body class="guest-app min-h-dvh antialiased font-normal text-[rgb(var(--fg))]">
     <div id="annap-root" class="annap-root">
         @if (!seatedSlimChrome)
         {

@@ -527,7 +527,6 @@ else
             document.getElementById("cartSubmitResult").textContent = "";
         }
 
-        let guestCartLockY = 0;
         let homeOrderIdempotencyKey = null;
         let homeOrderSubmitInFlight = false;
 
@@ -544,10 +543,7 @@ else
                 return;
             }
             renderCart();
-            guestCartLockY = window.scrollY || document.documentElement.scrollTop || 0;
-            document.documentElement.style.setProperty("--guest-lock-y", `-${guestCartLockY}px`);
-            document.body.classList.add("guest-scroll-lock");
-            document.body.style.top = `-${guestCartLockY}px`;
+            if (window.AnnapScrollLock) window.AnnapScrollLock.lock();
 
             overlay.classList.remove("hidden");
             requestAnimationFrame(() => {
@@ -571,10 +567,7 @@ else
 
             window.setTimeout(() => {
                 overlay.classList.add("hidden");
-                document.body.classList.remove("guest-scroll-lock");
-                document.body.style.top = "";
-                document.documentElement.style.removeProperty("--guest-lock-y");
-                window.scrollTo(0, guestCartLockY);
+                if (window.AnnapScrollLock) window.AnnapScrollLock.unlock();
             }, 220);
         }
 

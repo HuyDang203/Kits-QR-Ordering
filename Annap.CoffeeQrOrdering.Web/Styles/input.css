@@ -177,12 +177,6 @@
     animation: orderTraySubmitPulse 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  body.order-tray-locked {
-    overflow: hidden;
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-
   body.annap-has-order-tray-dock .menu-browse {
     padding-bottom: max(10rem, calc(7.5rem + env(safe-area-inset-bottom)));
   }
@@ -193,17 +187,6 @@
 
   body.annap-has-order-tray-dock #cartOverlay {
     display: none !important;
-  }
-
-  /* iOS: keep background from scrolling behind the tray */
-  @supports (-webkit-touch-callout: none) {
-    body.order-tray-locked {
-      position: fixed;
-      top: var(--tray-lock-y, 0);
-      left: 0;
-      right: 0;
-      width: 100%;
-    }
   }
 
   .order-tray-backdrop-layer {
@@ -238,11 +221,6 @@
 
   #order-tray-root {
     contain: layout style;
-  }
-
-  html.annap-overlay-open,
-  body.drink-detail-open {
-    overscroll-behavior: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -289,33 +267,6 @@
     min-height: 100dvh;
     /* When annap-viewport.js runs, match visible height (iPhone URL bar / in-app chrome). */
     min-height: var(--vv-h, 100svh);
-  }
-
-  body.guest-scroll-lock {
-    overflow: hidden;
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-
-  /* Desktop (fine pointer): allow mouse-wheel scroll even when a guest overlay is open.
-     The backdrop pointer-events handle background interaction — overflow: hidden is
-     only needed on touch devices to suppress elastic scroll behind the sheet. */
-  @media (hover: hover) and (pointer: fine) {
-    body.guest-scroll-lock {
-      overflow: visible;
-      touch-action: auto;
-      overscroll-behavior: auto;
-    }
-  }
-
-  @supports (-webkit-touch-callout: none) {
-    body.guest-scroll-lock {
-      position: fixed;
-      top: var(--guest-lock-y, 0);
-      left: 0;
-      right: 0;
-      width: 100%;
-    }
   }
 
   ::selection {

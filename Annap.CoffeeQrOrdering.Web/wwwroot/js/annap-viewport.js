@@ -77,7 +77,7 @@
     }
 
     function applySync(forceFull) {
-        if (html.classList.contains("annap-overlay-open")) {
+        if (global.AnnapScrollLock && global.AnnapScrollLock.isLocked()) {
             return;
         }
 

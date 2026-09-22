@@ -15,7 +15,7 @@
     function syncKeyboardInset() {
         const vv = window.visualViewport;
         if (vv && vv.scale > 1.02) return;
-        if (document.documentElement.classList.contains("annap-overlay-open")) return;
+        if (global.AnnapScrollLock && global.AnnapScrollLock.isLocked()) return;
         const layoutH = window.innerHeight;
         const visible = vv && vv.height > 0 ? vv.height : layoutH;
         const inset = Math.max(0, Math.round(layoutH - visible - readCssPx("--vv-keyboard-ignore")));

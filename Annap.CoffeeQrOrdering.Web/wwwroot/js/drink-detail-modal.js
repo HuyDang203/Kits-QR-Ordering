@@ -21,7 +21,6 @@
 
     var BOUND = false;
     var OPEN = false;
-    var LOCK_Y = 0;
     var FETCH_GEN = 0;
     var LAST_OPEN_ID = "";
     var LAST_OPEN_AT = 0;
@@ -61,22 +60,11 @@
     }
 
     function lockScroll() {
-        LOCK_Y = global.scrollY || document.documentElement.scrollTop || 0;
-        document.documentElement.style.setProperty("--guest-lock-y", "-" + LOCK_Y + "px");
-        document.body.style.top = "-" + LOCK_Y + "px";
-        document.body.classList.add("guest-scroll-lock");
-        document.documentElement.classList.add("annap-overlay-open");
+        global.AnnapScrollLock && global.AnnapScrollLock.lock();
     }
 
     function unlockScroll() {
-        document.body.classList.remove("guest-scroll-lock");
-        document.body.style.top = "";
-        document.documentElement.style.removeProperty("--guest-lock-y");
-        document.documentElement.classList.remove("annap-overlay-open");
-        var y = LOCK_Y;
-        global.requestAnimationFrame(function () {
-            global.scrollTo(0, y);
-        });
+        global.AnnapScrollLock && global.AnnapScrollLock.unlock();
     }
 
     function showRoot(root) {
@@ -441,12 +429,7 @@
         global.addEventListener("pageshow", function (ev) {
             if (!ev.persisted) return;
             if (OPEN) close();
-            if (document.body.classList.contains("guest-scroll-lock")) {
-                document.body.classList.remove("guest-scroll-lock");
-                document.body.style.top = "";
-                document.documentElement.style.removeProperty("--guest-lock-y");
-                document.documentElement.classList.remove("annap-overlay-open");
-            }
+            if (global.AnnapScrollLock) global.AnnapScrollLock.reset();
         });
 
         global.addEventListener("popstate", function () {
@@ -464,12 +447,7 @@
                 }
                 return;
             }
-            if (document.body.classList.contains("guest-scroll-lock")) {
-                document.body.classList.remove("guest-scroll-lock");
-                document.body.style.top = "";
-                document.documentElement.style.removeProperty("--guest-lock-y");
-                document.documentElement.classList.remove("annap-overlay-open");
-            }
+            if (global.AnnapScrollLock) global.AnnapScrollLock.reset();
         });
     }
 

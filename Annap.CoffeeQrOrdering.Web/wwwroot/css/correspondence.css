@@ -437,17 +437,10 @@ html.annap-correspond-ui body.guest-app .menu-card-reveal {
   opacity: 0.42;
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   11b. TRAY SCROLL LOCK â€” applied on all viewports when tray sheet is open
-   Prevents page from scrolling under the backdrop on iOS Safari.
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-/* Scroll lock only when order-tray-dock enables it (tablet+); avoid mobile fixed-body jumps */
-@media (min-width: 640px) {
-  body.order-tray-locked {
-    position: fixed;
-    width: 100%;
-    overflow-y: scroll;
-  }
+/* Minimum body styling when an overlay is open (annap-scroll-lock class).
+   Position / offset are owned by JS (window.AnnapScrollLock). */
+body.annap-scroll-lock {
+  overflow: hidden;
 }
 
 /* ============================================================

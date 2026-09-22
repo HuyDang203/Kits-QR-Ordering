@@ -4,10 +4,11 @@
  * Scope: .admin-root
  */
 
-body.admin-scroll-lock {
+/* Minimum scroll-lock styling: when an overlay locks the background, body
+   must not be a scroll container. Position/offset are owned by JS
+   (window.AnnapScrollLock). */
+body.annap-scroll-lock {
   overflow: hidden;
-  touch-action: none;
-  overscroll-behavior: none;
 }
 
 .admin-root {

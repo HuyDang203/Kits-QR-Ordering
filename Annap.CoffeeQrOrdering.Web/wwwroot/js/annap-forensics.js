@@ -32,8 +32,12 @@
                 r.overlay = { isOpen: dm ? dm.isOpen() : false };
             } catch (_) { r.overlay = { error: 'DrinkDetailModal unavailable' }; }
             r.scrollLock = {
-                guestScrollLock: document.body.classList.contains('guest-scroll-lock'),
-                orderTrayLocked: document.body.classList.contains('order-tray-locked'),
+                isLocked: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.isLocked)
+                    ? window.AnnapScrollLock.isLocked()
+                    : false,
+                count: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.getCount)
+                    ? window.AnnapScrollLock.getCount()
+                    : 0,
                 drinkDetailOpen: document.body.classList.contains('drink-detail-open'),
                 bodyTop: document.body.style.top || ''
             };
@@ -130,8 +134,12 @@
                 menuCatalogUiGuard:    !!(document.documentElement.dataset && document.documentElement.dataset.annapMenuCatalogUi),
                 trayEscapeBound:       !!window._annapTrayEscapeBound,
                 scrollLockState: {
-                    guestScrollLock: document.body.classList.contains('guest-scroll-lock'),
-                    orderTrayLocked: document.body.classList.contains('order-tray-locked'),
+                    isLocked: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.isLocked)
+                        ? window.AnnapScrollLock.isLocked()
+                        : false,
+                    count: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.getCount)
+                        ? window.AnnapScrollLock.getCount()
+                        : 0,
                     bodyTop:         document.body.style.top
                 }
             };
@@ -500,8 +508,12 @@
 
         /* Scroll-lock sanity */
         r.scrollLock = {
-            guestScrollLock: document.body.classList.contains('guest-scroll-lock'),
-            orderTrayLocked: document.body.classList.contains('order-tray-locked'),
+            isLocked: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.isLocked)
+                ? window.AnnapScrollLock.isLocked()
+                : false,
+            count: (typeof window.AnnapScrollLock !== 'undefined' && window.AnnapScrollLock.getCount)
+                ? window.AnnapScrollLock.getCount()
+                : 0,
             drinkDetailOpen: document.body.classList.contains('drink-detail-open'),
             bodyTop:         document.body.style.top || ''
         };

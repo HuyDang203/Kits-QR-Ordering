@@ -117,8 +117,7 @@
             animations: scanAnimations(),
             listenerCounts: countListeners(),
             memory: memoryEstimate(),
-            scrollLocked: document.documentElement.classList.contains("annap-overlay-open")
-                || document.body.classList.contains("guest-scroll-lock")
+            scrollLocked: global.AnnapScrollLock ? global.AnnapScrollLock.isLocked() : false
         };
     }
 

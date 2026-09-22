@@ -359,34 +359,19 @@ function __annapMenuRuntimeJsonSelfCheck() {
             };
         }
 
-        let trayLockScrollY = 0;
-
         function setTrayOpenImmediate(open) {
             const next = !!open;
             const useBodyLock =
                 typeof window.matchMedia === "function" && window.matchMedia("(min-width: 640px)").matches;
 
             if (next && !trayOpen && useBodyLock) {
-                trayLockScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-                document.documentElement.style.setProperty("--tray-lock-y", `-${trayLockScrollY}px`);
-                document.body.style.top = `-${trayLockScrollY}px`;
+                window.AnnapScrollLock && window.AnnapScrollLock.lock();
             }
             if (!next && trayOpen) {
-                document.body.style.top = "";
-                document.documentElement.style.removeProperty("--tray-lock-y");
-                const wasLocked = document.body.classList.contains("order-tray-locked");
-                document.body.classList.remove("order-tray-locked");
-                if (wasLocked) {
-                    try {
-                        window.scrollTo(0, trayLockScrollY);
-                    } catch (_st) {
-                        /* ignore */
-                    }
-                }
+                window.AnnapScrollLock && window.AnnapScrollLock.unlock();
             }
 
             trayOpen = next;
-            document.body.classList.toggle("order-tray-locked", !!(trayOpen && useBodyLock));
             if (orderTrayRoot) orderTrayRoot.classList.toggle("is-open", trayOpen);
             if (orderTraySheet) {
                 orderTraySheet.classList.toggle("order-tray-sheet--closed", !trayOpen);

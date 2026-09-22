@@ -19,9 +19,9 @@
             backdrop.classList.toggle("is-open", v);
             toggle.setAttribute("aria-expanded", v ? "true" : "false");
             if (v) {
-                document.body.classList.add("admin-scroll-lock");
+                window.AnnapScrollLock && window.AnnapScrollLock.lock();
             } else {
-                document.body.classList.remove("admin-scroll-lock");
+                window.AnnapScrollLock && window.AnnapScrollLock.unlock();
             }
         }
 
