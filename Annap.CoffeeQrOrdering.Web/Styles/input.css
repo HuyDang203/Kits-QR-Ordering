@@ -297,6 +297,17 @@
     overscroll-behavior: none;
   }
 
+  /* Desktop (fine pointer): allow mouse-wheel scroll even when a guest overlay is open.
+     The backdrop pointer-events handle background interaction — overflow: hidden is
+     only needed on touch devices to suppress elastic scroll behind the sheet. */
+  @media (hover: hover) and (pointer: fine) {
+    body.guest-scroll-lock {
+      overflow: visible;
+      touch-action: auto;
+      overscroll-behavior: auto;
+    }
+  }
+
   @supports (-webkit-touch-callout: none) {
     body.guest-scroll-lock {
       position: fixed;
