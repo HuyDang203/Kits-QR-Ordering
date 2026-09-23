@@ -78,12 +78,6 @@ html.annap-correspond-ui body.drink-detail-open #order-tray-root {
   z-index: 386;
 }
 
-html.annap-correspond-ui body.annap-add-ceremony-active::before,
-html.annap-correspond-ui body.annap-order-confirming::before {
-  opacity: 1;
-  animation-duration: 9s;
-}
-
 @keyframes annap-luxury-light-drift {
   from { transform: translate3d(-1.2%, -0.4%, 0) scale(1); }
   to   { transform: translate3d(1.4%, 0.8%, 0) scale(1.025); }
@@ -110,14 +104,6 @@ html.annap-correspond-ui .annap-ambient-thermal {
 html.annap-correspond-ui .annap-ambient-grain {
   opacity: 0.032;
   mix-blend-mode: multiply;
-}
-
-.annap-add-order-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 390;
-  pointer-events: none;
-  overflow: hidden;
 }
 
 /* FRONTEND-CLEANUP-PHASE-1A — static body wash on seated / touch (no continuous repaint) */
@@ -463,16 +449,6 @@ html.annap-correspond-ui #order-tray-chip::after {
   pointer-events: none;
 }
 
-@keyframes annap-tray-chip-ring {
-  0%   { transform: scale(1);    opacity: 0.55; }
-  70%  { transform: scale(1.03); opacity: 0.2; }
-  100% { transform: scale(1.05); opacity: 0; }
-}
-
-html.annap-correspond-ui .annap-tray-chip--pulse::after {
-  animation: annap-tray-chip-ring 560ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
 body.ge-sommelier-flow .order-tray-root--empty #order-tray-chip {
   min-height: 2.75rem;
   gap: 0.45rem;
@@ -794,141 +770,7 @@ html.annap-correspond-ui #guestToast .surface-glass {
   animation: ghostWordTravel 860ms var(--ease-unfold, cubic-bezier(0.16, 1, 0.3, 1)) forwards;
 }
 
-.annap-add-confirmation {
-  position: fixed;
-  z-index: 211;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  padding: 0.48rem 0.78rem;
-  border: 1px solid rgba(196, 168, 130, 0.26);
-  background: rgba(250, 247, 242, 0.78);
-  box-shadow:
-    0 10px 28px rgba(26, 18, 9, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62);
-  color: rgba(91, 65, 38, 0.78);
-  font-family: var(--font-ui);
-  font-size: 0.86rem;
-  font-style: italic;
-  letter-spacing: 0.025em;
-  white-space: nowrap;
-  animation: annap-add-confirmation-in 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes annap-add-confirmation-in {
-  0% { opacity: 0; transform: translate(-50%, -42%) scale(0.96); filter: blur(5px); }
-  18% { opacity: 1; transform: translate(-50%, -54%) scale(1); filter: blur(0); }
-  72% { opacity: 0.92; transform: translate(-50%, -68%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -84%) scale(0.98); filter: blur(2px); }
-}
-
 /* DETAIL-HIGH-END-FINAL — receipt toast above tray (pairing add) */
-.annap-tray-receipt-toast {
-  position: fixed;
-  z-index: 385;
-  left: 50%;
-  transform: translateX(-50%) translateY(0);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  max-width: min(18rem, calc(100vw - 2rem));
-  padding: 0.5rem 0.78rem;
-  border: 1px solid rgba(196, 168, 130, 0.34);
-  border-radius: 0.55rem;
-  background: rgba(252, 248, 242, 0.96);
-  box-shadow:
-    0 8px 22px rgba(26, 18, 9, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62);
-  color: rgba(61, 43, 26, 0.88);
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1.25;
-  pointer-events: none;
-  opacity: 0;
-  animation: annap-tray-receipt-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.annap-tray-receipt-toast__mark {
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 999px;
-  border: 1px solid rgba(196, 168, 130, 0.42);
-  background: rgba(244, 236, 222, 0.9);
-  font-size: 0.58rem;
-  line-height: 1;
-  color: rgba(91, 65, 38, 0.9);
-}
-
-.annap-tray-receipt-toast__copy {
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.annap-tray-receipt-toast--out {
-  animation: annap-tray-receipt-out 0.32s ease forwards;
-}
-
-@keyframes annap-tray-receipt-in {
-  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
-  14% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  78% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  100% { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
-}
-
-@keyframes annap-tray-receipt-out {
-  from { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
-  to { opacity: 0; transform: translateX(-50%) translateY(6px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .annap-tray-receipt-toast {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: translateX(-50%) translateY(0) !important;
-  }
-
-  .annap-tray-receipt-toast--out {
-    animation: none !important;
-    opacity: 0 !important;
-  }
-}
-
-html.annap-guest-no-motion .annap-tray-receipt-toast {
-  animation: none !important;
-  opacity: 1 !important;
-  transform: translateX(-50%) translateY(0) !important;
-}
-
-html.annap-guest-no-motion .annap-tray-receipt-toast--out {
-  animation: none !important;
-  opacity: 0 !important;
-}
-
-.annap-cart-impact-ripple {
-  position: fixed;
-  z-index: 209;
-  pointer-events: none;
-  width: 7.75rem;
-  height: 4.75rem;
-  border-radius: 999px;
-  background:
-    radial-gradient(ellipse at center, rgba(196, 168, 130, 0.2), transparent 70%);
-  transform: translate(-50%, -50%) scale(0.4);
-  animation: annap-cart-impact-ripple 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes annap-cart-impact-ripple {
-  0% { opacity: 0.88; transform: translate(-50%, -50%) scale(0.32); }
-  70% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.02); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.34); }
-}
-
 @keyframes annap-cup-fly {
   0% {
     opacity: 0;
@@ -989,43 +831,7 @@ html.annap-guest-no-motion .annap-tray-receipt-toast--out {
   font-size: 1.35rem;
 }
 
-@keyframes annap-card-ceremony-lift {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  38% { transform: translate3d(0, -5px, 0) scale(1.012); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-.annap-card-ceremony-lift {
-  animation: annap-card-ceremony-lift 760ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
-}
-
-.annap-card-ceremony-lift--sommelier {
-  animation-duration: 980ms;
-}
-
-.annap-card-ceremony-lift .menu-editorial-card__img,
-.annap-card-ceremony-lift .ge-result-visual,
-.annap-card-ceremony-lift .dd-product,
-.annap-card-ceremony-lift .dd-pairing__img {
-  box-shadow:
-    0 14px 42px rgba(26, 18, 9, 0.12),
-    0 0 30px rgba(196, 168, 130, 0.18);
-}
-
-.annap-cart-impact {
-  animation: annap-cart-magnetic-impact 680ms cubic-bezier(0.2, 0.86, 0.22, 1) both;
-}
-
-@keyframes annap-cart-magnetic-impact {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  36% { transform: translate3d(0, -2px, 0) scale(1.028); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-/* Cart-impact motion uses .annap-cart-impact + annap-cart-magnetic-impact keyframes above.
-   Chip surface stays owned by checkout-sheet.css. */
-
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/* Cart-impact motion has been moved to annap-ceremony.css. â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    16b. WAX ACKNOWLEDGEMENT PULSE â€” soft warmth expanding from add button
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes annap-wax-pulse {
@@ -1055,41 +861,11 @@ html.annap-guest-no-motion .annap-tray-receipt-toast--out {
   transition: opacity 280ms ease-out, transform 280ms ease-out;
 }
 
-#annap-root.is-leaving {
-  opacity: 0;
-  transform: translateY(5px);
-  pointer-events: none;
-}
-
-@keyframes annap-page-in {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.annap-page-in {
-  animation: annap-page-in 400ms var(--ease-unfold, cubic-bezier(0.16, 1, 0.3, 1)) both;
-}
-
-html.annap-guest-no-motion #annap-root {
-  transition: none !important;
-}
-
-html.annap-guest-no-motion .annap-page-in {
-  animation: none !important;
-}
-
 html.annap-guest-no-motion body::before,
 html.annap-guest-no-motion body::after,
 html.annap-guest-no-motion .annap-cup-flyer,
 html.annap-guest-no-motion .annap-ghost-word,
-html.annap-guest-no-motion .annap-wax-pulse,
-html.annap-guest-no-motion .annap-card-ceremony-lift {
+html.annap-guest-no-motion .annap-wax-pulse {
   animation: none !important;
   transition: none !important;
 }
@@ -1279,32 +1055,6 @@ body.guest-app:has(.menu-browse--catalogue) .order-tray-root--empty .order-tray-
 
 /* ── Tray surface (fly-to-tray + correspondence cards) — single owner: correspondence.css ── */
 
-@keyframes annap-tasting-fly {
-  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.88) rotate(-4deg); filter: blur(4px); }
-  10% { opacity: 1; filter: blur(0); }
-  48% { opacity: 1; transform: translate3d(calc(var(--annap-fly-x) * 0.58), calc(var(--annap-fly-y) * 0.5 - 48px), 0) scale(1.06) rotate(3deg); }
-  78% { opacity: 0.92; transform: translate3d(calc(var(--annap-fly-x) * 0.92), calc(var(--annap-fly-y) * 0.88), 0) scale(0.72); }
-  100% { opacity: 0; transform: translate3d(var(--annap-fly-x), var(--annap-fly-y), 0) scale(0.28); }
-}
-
-.annap-tasting-flyer {
-  position: fixed;
-  z-index: 205;
-  pointer-events: none;
-  display: grid;
-  place-items: center;
-  border-radius: 0.55rem;
-  border: 1px solid #d6c4a8;
-  background: #faf7f2;
-  box-shadow: 0 22px 48px rgba(26, 18, 9, 0.18);
-  overflow: hidden;
-  animation: annap-tasting-fly 980ms cubic-bezier(0.18, 0.82, 0.18, 1) forwards;
-}
-
-.annap-tasting-flyer img { width: 100%; height: 100%; object-fit: contain; padding: 0.14rem; }
-.annap-tasting-flyer__glyph { font-family: var(--font-ui); font-style: italic; color: var(--wax-seal, #c4a882); font-size: 1.2rem; }
-.annap-tasting-flyer--sommelier { animation-duration: 1040ms; }
-
 .order-tray-chip__stack.annap-tray-slot-receive .order-tray-chip__card:last-child {
   animation: traySlotReceive 680ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
@@ -1410,7 +1160,6 @@ body.guest-app:has(.menu-browse--catalogue) .order-tray-root--empty .order-tray-
   place-items: center;
 }
 
-html.annap-guest-no-motion .annap-tasting-flyer,
 html.annap-guest-no-motion .tray-correspondence-card,
 html.annap-guest-no-motion .order-tray-chip__count--settling {
   animation: none !important;
@@ -1446,10 +1195,6 @@ html.annap-correspond-ui #order-tray-chip {
   transform: none;
 }
 
-html.annap-correspond-ui .annap-tray-chip--pulse::after {
-  animation: annap-tray-chip-ring 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
 html.annap-correspond-ui #order-tray-root.order-tray-root--sheet-open #order-tray-sheet,
 html.annap-correspond-ui .order-tray-sheet {
   max-height: min(72dvh, 680px);
@@ -1472,14 +1217,6 @@ html.annap-correspond-ui .order-tray-root--sheet-open .order-tray-sheet {
 
   body.drink-detail-open.annap-has-order-tray-dock .dd-passport__inner {
     --dd-tray-clearance: max(var(--tray-dock-clearance), calc(5.75rem + env(safe-area-inset-bottom, 0px)));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html.annap-correspond-ui .annap-tray-chip--pulse::after,
-  html.annap-correspond-ui #order-tray-chip {
-    animation: none !important;
-    transition: none !important;
   }
 }
 

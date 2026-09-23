@@ -1,0 +1,387 @@
+/**
+ * ANNAP Ceremony Layer — runtime animation CSS required by Guest JS.
+ *
+ * This file is the SINGLE OWNER of every CSS class, @keyframes, and
+ * reduced-motion guard listed below. Classes here are dynamically
+ * added/removed by Guest JS:
+ *
+ *   add-to-order-animation-provider.js
+ *   order-tray-dock.js
+ *   correspondence.js
+ *
+ * It is loaded ONLY by the Guest layout (Pages/Shared/_Layout.cshtml)
+ * after correspondence.css. Staff and Admin layouts do NOT load it.
+ *
+ * Do not edit selectors, keyframes, timings, z-indexes, easings, or
+ * !important flags here without verifying every JS caller.
+ *
+ * ============================================================================
+ * A. Portal layer
+ * ============================================================================
+ * Created by add-to-order-animation-provider.js:ensureLayer()
+ *   (line 47 — layer.className = "annap-add-order-layer")
+ */
+.annap-add-order-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 390;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ============================================================================
+ * H. Body-level transient ceremony (1/4) — JS-driven body classes
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :422  document.body.classList.add("annap-add-ceremony-active");
+ *   :445  document.body.classList.remove("annap-add-ceremony-active", ...);
+ * order-tray-dock.js:
+ *   :1149 document.body.classList.add("annap-order-confirming");
+ *   :1151 document.body.classList.remove("annap-order-confirming");
+ */
+html.annap-correspond-ui body.annap-add-ceremony-active::before,
+html.annap-correspond-ui body.annap-order-confirming::before {
+  opacity: 1;
+  animation-duration: 9s;
+}
+
+/* ============================================================================
+ * H. Body-level transient ceremony (2/4) — tray chip pulse ring
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :193  target.classList.remove("annap-cart-impact", "annap-tray-chip--pulse", ...);
+ *   :195  target.classList.add("annap-cart-impact", "annap-tray-chip--pulse");
+ *   :197  target.classList.remove("annap-cart-impact", "annap-tray-chip--pulse", ...);
+ *
+ * Note: TWO .annap-tray-chip--pulse::after rules exist below with
+ * different (duration, easing) — preserved verbatim from correspondence.css
+ * because the durations are NOT behaviorally identical.
+ */
+@keyframes annap-tray-chip-ring {
+  0%   { transform: scale(1);    opacity: 0.55; }
+  70%  { transform: scale(1.03); opacity: 0.2; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+
+html.annap-correspond-ui .annap-tray-chip--pulse::after {
+  animation: annap-tray-chip-ring 560ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+html.annap-correspond-ui .annap-tray-chip--pulse::after {
+  animation: annap-tray-chip-ring 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ============================================================================
+ * H. Body-level transient ceremony (3/4) — reduced-motion guard
+ * ============================================================================
+ */
+@media (prefers-reduced-motion: reduce) {
+  html.annap-correspond-ui .annap-tray-chip--pulse::after,
+  html.annap-correspond-ui #order-tray-chip {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+ * G. Add confirmation
+ * ============================================================================
+ * add-to-order-animation-provider.js:264
+ *   note.className = "annap-add-confirmation";
+ */
+.annap-add-confirmation {
+  position: fixed;
+  z-index: 211;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  padding: 0.48rem 0.78rem;
+  border: 1px solid rgba(196, 168, 130, 0.26);
+  background: rgba(250, 247, 242, 0.78);
+  box-shadow:
+    0 10px 28px rgba(26, 18, 9, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  color: rgba(91, 65, 38, 0.78);
+  font-family: var(--font-ui);
+  font-size: 0.86rem;
+  font-style: italic;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  animation: annap-add-confirmation-in 1.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes annap-add-confirmation-in {
+  0% { opacity: 0; transform: translate(-50%, -42%) scale(0.96); filter: blur(5px); }
+  18% { opacity: 1; transform: translate(-50%, -54%) scale(1); filter: blur(0); }
+  72% { opacity: 0.92; transform: translate(-50%, -68%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -84%) scale(0.98); filter: blur(2px); }
+}
+
+/* ============================================================================
+ * C. Receipt toast — above tray
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :229  toast.className = "annap-tray-receipt-toast";
+ *   :233  mark.className = "annap-tray-receipt-toast__mark";
+ *   :237  copy.className = "annap-tray-receipt-toast__copy";
+ *   :254  toast.classList.add("annap-tray-receipt-toast--out");
+ */
+.annap-tray-receipt-toast {
+  position: fixed;
+  z-index: 385;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.5rem 0.78rem;
+  border: 1px solid rgba(196, 168, 130, 0.34);
+  border-radius: 0.55rem;
+  background: rgba(252, 248, 242, 0.96);
+  box-shadow:
+    0 8px 22px rgba(26, 18, 9, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  color: rgba(61, 43, 26, 0.88);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  pointer-events: none;
+  opacity: 0;
+  animation: annap-tray-receipt-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.annap-tray-receipt-toast__mark {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(196, 168, 130, 0.42);
+  background: rgba(244, 236, 222, 0.9);
+  font-size: 0.58rem;
+  line-height: 1;
+  color: rgba(91, 65, 38, 0.9);
+}
+
+.annap-tray-receipt-toast__copy {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.annap-tray-receipt-toast--out {
+  animation: annap-tray-receipt-out 0.32s ease forwards;
+}
+
+@keyframes annap-tray-receipt-in {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  14% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  78% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
+}
+
+@keyframes annap-tray-receipt-out {
+  from { opacity: 0.92; transform: translateX(-50%) translateY(-2px); }
+  to { opacity: 0; transform: translateX(-50%) translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annap-tray-receipt-toast {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .annap-tray-receipt-toast--out {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+html.annap-guest-no-motion .annap-tray-receipt-toast {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+html.annap-guest-no-motion .annap-tray-receipt-toast--out {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+/* ============================================================================
+ * D. Cart impact ripple
+ * ============================================================================
+ * add-to-order-animation-provider.js:279
+ *   ripple.className = "annap-cart-impact-ripple";
+ */
+.annap-cart-impact-ripple {
+  position: fixed;
+  z-index: 209;
+  pointer-events: none;
+  width: 7.75rem;
+  height: 4.75rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at center, rgba(196, 168, 130, 0.2), transparent 70%);
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: annap-cart-impact-ripple 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes annap-cart-impact-ripple {
+  0% { opacity: 0.88; transform: translate(-50%, -50%) scale(0.32); }
+  70% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.02); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.34); }
+}
+
+/* ============================================================================
+ * E. Card ceremony lift
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :354  card.classList.remove("annap-card-ceremony-lift", "annap-card-ceremony-lift--sommelier");
+ *   :357  card.classList.add("annap-card-ceremony-lift");
+ *   :358  if (elevated) card.classList.add("annap-card-ceremony-lift--sommelier");
+ *   :361  card.classList.remove("annap-card-ceremony-lift", "annap-card-ceremony-lift--sommelier");
+ */
+@keyframes annap-card-ceremony-lift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  38% { transform: translate3d(0, -5px, 0) scale(1.012); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.annap-card-ceremony-lift {
+  animation: annap-card-ceremony-lift 760ms cubic-bezier(0.18, 0.86, 0.22, 1) both;
+}
+
+.annap-card-ceremony-lift--sommelier {
+  animation-duration: 980ms;
+}
+
+.annap-card-ceremony-lift .menu-editorial-card__img,
+.annap-card-ceremony-lift .ge-result-visual,
+.annap-card-ceremony-lift .dd-product,
+.annap-card-ceremony-lift .dd-pairing__img {
+  box-shadow:
+    0 14px 42px rgba(26, 18, 9, 0.12),
+    0 0 30px rgba(196, 168, 130, 0.18);
+}
+
+/* ============================================================================
+ * F. Cart magnetic impact
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :193  target.classList.remove("annap-cart-impact", "annap-tray-chip--pulse", ...);
+ *   :195  target.classList.add("annap-cart-impact", "annap-tray-chip--pulse");
+ *   :197  target.classList.remove("annap-cart-impact", "annap-tray-chip--pulse", ...);
+ *
+ * Cart-impact motion uses .annap-cart-impact + annap-cart-magnetic-impact keyframes above.
+ * Chip surface stays owned by checkout-sheet.css.
+ */
+.annap-cart-impact {
+  animation: annap-cart-magnetic-impact 680ms cubic-bezier(0.2, 0.86, 0.22, 1) both;
+}
+
+@keyframes annap-cart-magnetic-impact {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  36% { transform: translate3d(0, -2px, 0) scale(1.028); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* ============================================================================
+ * I. Page transition / reduced-motion (1/4) — #annap-root + .annap-page-in
+ * ============================================================================
+ * correspondence.js:
+ *   :23  root.classList.add("annap-page-in");
+ *   :26  function () { root.classList.remove("annap-page-in"); },
+ *   :55  is-leaving toggle during page navigation
+ */
+#annap-root.is-leaving {
+  opacity: 0;
+  transform: translateY(5px);
+  pointer-events: none;
+}
+
+@keyframes annap-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.annap-page-in {
+  animation: annap-page-in 400ms var(--ease-unfold, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+html.annap-guest-no-motion #annap-root {
+  transition: none !important;
+}
+
+html.annap-guest-no-motion .annap-page-in {
+  animation: none !important;
+}
+
+/* ============================================================================
+ * I. Page transition / reduced-motion (2/4) — guest-no-motion for E
+ * ============================================================================
+ * Note: split out from the multi-selector block in correspondence.css so that
+ *       .annap-cup-flyer / .annap-ghost-word / .annap-wax-pulse / body::before
+ *       / body::after can stay in correspondence.css while the ceremony
+ *       animation guard travels with the ceremony file.
+ */
+html.annap-guest-no-motion .annap-card-ceremony-lift {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ============================================================================
+ * B. Fly-to-tray flyer
+ * ============================================================================
+ * add-to-order-animation-provider.js:
+ *   :299  flyer.className = "annap-tasting-flyer" + (opts.elevated ? " annap-tasting-flyer--sommelier" : "");
+ *   :314  flyer.innerHTML = '<span class="annap-tasting-flyer__glyph">A</span>';
+ */
+@keyframes annap-tasting-fly {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.88) rotate(-4deg); filter: blur(4px); }
+  10% { opacity: 1; filter: blur(0); }
+  48% { opacity: 1; transform: translate3d(calc(var(--annap-fly-x) * 0.58), calc(var(--annap-fly-y) * 0.5 - 48px), 0) scale(1.06) rotate(3deg); }
+  78% { opacity: 0.92; transform: translate3d(calc(var(--annap-fly-x) * 0.92), calc(var(--annap-fly-y) * 0.88), 0) scale(0.72); }
+  100% { opacity: 0; transform: translate3d(var(--annap-fly-x), var(--annap-fly-y), 0) scale(0.28); }
+}
+
+.annap-tasting-flyer {
+  position: fixed;
+  z-index: 205;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  border-radius: 0.55rem;
+  border: 1px solid #d6c4a8;
+  background: #faf7f2;
+  box-shadow: 0 22px 48px rgba(26, 18, 9, 0.18);
+  overflow: hidden;
+  animation: annap-tasting-fly 980ms cubic-bezier(0.18, 0.82, 0.18, 1) forwards;
+}
+
+.annap-tasting-flyer img { width: 100%; height: 100%; object-fit: contain; padding: 0.14rem; }
+.annap-tasting-flyer__glyph { font-family: var(--font-ui); font-style: italic; color: var(--wax-seal, #c4a882); font-size: 1.2rem; }
+.annap-tasting-flyer--sommelier { animation-duration: 1040ms; }
+
+/* ============================================================================
+ * I. Page transition / reduced-motion (3/4) — guest-no-motion for B
+ * ============================================================================
+ * Note: split out from the multi-selector block in correspondence.css so that
+ *       .tray-correspondence-card / .order-tray-chip__count--settling can stay
+ *       in correspondence.css while the ceremony animation guard travels
+ *       with the ceremony file.
+ */
+html.annap-guest-no-motion .annap-tasting-flyer {
+  animation: none !important;
+}
