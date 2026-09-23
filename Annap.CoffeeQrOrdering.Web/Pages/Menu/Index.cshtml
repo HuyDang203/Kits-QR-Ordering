@@ -50,13 +50,17 @@
         _ => "Các món trong nhóm này. Hỏi barista nếu bạn cần gợi ý."
     };
     var catList = Model.Categories.ToList();
+    var detailImages = Model.DetailImageByItemId;
     var catalogJson = JsonSerializer.Serialize(
         catList.SelectMany(c => c.Items.Select(i => new {
             id = i.Id,
             name = i.Name,
             price = i.Price,
             categoryName = c.Name,
-            supportsHotIced = DrinkServingTemperature.Supports(c.Name, i.Name, i.ItemType)
+            supportsHotIced = DrinkServingTemperature.Supports(c.Name, i.Name, i.ItemType),
+            // Server-resolved detail poster URL — same call the detail API performs.
+            // Empty string when no image is available; pointerdown preload skips empties.
+            detailImage = detailImages.TryGetValue(i.Id, out var di) ? di : ""
         })),
         new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
     var guestCtxJson = JsonSerializer.Serialize(

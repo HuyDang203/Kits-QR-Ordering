@@ -12,7 +12,7 @@ public enum MenuImageProfile
     /// <summary>Admin preview + fallback card — max 800px edge.</summary>
     Card,
 
-    /// <summary>Detail overlay hero — max 1200px edge.</summary>
+    /// <summary>Detail overlay hero — max 800px edge.</summary>
     DetailPoster
 }
 
@@ -30,7 +30,7 @@ public static class MenuImagePipeline
 {
     public const int ThumbMaxEdge = 480;
     public const int CardMaxEdge = 800;
-    public const int DetailPosterMaxEdge = 1200;
+    public const int DetailPosterMaxEdge = 800;
 
     private static int MaxEdge(MenuImageProfile profile) => profile switch
     {

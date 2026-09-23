@@ -48,6 +48,9 @@
     {
         <script src="~/js/annap-forensics.js" asp-append-version="true"></script>
     }
+    @* Cloudinary CDN preconnect — reduces DNS + TLS handshake latency for detail poster images served
+       from res.cloudinary.com across every guest-facing page that includes this layout. *@
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/correspondence.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/annap-ceremony.css" asp-append-version="true" />

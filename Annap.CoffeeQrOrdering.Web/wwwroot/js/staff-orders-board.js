@@ -1,4 +1,41 @@
 (function () {
+    // ===== TEMP: STAFF PERF FE instrumentation (delete after diagnosis) =====
+    // Captures per-action click-to-render timings for prep-done / complete / mark-paid.
+    // Does NOT alter fetch, render, or SignalR behavior. Logs one [STAFF PERF FE] line per action.
+    let __staffPerfCtx = null;
+    function __staffPerfStart(action, orderId, t0) {
+        __staffPerfCtx = {
+            action,
+            orderId,
+            t0,
+            postStart: 0,
+            postHeaders: 0,
+            postJson: 0,
+            boardStart: 0,
+            boardHeaders: 0,
+            boardJson: 0,
+            render: 0,
+            logged: false
+        };
+    }
+    function __staffPerfLogFinal() {
+        const ctx = __staffPerfCtx;
+        if (!ctx || ctx.logged) return;
+        ctx.logged = true;
+        __staffPerfCtx = null;
+        const r = (n) => Math.max(0, Math.round(n));
+        console.warn(
+            "[STAFF PERF FE] action=" + ctx.action + " order=" + ctx.orderId +
+            " post_headers_ms=" + r(ctx.postHeaders - ctx.postStart) +
+            " post_json_ms=" + r(ctx.postJson - ctx.postHeaders) +
+            " board_headers_ms=" + r(ctx.boardHeaders - ctx.boardStart) +
+            " board_json_ms=" + r(ctx.boardJson - ctx.boardHeaders) +
+            " render_ms=" + r(ctx.render - ctx.boardJson) +
+            " total_ms=" + r(ctx.render - ctx.t0)
+        );
+    }
+    // ===== /TEMP =====
+
     const BOARD_COLUMNS = ["submitted", "paid", "completed"];
 
     const COLUMN_META = {
@@ -692,6 +729,7 @@
         if (loadInFlight) return;
         loadInFlight = true;
         if (userRefresh) showError("");
+        if (__staffPerfCtx) __staffPerfCtx.boardStart = performance.now();
         const migrationMsg =
             "Cơ sở dữ liệu chưa được cập nhật cho quy trình thanh toán. Vui lòng chạy migration rồi thử lại.";
         try {
@@ -699,12 +737,18 @@
                 headers: { Accept: "application/json" },
                 credentials: "same-origin"
             });
+            if (__staffPerfCtx) __staffPerfCtx.boardHeaders = performance.now();
             const data = await res.json().catch(() => null);
+            if (__staffPerfCtx) __staffPerfCtx.boardJson = performance.now();
             if (!res.ok) {
                 if (data?.error === "database_migration_required") throw new Error(migrationMsg);
                 throw new Error("Không thể tải đơn hàng.");
             }
             mergeBoard(data);
+            if (__staffPerfCtx) {
+                __staffPerfCtx.render = performance.now();
+                __staffPerfLogFinal();
+            }
             showError("");
             const stamp = el("#staff-last-updated");
             const mobileStamp = el("#staff-mobile-sync-time");
@@ -714,6 +758,10 @@
         } catch (e) {
             closeBillSheet();
             showError(e.message || "Lỗi mạng.");
+            if (__staffPerfCtx) {
+                __staffPerfCtx.render = performance.now();
+                __staffPerfLogFinal();
+            }
         } finally {
             if (firstPaint) {
                 firstPaint = false;
@@ -842,14 +890,18 @@
     async function markPaid(orderId, cardEl) {
         if (!orderId) return;
         if (cardEl) cardEl.classList.add("staff-order-card--syncing");
+        __staffPerfStart("mark-paid", orderId, performance.now());
         try {
+            __staffPerfCtx.postStart = performance.now();
             const res = await fetch(apiUrl(`/api/staff/orders/${orderId}/mark-paid`), {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Accept: "application/json" },
                 credentials: "same-origin",
                 body: JSON.stringify({})
             });
+            __staffPerfCtx.postHeaders = performance.now();
             const j = await res.json().catch(() => null);
+            __staffPerfCtx.postJson = performance.now();
             if (!res.ok) throw new Error(j?.error || "Không xác nhận được thanh toán.");
             if (j?.bill) openBillSheet(renderBillHtml(j.bill));
             await loadBoard({});
@@ -864,14 +916,19 @@
     async function setItemPrepared(orderId, itemId, body, cardEl) {
         if (!orderId || !itemId) return;
         if (cardEl) cardEl.classList.add("staff-order-card--syncing");
+        const __isPrepDone = !!(body && body.isPrepared === true);
+        if (__isPrepDone) __staffPerfStart("prep-done", orderId, performance.now());
         try {
+            if (__isPrepDone) __staffPerfCtx.postStart = performance.now();
             const res = await fetch(apiUrl(`/api/staff/orders/${orderId}/items/${itemId}/prepared`), {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Accept: "application/json" },
                 credentials: "same-origin",
                 body: JSON.stringify(body)
             });
+            if (__isPrepDone) __staffPerfCtx.postHeaders = performance.now();
             const j = await res.json().catch(() => null);
+            if (__isPrepDone) __staffPerfCtx.postJson = performance.now();
             if (!res.ok) throw new Error(j?.message || j?.error || "Không cập nhật được tiến độ pha chế.");
             await loadBoard({});
         } catch (e) {
@@ -885,13 +942,17 @@
     async function completeOrder(orderId, cardEl) {
         if (!orderId) return;
         if (cardEl) cardEl.classList.add("staff-order-card--syncing");
+        __staffPerfStart("complete", orderId, performance.now());
         try {
+            __staffPerfCtx.postStart = performance.now();
             const res = await fetch(apiUrl(`/api/staff/orders/${orderId}/complete`), {
                 method: "POST",
                 headers: { Accept: "application/json" },
                 credentials: "same-origin"
             });
+            __staffPerfCtx.postHeaders = performance.now();
             const j = await res.json().catch(() => null);
+            __staffPerfCtx.postJson = performance.now();
             if (!res.ok) throw new Error(j?.messageVi || j?.message || j?.error || "Không hoàn thành được đơn.");
             await loadBoard({});
         } catch (e) {

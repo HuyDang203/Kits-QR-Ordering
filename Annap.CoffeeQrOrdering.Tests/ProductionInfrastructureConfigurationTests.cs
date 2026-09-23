@@ -215,6 +215,83 @@ public sealed class ProductionInfrastructureConfigurationTests
         Assert.Equal(unsupported, MenuMediaResolver.IsCloudinaryUrl(url) == false && !MenuImagePaths.IsManagedUrl(url));
     }
 
+    // ── ApplyDeliveryTransforms (Cloudinary delivery-time transforms) ──────────────
+
+    [Fact]
+    public void ApplyDeliveryTransforms_appends_to_existing_transformation_segment()
+    {
+        // Simulates a URL returned from Cloudinary upload with the upload-time
+        // w_800,h_800,c_limit,q_auto:good transformation already applied.
+        var stored =
+            "https://res.cloudinary.com/annap/image/upload/w_800,h_800,c_limit,q_auto:good/annap/menu-items/abc123-poster.webp";
+
+        var result = MenuMediaResolver.ApplyDeliveryTransforms(stored, "f_auto,q_auto");
+
+        Assert.Equal(
+            "https://res.cloudinary.com/annap/image/upload/w_800,h_800,c_limit,q_auto:good,f_auto,q_auto/annap/menu-items/abc123-poster.webp",
+            result);
+    }
+
+    [Fact]
+    public void ApplyDeliveryTransforms_inserts_before_version_segment()
+    {
+        // URL with a version prefix but no transformation segment — the delivery
+        // transforms are inserted as a new segment between /upload/ and v…/ .
+        var stored =
+            "https://res.cloudinary.com/annap/image/upload/v1/annap/menu-items/abc123-poster.webp";
+
+        var result = MenuMediaResolver.ApplyDeliveryTransforms(stored, "f_auto,q_auto");
+
+        Assert.Equal(
+            "https://res.cloudinary.com/annap/image/upload/f_auto,q_auto/v1/annap/menu-items/abc123-poster.webp",
+            result);
+    }
+
+    [Fact]
+    public void ApplyDeliveryTransforms_is_idempotent_when_already_transformed()
+    {
+        // A URL that has already had f_auto,q_auto appended must not produce a
+        // second pair on a repeated call (AllTransformsPresent guard).
+        var transformed =
+            "https://res.cloudinary.com/annap/image/upload/w_800,h_800,c_limit,q_auto:good,f_auto,q_auto/annap/menu-items/abc123-poster.webp";
+
+        var result = MenuMediaResolver.ApplyDeliveryTransforms(transformed, "f_auto,q_auto");
+
+        Assert.Equal(transformed, result);
+    }
+
+    [Theory]
+    [InlineData("https://example.com/images/photo.jpg")]
+    [InlineData("/media/menu-items/abc123.webp")]
+    [InlineData("/images/menu-fallback.svg")]
+    public void ApplyDeliveryTransforms_passes_through_non_Cloudinary_urls(string url)
+    {
+        Assert.Equal(url, MenuMediaResolver.ApplyDeliveryTransforms(url, "f_auto,q_auto"));
+    }
+
+    [Theory]
+    [InlineData(null, "f_auto,q_auto", "")]
+    [InlineData("", "f_auto,q_auto", "")]
+    [InlineData("  ", "f_auto,q_auto", "")]
+    [InlineData("https://res.cloudinary.com/annap/image/upload/v1/annap/x.webp", "", "https://res.cloudinary.com/annap/image/upload/v1/annap/x.webp")]
+    public void ApplyDeliveryTransforms_handles_null_empty_and_whitespace(string? url, string transforms, string expected)
+    {
+        Assert.Equal(expected, MenuMediaResolver.ApplyDeliveryTransforms(url, transforms));
+    }
+
+    [Fact]
+    public void ApplyDeliveryTransforms_preserves_public_id_folder_and_version()
+    {
+        var stored =
+            "https://res.cloudinary.com/demo/image/upload/v1712345678/my-folder/sub-folder/item-poster.webp";
+
+        var result = MenuMediaResolver.ApplyDeliveryTransforms(stored, "f_auto,q_auto");
+
+        Assert.Contains("v1712345678", result);
+        Assert.Contains("my-folder/sub-folder/item-poster.webp", result);
+        Assert.StartsWith("https://res.cloudinary.com/demo/image/upload/f_auto,q_auto/v", result);
+    }
+
     [Fact]
     public void DataProtection_keys_survive_a_new_application_instance()
     {

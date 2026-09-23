@@ -12,6 +12,82 @@ public static class MenuMediaResolver
 {
     public const string FallbackPlaceholderUrl = "/images/menu-fallback.svg";
 
+    /// <summary>
+    /// Delivery-time Cloudinary transformations appended to every resolved detail poster URL.
+    /// f_auto lets the CDN serve AVIF/WebP per Accept header; q_auto picks an efficient quality
+    /// target for the chosen format. Applied AFTER any upload-time transforms already on the URL.
+    /// </summary>
+    internal const string DetailPosterDeliveryTransform = "f_auto,q_auto";
+
+    private const string CloudinaryUploadMarker = "/image/upload/";
+
+    /// <summary>
+    /// Appends delivery-time transformations to a Cloudinary URL without altering the public ID,
+    /// folder, existing transforms, or version segment. If the URL has no transformation segment,
+    /// a new segment is inserted before the version segment (if any). Returns the input unchanged
+    /// when it is not a recognized Cloudinary upload URL, or when every transformation in
+    /// <paramref name="transformsToAppend"/> is already present in the existing segment (idempotent).
+    /// </summary>
+    internal static string ApplyDeliveryTransforms(string? cloudinaryUrl, string transformsToAppend)
+    {
+        if (string.IsNullOrWhiteSpace(cloudinaryUrl) || string.IsNullOrEmpty(transformsToAppend))
+            return cloudinaryUrl?.Trim() ?? "";
+
+        var url = cloudinaryUrl.Trim();
+
+        var markerIdx = url.IndexOf(CloudinaryUploadMarker, StringComparison.OrdinalIgnoreCase);
+        if (markerIdx < 0)
+            return url;
+
+        var insertPos = markerIdx + CloudinaryUploadMarker.Length;
+        var before = url.Substring(0, insertPos);
+        var after = url.Substring(insertPos);
+
+        var nextSlash = after.IndexOf('/');
+        if (nextSlash < 0)
+            return url;
+
+        var firstSegment = after.Substring(0, nextSlash);
+        var rest = after.Substring(nextSlash);
+
+        // Version segment = "v" + digits (e.g. v1712345678). No transforms present in that case.
+        var isVersionSegment = firstSegment.Length > 1
+            && firstSegment[0] == 'v'
+            && IsAllDigits(firstSegment, 1);
+
+        if (isVersionSegment)
+            return before + transformsToAppend + "/" + firstSegment + rest;
+
+        // Idempotency: if every requested transform is already in the existing segment,
+        // return the URL unchanged so double-processing never duplicates f_auto/q_auto.
+        if (AllTransformsPresent(firstSegment, transformsToAppend))
+            return url;
+
+        // Existing transformation segment — append to it.
+        return before + firstSegment + "," + transformsToAppend + rest;
+    }
+
+    private static bool IsAllDigits(string s, int start)
+    {
+        for (var i = start; i < s.Length; i++)
+            if (s[i] < '0' || s[i] > '9')
+                return false;
+        return true;
+    }
+
+    private static bool AllTransformsPresent(string existingSegment, string transformsToAppend)
+    {
+        var requested = transformsToAppend.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        for (var i = 0; i < requested.Length; i++)
+        {
+            var token = requested[i].Trim();
+            if (token.Length == 0) continue;
+            if (existingSegment.IndexOf(token, StringComparison.OrdinalIgnoreCase) < 0)
+                return false;
+        }
+        return true;
+    }
+
     private static Func<string, bool>? _webRootFileExists;
 
     public static void BindWebRootFileExists(Func<string, bool> exists) => _webRootFileExists = exists;
@@ -67,7 +143,9 @@ public static class MenuMediaResolver
 
     /// <summary>
     /// Canonical detail poster URL. Prefers Cloudinary detail poster, then Cloudinary hero,
-    /// then local managed files.
+    /// then local managed files. Delivery-time Cloudinary transforms (f_auto,q_auto) are
+    /// appended to all returned Cloudinary URLs so the CDN can serve AVIF/WebP per Accept
+    /// header without an extra round-trip.
     /// </summary>
     public static string? TryResolveDetailPosterUrl(
         string? detailPosterImagePath,
@@ -76,10 +154,10 @@ public static class MenuMediaResolver
         string categoryName)
     {
         if (IsCloudinaryUrl(detailPosterImagePath))
-            return detailPosterImagePath!.Trim();
+            return ApplyDeliveryTransforms(detailPosterImagePath, DetailPosterDeliveryTransform);
 
         if (IsCloudinaryUrl(imageUrl))
-            return imageUrl!.Trim();
+            return ApplyDeliveryTransforms(imageUrl, DetailPosterDeliveryTransform);
 
         var sawManagedUpload = false;
         if (IsAllowedLocalUrl(detailPosterImagePath) && !IsEphemeralPlaceholderUrl(detailPosterImagePath))

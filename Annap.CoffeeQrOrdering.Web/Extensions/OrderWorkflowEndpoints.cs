@@ -1,10 +1,12 @@
 using System.Data;
+using System.Diagnostics;
 using Annap.CoffeeQrOrdering.Domain;
 using Annap.CoffeeQrOrdering.Domain.Entities;
 using Annap.CoffeeQrOrdering.Infrastructure.Persistence;
 using Annap.CoffeeQrOrdering.Web.Internal;
 using Annap.CoffeeQrOrdering.Web.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Annap.CoffeeQrOrdering.Web.Extensions;
 
@@ -62,8 +64,13 @@ internal static class OrderWorkflowEndpoints
             Guid orderId,
             AppDbContext db,
             IOrderStatusNotifier notifier,
+            ILoggerFactory loggerFactory,
             CancellationToken ct) =>
         {
+            var perfLog = loggerFactory.CreateLogger("Annap.StaffPerf");
+            var swTotal = Stopwatch.StartNew();
+            long dbLoadMs = 0, saveMs = 0, commitMs = 0, guestSignalRMs = 0, staffSignalRMs = 0;
+
             if (!StaffAuthorizationHelper.CanComplete(http.User))
                 return Results.Forbid();
 
@@ -72,10 +79,13 @@ internal static class OrderWorkflowEndpoints
             await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
             try
             {
+                var swLoad = Stopwatch.StartNew();
                 var order = await db.Orders
                     .Include(o => o.Items)
                     .ThenInclude(i => i.MenuItem)
                     .FirstOrDefaultAsync(o => o.Id == orderId, ct);
+                swLoad.Stop();
+                dbLoadMs = swLoad.ElapsedMilliseconds;
                 if (order is null)
                 {
                     await tx.RollbackAsync(ct);
@@ -130,14 +140,34 @@ internal static class OrderWorkflowEndpoints
                     order.PaidAtUtc = now;
                 order.BillNumber = OrderBillHelper.EnsureBillNumber(order);
 
+                var swSave = Stopwatch.StartNew();
                 await OperationalAudit.AppendAsync(db, "order.complete", actorName, order.Id, "", ct);
                 await db.SaveChangesAsync(ct);
+                swSave.Stop();
+                saveMs = swSave.ElapsedMilliseconds;
+
+                var swCommit = Stopwatch.StartNew();
                 await tx.CommitAsync(ct);
+                swCommit.Stop();
+                commitMs = swCommit.ElapsedMilliseconds;
 
                 var bill = OrderBillHelper.BuildPaidReceipt(order);
                 var pulse = BuildWorkflowPulse(order, bill);
+
+                var swGuest = Stopwatch.StartNew();
                 await notifier.NotifyGuestOrderWorkflowAsync(order.Id, pulse, ct);
+                swGuest.Stop();
+                guestSignalRMs = swGuest.ElapsedMilliseconds;
+
+                var swStaff = Stopwatch.StartNew();
                 await notifier.NotifyStaffBoardWorkflowAsync(pulse, ct);
+                swStaff.Stop();
+                staffSignalRMs = swStaff.ElapsedMilliseconds;
+
+                swTotal.Stop();
+                perfLog.LogWarning(
+                    "[STAFF PERF] action=complete order={OrderId} outcome=ok db_load_ms={DbLoadMs} save_ms={SaveMs} commit_ms={CommitMs} guest_signalr_ms={GuestSignalRMs} staff_signalr_ms={StaffSignalRMs} total_ms={TotalMs}",
+                    orderId, dbLoadMs, saveMs, commitMs, guestSignalRMs, staffSignalRMs, swTotal.ElapsedMilliseconds);
 
                 return Results.Ok(new
                 {
@@ -152,6 +182,10 @@ internal static class OrderWorkflowEndpoints
             catch (DbUpdateException ex) when (OrderSubmitHelper.IsSerializationConflict(ex))
             {
                 await tx.RollbackAsync(ct);
+                swTotal.Stop();
+                perfLog.LogWarning(
+                    "[STAFF PERF] action=complete order={OrderId} outcome=conflict db_load_ms={DbLoadMs} save_ms={SaveMs} commit_ms={CommitMs} guest_signalr_ms={GuestSignalRMs} staff_signalr_ms={StaffSignalRMs} total_ms={TotalMs}",
+                    orderId, dbLoadMs, saveMs, commitMs, guestSignalRMs, staffSignalRMs, swTotal.ElapsedMilliseconds);
                 return Results.Json(
                     new { error = "Another hand moved this ticket first—refresh the board." },
                     statusCode: StatusCodes.Status409Conflict);
@@ -165,8 +199,13 @@ internal static class OrderWorkflowEndpoints
             MarkItemPreparedRequest? body,
             AppDbContext db,
             IOrderStatusNotifier notifier,
+            ILoggerFactory loggerFactory,
             CancellationToken ct) =>
         {
+            var perfLog = loggerFactory.CreateLogger("Annap.StaffPerf");
+            var swTotal = Stopwatch.StartNew();
+            long dbLoadMs = 0, saveMs = 0, commitMs = 0, staffSignalRMs = 0;
+
             if (!StaffAuthorizationHelper.CanPrepareItems(http.User))
                 return Results.Forbid();
 
@@ -175,10 +214,13 @@ internal static class OrderWorkflowEndpoints
             await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
             try
             {
+                var swLoad = Stopwatch.StartNew();
                 var order = await db.Orders
                     .Include(o => o.Items)
                     .ThenInclude(i => i.MenuItem)
                     .FirstOrDefaultAsync(o => o.Id == orderId, ct);
+                swLoad.Stop();
+                dbLoadMs = swLoad.ElapsedMilliseconds;
                 if (order is null)
                 {
                     await tx.RollbackAsync(ct);
@@ -230,15 +272,30 @@ internal static class OrderWorkflowEndpoints
 
                 if (changed)
                 {
+                    var swSave = Stopwatch.StartNew();
                     await OperationalAudit.AppendAsync(db, "order.item_prepared", actorName, order.Id,
                         $"item={item.Id};qty={item.PreparedQuantity}/{item.Quantity}", ct);
                     await db.SaveChangesAsync(ct);
+                    swSave.Stop();
+                    saveMs = swSave.ElapsedMilliseconds;
                 }
 
+                var swCommit = Stopwatch.StartNew();
                 await tx.CommitAsync(ct);
+                swCommit.Stop();
+                commitMs = swCommit.ElapsedMilliseconds;
 
                 var pulse = BuildWorkflowPulse(order, OrderBillHelper.BuildPaidReceipt(order));
+
+                var swStaff = Stopwatch.StartNew();
                 await notifier.NotifyStaffBoardWorkflowAsync(pulse, ct);
+                swStaff.Stop();
+                staffSignalRMs = swStaff.ElapsedMilliseconds;
+
+                swTotal.Stop();
+                perfLog.LogWarning(
+                    "[STAFF PERF] action=prep-done order={OrderId} item={ItemId} outcome=ok changed={Changed} db_load_ms={DbLoadMs} save_ms={SaveMs} commit_ms={CommitMs} staff_signalr_ms={StaffSignalRMs} total_ms={TotalMs}",
+                    orderId, itemId, changed, dbLoadMs, saveMs, commitMs, staffSignalRMs, swTotal.ElapsedMilliseconds);
 
                 var progress = OrderItemPreparationHelper.CountProgress(order);
                 return Results.Ok(new
@@ -253,6 +310,10 @@ internal static class OrderWorkflowEndpoints
             catch (DbUpdateException ex) when (OrderSubmitHelper.IsSerializationConflict(ex))
             {
                 await tx.RollbackAsync(ct);
+                swTotal.Stop();
+                perfLog.LogWarning(
+                    "[STAFF PERF] action=prep-done order={OrderId} item={ItemId} outcome=conflict db_load_ms={DbLoadMs} save_ms={SaveMs} commit_ms={CommitMs} staff_signalr_ms={StaffSignalRMs} total_ms={TotalMs}",
+                    orderId, itemId, dbLoadMs, saveMs, commitMs, staffSignalRMs, swTotal.ElapsedMilliseconds);
                 return Results.Json(
                     new { error = "Another hand moved this ticket first—refresh the board." },
                     statusCode: StatusCodes.Status409Conflict);

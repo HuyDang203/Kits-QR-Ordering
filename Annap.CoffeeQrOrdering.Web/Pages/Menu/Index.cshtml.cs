@@ -1,6 +1,7 @@
 using Annap.CoffeeQrOrdering.Application.Abstractions;
 using Annap.CoffeeQrOrdering.Domain.Entities;
 using Annap.CoffeeQrOrdering.Web.Internal;
+using Annap.CoffeeQrOrdering.Web.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,15 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
     public bool HasSeatedTable => VenueTableId is not null;
 
     public bool TableHandoffInvalid { get; private set; }
+
+    /// <summary>
+    /// Server-resolved detail poster URL for every visible menu item, keyed by item id.
+    /// Populated from the same <see cref="MenuMediaResolver.TryResolveDetailPosterUrl"/> call
+    /// that powers the detail API so the browser can preload the image at pointerdown
+    /// without an extra round-trip or Cloudinary URL derivation in JavaScript.
+    /// </summary>
+    public IReadOnlyDictionary<Guid, string> DetailImageByItemId { get; private set; } =
+        new Dictionary<Guid, string>();
 
     public GuestTableContextState TableContextState =>
         GuestTableContext.Resolve(HasSeatedTable, false, TableHandoffInvalid);
@@ -56,5 +66,22 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
         {
             cat.Items = cat.Items.OrderBy(i => i.DisplaySortOrder).ThenBy(i => i.Name).ToList();
         }
+
+        // Pre-resolve each item's detail poster URL using the exact same call the
+        // detail API performs. No additional DB query: MenuItem.DetailPosterImagePath
+        // and MenuItem.ImageUrl are already in memory from the Categories include above.
+        var byItem = new Dictionary<Guid, string>(capacity: 64);
+        foreach (var cat in Categories)
+        {
+            foreach (var item in cat.Items)
+            {
+                byItem[item.Id] = MenuMediaResolver.TryResolveDetailPosterUrl(
+                    item.DetailPosterImagePath,
+                    item.ImageUrl,
+                    item.Name,
+                    cat.Name) ?? "";
+            }
+        }
+        DetailImageByItemId = byItem;
     }
 }

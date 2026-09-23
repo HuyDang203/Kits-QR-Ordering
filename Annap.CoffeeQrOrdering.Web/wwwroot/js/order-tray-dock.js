@@ -273,6 +273,38 @@ function __annapMenuRuntimeJsonSelfCheck() {
             return CATALOG.find((r) => String(r.id) === String(id));
         }
 
+        /* Detail poster URL lookup — server-resolved via MenuMediaResolver.TryResolveDetailPosterUrl.
+           Used only by the pointerdown preload below; never used to mutate the modal or API flow. */
+        const DETAIL_IMAGE_BY_DRINK_ID = (function () {
+            const map = new Map();
+            if (!Array.isArray(CATALOG)) return map;
+            for (const row of CATALOG) {
+                if (!row || row.id == null) continue;
+                const url = typeof row.detailImage === "string" ? row.detailImage : "";
+                if (url) map.set(String(row.id), url);
+            }
+            return map;
+        })();
+
+        /* Preload dedup — set of URLs already started in this session.
+           Image objects are NOT retained; the browser HTTP cache serves repeat requests. */
+        const _preloadedDetailImages = new Set();
+
+        function preloadDrinkDetailImage(drinkId) {
+            if (!drinkId) return;
+            const url = DETAIL_IMAGE_BY_DRINK_ID.get(String(drinkId));
+            if (!url) return;
+            if (_preloadedDetailImages.has(url)) return;
+            _preloadedDetailImages.add(url);
+            try {
+                const img = new Image();
+                img.src = url;
+                /* No event listeners — let the browser decide cache/revalidation. */
+            } catch (_pe) {
+                /* ignore */
+            }
+        }
+
         function cartLineKey(l) {
             const gl = (l.guestLabel && String(l.guestLabel).trim()) || "";
             const menuId =
@@ -2104,6 +2136,10 @@ function __annapMenuRuntimeJsonSelfCheck() {
                     if (!card || !browse.contains(card)) return;
                     if (t.closest("button,a")) return;
                     if (ev.pointerType === "mouse" && ev.button !== 0) return;
+                    /* Concurrent image preload — starts the detail poster request at
+                       pointerdown so the Cloudinary fetch is in-flight before the API
+                       request begins on pointerup/click. No blocking, no preventDefault. */
+                    preloadDrinkDetailImage(card.getAttribute("data-drink-card"));
                     card.classList.add("menu-card-reveal--pressed");
                 },
                 true

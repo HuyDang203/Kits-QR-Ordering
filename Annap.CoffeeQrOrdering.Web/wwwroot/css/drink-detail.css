@@ -254,8 +254,6 @@
     object-position: center;
     position: relative;
     z-index: 1;
-    content-visibility: auto;
-    contain-intrinsic-size: 240px 300px;
 }
 
 /* No-image placeholder */
