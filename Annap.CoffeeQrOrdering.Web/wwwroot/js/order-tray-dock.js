@@ -62,6 +62,10 @@ let traySubmittedStatus = null;
 let trayStatusPollTimer = null;
 let trayKnownPendingPayment = null;
 const celebratedPaidOrderIds = new Set();
+/* Latest successful GET /api/track/orders/{id}?token=... payload, retained only for
+   presentation (e.g. tableCode label in submitted/payment panel). Cleared when
+   payment flow returns the tray to EDITING. Refresh is idempotent. */
+let lastGuestTrackData = null;
 const TRAY_STATUS_POLL_MS = 3500;
 let bankTransferQrInflightKey = "";
 let bankTransferQrCache = null;
@@ -1447,6 +1451,28 @@ function __annapMenuRuntimeJsonSelfCheck() {
             }
         }
 
+        /* Table identity shown inside the submitted/payment panel. Source priority:
+             1. track payload tableCode (authoritative; survives stale GUEST_CTX)
+             2. GUEST_CTX.label as synchronous fallback
+           Returns "" when no usable table identity exists (e.g. takeaway). Never
+           parses arbitrary URL/storage strings. */
+        function resolveSubmittedTableBadgeText() {
+            const fromTrack = lastGuestTrackData && lastGuestTrackData.tableCode != null
+                ? String(lastGuestTrackData.tableCode).trim()
+                : "";
+            let raw = "";
+            if (fromTrack && fromTrack.toLowerCase() !== "takeaway") raw = fromTrack;
+            else {
+                const lab = String((GUEST_CTX && GUEST_CTX.label) || "").trim();
+                if (lab && lab.toLowerCase() !== "takeaway") raw = lab;
+            }
+            if (!raw) return "";
+            const formatted =
+                tfmt("cart.tableMetaShort", { label: raw }) ||
+                trayCopy("cart.tableMetaShort");
+            return formatted || raw;
+        }
+
         function renderSubmitted() {
             const sess = readSubmittedSession();
             const panel = document.getElementById("order-tray-submitted-panel");
@@ -1456,6 +1482,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const bodyEl = document.getElementById("order-tray-submitted-body");
             const noteEl = document.getElementById("order-tray-submitted-note");
             const trackEl = document.getElementById("order-tray-submitted-track");
+            const tableEl = document.getElementById("order-tray-submitted-table");
             if (!panel || !card || !sess) return;
 
             let title;
@@ -1497,6 +1524,18 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 }
             }
             if (noteEl) noteEl.textContent = keepOpen;
+            if (tableEl) {
+                const tableText = resolveSubmittedTableBadgeText();
+                if (tableText) {
+                    tableEl.textContent = tableText;
+                    tableEl.classList.remove("hidden");
+                    tableEl.hidden = false;
+                } else {
+                    tableEl.textContent = "";
+                    tableEl.classList.add("hidden");
+                    tableEl.hidden = true;
+                }
+            }
             if (trackEl) {
                 trackEl.href = buildTrackHref(sess);
                 trackEl.textContent = trayCopy("menuTray.chipTrackCta");
@@ -1666,7 +1705,9 @@ function __annapMenuRuntimeJsonSelfCheck() {
             }, 2000);
         }
 
-        function showPaymentSuccessCelebration(sess) {
+        function showPaymentSuccessCelebration(sess, opts) {
+            opts = opts || {};
+            const onDismiss = typeof opts.onDismiss === "function" ? opts.onDismiss : null;
             dismissPaymentSuccessCelebration();
             const host = document.createElement("div");
             host.id = "order-tray-payment-celebration";
@@ -1703,6 +1744,13 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 if (!act) return;
                 ev.preventDefault();
                 dismissPaymentSuccessCelebration();
+                if (onDismiss) {
+                    try {
+                        onDismiss();
+                    } catch (_cbErr) {
+                        /* ignore */
+                    }
+                }
             });
             document.body.appendChild(host);
             window.requestAnimationFrame(function () {
@@ -1711,11 +1759,55 @@ function __annapMenuRuntimeJsonSelfCheck() {
             runTrayConfettiBurst();
         }
 
+        /* After payment is confirmed by staff:
+           - keep the celebration visible for the current paid order
+           - keep celebratedPaidOrderIds populated so the same paid order cannot
+             replay its celebration on the next poll/reload
+           - register a single-fire cleanup that, when the user dismisses the
+             celebration, removes the old Guest order session, resets transient
+             state tied to the submitted order, and transitions the tray back
+             to EDITING so a fresh order can be placed. */
         function handlePaymentConfirmedCelebration(sess) {
             setTrayOpen(false);
             checkoutUi = CHECKOUT_UI.PAID;
             renderCheckoutTray();
-            showPaymentSuccessCelebration(sess);
+            let cleanupFired = false;
+            const cleanupAfterPaidCelebration = function () {
+                if (cleanupFired) return;
+                cleanupFired = true;
+                try {
+                    stopTrayStatusPolling();
+                } catch (_p1) {
+                    /* ignore */
+                }
+                try {
+                    GuestInteractionContract.removeGuestOrderSession();
+                } catch (_p2) {
+                    /* ignore */
+                }
+                traySubmittedStatus = null;
+                trayKnownPendingPayment = null;
+                trayStatusFingerprint = "";
+                bankTransferQrInflightKey = "";
+                bankTransferQrCache = null;
+                bankTransferQrCacheKey = "";
+                lastGuestTrackData = null;
+                try {
+                    if (
+                        isPostOrderCheckoutUi(checkoutUi) ||
+                        checkoutUi === CHECKOUT_UI.PAID ||
+                        checkoutUi === CHECKOUT_UI.COMPLETED
+                    ) {
+                        setCheckoutUi(CHECKOUT_UI.EDITING);
+                    } else {
+                        renderCheckoutTray();
+                    }
+                } catch (_p3) {
+                    checkoutUi = CHECKOUT_UI.EDITING;
+                    renderCheckoutTray();
+                }
+            };
+            showPaymentSuccessCelebration(sess, { onDismiss: cleanupAfterPaidCelebration });
             if (window.InteractionFeedback) {
                 window.InteractionFeedback.trigger("success", { silentVisual: true });
             }
@@ -1749,6 +1841,10 @@ function __annapMenuRuntimeJsonSelfCheck() {
                     __annapTrayPaymentDevLog("guest status poll: non-json response", { status: res.status });
                     return { fingerprintChanged: false };
                 }
+                /* Cache the latest successful track payload for presentation helpers
+                   (e.g. submitted panel table badge). Cleared when the tray returns
+                   to EDITING after payment confirmation. */
+                if (data && typeof data === "object") lastGuestTrackData = data;
                 if (data.isCancelled) {
                     GuestInteractionContract.removeGuestOrderSession();
                     traySubmittedStatus = null;

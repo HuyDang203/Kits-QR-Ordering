@@ -246,4 +246,106 @@ public sealed class GuestPaymentUxTests
         Assert.Contains("renderCheckoutTray()", block, StringComparison.Ordinal);
         Assert.DoesNotContain("renderCart()", block, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Submitted_panel_includes_table_identity_badge_element()
+    {
+        var markup = File.ReadAllText(
+            Path.Combine(
+                Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Annap.CoffeeQrOrdering.Web", "Pages")),
+                "Shared",
+                "_OrderTrayDock.cshtml"));
+        Assert.Contains("id=\"order-tray-submitted-table\"", markup, StringComparison.Ordinal);
+        Assert.Contains("order-tray-submitted-card__table", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Guest_tray_submitted_styles_define_table_badge()
+    {
+        var css = File.ReadAllText(Path.Combine(WebRoot, "css", "guest-tray-submitted.css"));
+        Assert.Contains(".order-tray-submitted-card__table", css, StringComparison.Ordinal);
+        Assert.Contains(".order-tray-root--submitted-paid .order-tray-submitted-card__table", css, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Submitted_panel_renders_table_badge_from_track_then_guest_ctx()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        Assert.Contains("function resolveSubmittedTableBadgeText", js, StringComparison.Ordinal);
+        Assert.Contains("lastGuestTrackData", js, StringComparison.Ordinal);
+        Assert.Contains("GUEST_CTX.label", js, StringComparison.Ordinal);
+        Assert.Contains("tableCode", js, StringComparison.Ordinal);
+        Assert.Contains("cart.tableMetaShort", js, StringComparison.Ordinal);
+
+        var renderSubmitted = js.IndexOf("function renderSubmitted", StringComparison.Ordinal);
+        var renderCheckout = js.IndexOf("function renderCheckoutTray", StringComparison.Ordinal);
+        Assert.True(renderSubmitted >= 0 && renderCheckout > renderSubmitted);
+        var submittedBlock = js[renderSubmitted..renderCheckout];
+        Assert.Contains("order-tray-submitted-table", submittedBlock, StringComparison.Ordinal);
+        Assert.Contains("resolveSubmittedTableBadgeText()", submittedBlock, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Track_poll_caches_payload_for_submitted_panel_table_badge()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        var start = js.IndexOf("async function refreshSubmittedTrayStatus", StringComparison.Ordinal);
+        var end = js.IndexOf("function updateTrayChrome", StringComparison.Ordinal);
+        var block = js[start..end];
+        // Caching logic must run when a successful track response arrives.
+        Assert.Contains("lastGuestTrackData = data", block, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void HandlePaymentConfirmedCelebration_registers_cleanup_on_dismiss()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        var start = js.IndexOf("function handlePaymentConfirmedCelebration", StringComparison.Ordinal);
+        Assert.True(start >= 0);
+        var end = js.IndexOf("\n        function ", start + 1, StringComparison.Ordinal);
+        var block = end > start ? js[start..end] : js[start..];
+
+        // Required cleanup primitives must run on celebration dismiss.
+        Assert.Contains("removeGuestOrderSession()", block, StringComparison.Ordinal);
+        Assert.Contains("stopTrayStatusPolling()", block, StringComparison.Ordinal);
+        Assert.Contains("traySubmittedStatus = null", block, StringComparison.Ordinal);
+        Assert.Contains("trayKnownPendingPayment = null", block, StringComparison.Ordinal);
+        Assert.Contains("trayStatusFingerprint = \"\"", block, StringComparison.Ordinal);
+        Assert.Contains("setCheckoutUi(CHECKOUT_UI.EDITING)", block, StringComparison.Ordinal);
+        Assert.Contains("cleanupFired", block, StringComparison.Ordinal);
+
+        // The dismiss hook must be wired through showPaymentSuccessCelebration.
+        var showStart = js.IndexOf("function showPaymentSuccessCelebration", StringComparison.Ordinal);
+        Assert.True(showStart >= 0);
+        var showEnd = js.IndexOf("\n        function ", showStart + 1, StringComparison.Ordinal);
+        var showBlock = showEnd > showStart ? js[showStart..showEnd] : js[showStart..];
+        Assert.Contains("opts.onDismiss", showBlock, StringComparison.Ordinal);
+        Assert.Contains("onDismiss()", showBlock, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Paid_celebration_does_not_clear_unrelated_cart_items()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        var start = js.IndexOf("function handlePaymentConfirmedCelebration", StringComparison.Ordinal);
+        var end = js.IndexOf("function refreshSubmittedTrayStatus", StringComparison.Ordinal);
+        var block = js[start..end];
+        // Cleanup must not call clearCart — only remove the submitted-order session
+        // so the customer can immediately start a new order without losing state.
+        Assert.Contains("removeGuestOrderSession()", block, StringComparison.Ordinal);
+        Assert.DoesNotContain("GuestInteractionContract.clearCart()", block, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Celebration_replay_guard_preserved_for_paid_order_ids()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        // celebratedPaidOrderIds must still exist and be consulted on the next poll.
+        Assert.Contains("celebratedPaidOrderIds", js, StringComparison.Ordinal);
+        var refreshStart = js.IndexOf("async function refreshSubmittedTrayStatus", StringComparison.Ordinal);
+        var refreshEnd = js.IndexOf("function updateTrayChrome", StringComparison.Ordinal);
+        var block = js[refreshStart..refreshEnd];
+        Assert.Contains("celebratedPaidOrderIds.has(orderKey)", block, StringComparison.Ordinal);
+        Assert.Contains("celebratedPaidOrderIds.add(orderKey)", block, StringComparison.Ordinal);
+    }
 }
