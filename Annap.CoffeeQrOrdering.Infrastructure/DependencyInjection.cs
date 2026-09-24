@@ -35,6 +35,11 @@ public static class DependencyInjection
 
         services.AddScoped<IMenuInventoryGate, MenuInventoryGate>();
 
+        // PricingService reads the PricingPromotionSettings singleton and
+        // applies the global discount factor on catalog render and at
+        // order submit time. Single arithmetic path; no in-memory cache.
+        services.AddScoped<IPricingService, PricingService>();
+
         services.AddMemoryCache();
 
         return services;

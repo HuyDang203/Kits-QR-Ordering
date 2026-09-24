@@ -607,7 +607,7 @@ public sealed class MenuArchiveAvailabilityTests
         };
 
     private static IndexModel NewIndexPageModel(AppDbContext db, string? actor = null) =>
-        new IndexModel(db)
+        new IndexModel(db, new Annap.CoffeeQrOrdering.Infrastructure.Services.PricingService(db))
         {
             PageContext = NewPageContext(actor),
             TempData = new NullTempDataDictionary()

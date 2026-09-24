@@ -1,5 +1,6 @@
 using Annap.CoffeeQrOrdering.Application.Abstractions;
 using Annap.CoffeeQrOrdering.Domain.Entities;
+using Annap.CoffeeQrOrdering.Infrastructure.Persistence.Configurations;
 using Annap.CoffeeQrOrdering.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Annap.CoffeeQrOrdering.Web.Pages.Admin.Menu;
 
 [Authorize(Policy = "Staff")]
-public sealed class IndexModel(IApplicationDbContext db) : PageModel
+public sealed class IndexModel(IApplicationDbContext db, IPricingService pricing) : PageModel
 {
     // ─────────────────────────────────────────────────────────────────────────
     // Filter / search query parameters (Phase 2 — server-side filtering).
@@ -53,12 +54,27 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
 
     public IReadOnlyList<CategoryOptionVm> Categories { get; private set; } = Array.Empty<CategoryOptionVm>();
 
+    /// <summary>
+    /// Global "Giảm giá 10%" promotion state. Read from the
+    /// <c>pricing_promotion_settings</c> singleton and surfaced to the page
+    /// so the admin can flip the toggle without leaving the menu CRUD view.
+    /// </summary>
+    public bool PromotionEnabled { get; private set; }
+
+    public int PromotionPercent { get; private set; } = 10;
+
     public async Task OnGetAsync(CancellationToken cancellationToken)
     {
         // Resolve filter values first so we can apply them to the database
         // query before any data is materialized.
         StatusFilter = ParseStatus(StatusFilterRaw);
         NormalizedSearch = string.IsNullOrWhiteSpace(SearchQuery) ? null : SearchQuery.Trim();
+
+        // Read the global promotion state once per page render. The same
+        // IPricingService is used at /api/menu and POST /api/orders so what
+        // the admin sees in the toggle matches what guests pay.
+        PromotionEnabled = await pricing.IsEnabledAsync(cancellationToken);
+        PromotionPercent = await pricing.GetCurrentPercentAsync(cancellationToken);
 
         // Categories are still loaded in full — they're a small control set,
         // and the category-filter dropdown must always show every category so
@@ -250,6 +266,64 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
             item.IsSignature,
             item.IsArchived,
             preview);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Promotion toggle (Phase: Global "Giảm giá 10%")
+    //
+    // Admin-only via the page-level [Authorize(Policy = "Staff")] which is
+    // mapped to the StaffRoleNames.Admin role. The handler:
+    //   • Loads the singleton row (created by the migration in OFF state).
+    //   • Mutates only the Enabled flag. Percent stays at the documented 10.
+    //   • Emits an audit row so we can prove when the toggle was flipped
+    //     and by whom. Idempotent: re-submitting the same value is a no-op
+    //     and still emits one audit row so the action is observable.
+    //
+    // Pricing is recomputed live from the singleton on every guest request
+    // (/api/menu and POST /api/orders both call IPricingService per-call);
+    // we deliberately do NOT touch MenuItem.Price — toggling OFF restores
+    // the original prices automatically because nothing was ever written
+    // back into MenuItem.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public async Task<IActionResult> OnPostSetPromotionEnabledAsync(
+        bool enabled,
+        CancellationToken cancellationToken)
+    {
+        var sid = PricingPromotionSettingsConfiguration.SingletonId;
+        var row = await db.PricingPromotionSettings
+            .FirstOrDefaultAsync(p => p.Id == sid, cancellationToken);
+        if (row is null)
+        {
+            // The migration always seeds the singleton, so this branch only
+            // triggers if someone manually removed the row. Recover by
+            // re-seeding it in OFF state.
+            row = new PricingPromotionSettings
+            {
+                Id = sid,
+                Enabled = false,
+                Percent = 10
+            };
+            await db.PricingPromotionSettings.AddAsync(row, cancellationToken);
+        }
+
+        var previous = row.Enabled;
+        row.Enabled = enabled;
+
+        var actor = User.Identity?.Name?.Trim();
+        await OperationalAudit.AppendAsync(
+            db,
+            "menu.promotion_toggle",
+            actor,
+            null,
+            $"prevEnabled={(previous ? "true" : "false")};newEnabled={(enabled ? "true" : "false")};percent={row.Percent}",
+            cancellationToken);
+        await db.SaveChangesAsync(cancellationToken);
+
+        TempData["MenuCurationToast"] = enabled
+            ? $"Đã bật giảm giá {row.Percent}% cho toàn bộ thực đơn."
+            : "Đã tắt giảm giá — giá trở về bình thường.";
+        return RedirectToPage("/Admin/Menu/Index");
     }
 
     /// <summary>Canonical status values for the admin menu filter UI.</summary>

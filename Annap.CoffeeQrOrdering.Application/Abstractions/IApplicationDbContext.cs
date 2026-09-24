@@ -25,6 +25,7 @@ public interface IApplicationDbContext
     DbSet<ExperiencePublishRecord> ExperiencePublishRecords { get; }
     DbSet<ExperienceGroupSettings> ExperienceGroupSettings { get; }
     DbSet<HomepageExperienceSettings> HomepageExperienceSettings { get; }
+    DbSet<PricingPromotionSettings> PricingPromotionSettings { get; }
     DbSet<AppNetworkSettings> AppNetworkSettings { get; }
     DbSet<PaymentConfirmation> PaymentConfirmations { get; }
     DbSet<StaffAccount> StaffAccounts { get; }

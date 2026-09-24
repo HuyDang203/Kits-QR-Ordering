@@ -28,6 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ExperiencePublishRecord> ExperiencePublishRecords => Set<ExperiencePublishRecord>();
     public DbSet<ExperienceGroupSettings> ExperienceGroupSettings => Set<ExperienceGroupSettings>();
     public DbSet<HomepageExperienceSettings> HomepageExperienceSettings => Set<HomepageExperienceSettings>();
+    public DbSet<PricingPromotionSettings> PricingPromotionSettings => Set<PricingPromotionSettings>();
     public DbSet<AppNetworkSettings> AppNetworkSettings => Set<AppNetworkSettings>();
     public DbSet<PaymentConfirmation> PaymentConfirmations => Set<PaymentConfirmation>();
     public DbSet<StaffAccount> StaffAccounts => Set<StaffAccount>();

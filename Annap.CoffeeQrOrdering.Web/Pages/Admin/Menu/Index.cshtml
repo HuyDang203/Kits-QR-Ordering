@@ -47,6 +47,65 @@
         </div>
     </header>
 
+    @*
+        Global promotion toggle — "Giảm giá 10%".
+
+        Single source of truth on the server is the
+        <c>pricing_promotion_settings</c> singleton row. Both menu display
+        and order submit go through IPricingService and read the same row,
+        so flipping this toggle takes effect on the next guest request
+        without any cache invalidation work.
+
+        Toggle is Admin-only via the page-level [Authorize(Policy = "Staff")]
+        which maps to StaffRoleNames.Admin. Baristas / Checkout cannot
+        reach this handler.
+    *@
+    @{
+        var promoOn = Model.PromotionEnabled;
+        var promoPct = Model.PromotionPercent;
+        var promoBannerClass = promoOn
+            ? "menu-operator-promo menu-operator-promo--on"
+            : "menu-operator-promo menu-operator-promo--off";
+        var promoStatusLabel = promoOn ? "ĐANG BẬT" : "TẮT";
+        var promoNextEnabled = !promoOn;
+        var promoCta = promoOn ? "Tắt giảm giá" : "Bật giảm giá 10%";
+        var promoConfirm = promoOn
+            ? "Tắt chế độ giảm giá? Toàn bộ món sẽ trở về giá bình thường cho khách mới. Đơn đã gửi vẫn giữ nguyên."
+            : null;
+    }
+    <section class="@promoBannerClass" aria-live="polite">
+        <div class="menu-operator-promo__copy">
+            <p class="menu-operator-promo__eyebrow">Khuyến mãi toàn thực đơn</p>
+            <p class="menu-operator-promo__title">
+                Giảm giá @promoPct%:
+                <span class="menu-operator-promo__status">@promoStatusLabel</span>
+            </p>
+            <p class="menu-operator-promo__lede">
+                @if (promoOn)
+                {
+                    <span>Mọi món đang bán đang được giảm @promoPct%. Khách mới sẽ thấy giá mới ngay khi tải lại thực đơn. Đơn đã gửi giữ nguyên giá tại thời điểm đặt.</span>
+                }
+                else
+                {
+                    <span>Món đang bán giá bình thường. Bật để áp dụng giảm @promoPct% cho toàn bộ thực đơn của khách.</span>
+                }
+            </p>
+        </div>
+        <form method="post"
+              asp-page="/Admin/Menu/Index"
+              asp-page-handler="SetPromotionEnabled"
+              asp-route-enabled="@(promoNextEnabled ? "true" : "false")"
+              class="menu-operator-promo__form"
+              data-confirm="@promoConfirm">
+            @Html.AntiForgeryToken()
+            <button type="submit"
+                    class="admin-btn @(promoOn ? "admin-btn--quiet" : "admin-btn--primary") guest-hit min-h-11 px-5 text-xs tracking-[0.1em]"
+                    aria-label="@promoCta">
+                @promoCta
+            </button>
+        </form>
+    </section>
+
     @if (TempData["MenuCurationToast"] is string toast)
     {
         <div class="menu-operator-toast" role="status">@toast</div>

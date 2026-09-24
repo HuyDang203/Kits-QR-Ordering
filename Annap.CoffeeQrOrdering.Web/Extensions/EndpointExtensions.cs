@@ -68,7 +68,7 @@ public static class EndpointExtensions
             });
         }).RequireAuthorization("Staff");
         
-        app.MapGet("/api/menu", async (HttpContext http, IApplicationDbContext db, IMenuInventoryGate inventoryGate, ILoggerFactory logFactory) =>
+        app.MapGet("/api/menu", async (HttpContext http, IApplicationDbContext db, IMenuInventoryGate inventoryGate, IPricingService pricing, ILoggerFactory logFactory) =>
         {
             using var linked = AnnapBootstrapExtensions.CreateRequestTimeout(http, 50);
             var ct = linked.Token;
@@ -82,31 +82,55 @@ public static class EndpointExtensions
                     .OrderBy(c => c.SortOrder)
                     .Include(c => c.Items)
                     .ToListAsync(ct);
-        
+
+                // Single read of promotion state, then per-item effective price
+                // via the same service used at order submit time. The price
+                // returned here is exactly the price the server will snapshot
+                // on OrderItem.UnitPrice, so a guest who adds this item to the
+                // tray and submits sees the same number they saw in the menu.
+                var promotionActive = await pricing.IsEnabledAsync(ct);
+                var promotionPercent = await pricing.GetCurrentPercentAsync(ct);
+
                 var asOf = DateTimeOffset.UtcNow;
+                // Two-pass: pull the EF graph, then project to anonymous DTOs
+                // with effective price resolved per item. Keeps EF happy (no
+                // async inside Select) and avoids parallel DB reads.
+                var dtoCategories = new List<object>(categories.Count);
+                foreach (var c in categories)
+                {
+                    var itemDtos = new List<object>();
+                    var orderedItems = c.Items
+                        .Where(i => i.IsAvailable && !i.IsArchived && !blocked.Contains(i.Id))
+                        .OrderBy(i => i.DisplaySortOrder)
+                        .ThenBy(i => i.Name);
+                    foreach (var i in orderedItems)
+                    {
+                        var effective = await pricing.GetEffectivePriceAsync(i.Price, ct);
+                        itemDtos.Add(new
+                        {
+                            i.Id,
+                            i.Name,
+                            i.Description,
+                            i.Price,
+                            // Effective price is what the guest will be
+                            // charged. When the promotion is OFF this equals
+                            // i.Price. Cart and order submit consume this
+                            // number unchanged.
+                            EffectivePrice = effective,
+                            i.DisplaySortOrder,
+                            imageUrl = MenuMediaResolver.ResolveCardImageUrl(
+                                null, null, i.ImageUrl, null, i.Name, c.Name, i.DetailPosterImagePath)
+                        });
+                    }
+                    dtoCategories.Add(new { c.Id, c.Name, Items = itemDtos });
+                }
+
                 return Results.Ok(new
                 {
                     asOfUtc = asOf,
-                    categories = categories.Select(c => new
-                    {
-                        c.Id,
-                        c.Name,
-                        Items = c.Items
-                            .Where(i => i.IsAvailable && !i.IsArchived && !blocked.Contains(i.Id))
-                            .OrderBy(i => i.DisplaySortOrder)
-                            .ThenBy(i => i.Name)
-                            .Select(i => new
-                            {
-                                i.Id,
-                                i.Name,
-                                i.Description,
-                                i.Price,
-                                i.DisplaySortOrder,
-                                imageUrl = MenuMediaResolver.ResolveCardImageUrl(
-                                    null, null, i.ImageUrl, null, i.Name, c.Name, i.DetailPosterImagePath)
-                            })
-                            .ToList()
-                    })
+                    promotionActive,
+                    promotionPercent,
+                    categories = dtoCategories
                 });
             }
             finally
@@ -157,6 +181,7 @@ public static class EndpointExtensions
             AppDbContext db,
             IOrderStatusNotifier notifier,
             IMenuInventoryGate inventoryGate,
+            IPricingService pricing,
             ILoggerFactory logFactory) =>
         {
             using var linked = AnnapBootstrapExtensions.CreateRequestTimeout(http, 65);
@@ -312,7 +337,18 @@ public static class EndpointExtensions
             {
                 paymentMethodRaw = OrderPaymentMethods.Cash;
             }
-        
+
+            // Resolve effective unit prices once via IPricingService — same
+            // service /api/menu uses, so the snapshot UnitPrice equals the
+            // displayed price. Historical orders are NEVER recalculated from
+            // this point forward; toggling the promotion off later leaves the
+            // already-snapshotted UnitPrice untouched.
+            var effectivePrices = new Dictionary<Guid, decimal>(menuItems.Count);
+            foreach (var mi in menuItems.Values)
+            {
+                effectivePrices[mi.Id] = await pricing.GetEffectivePriceAsync(mi.Price, ct);
+            }
+
             for (var attempt = 0; attempt < 3; attempt++)
             {
                 await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
@@ -325,7 +361,7 @@ public static class EndpointExtensions
                         await tx.CommitAsync(ct);
                         return OrderSubmitHelper.IdempotentOrderResponse(existing, existing.GuestSessionToken!, true);
                     }
-        
+
                     var token = GuestSessionTokens.Create();
                     var order = new Order
                     {
@@ -341,7 +377,11 @@ public static class EndpointExtensions
                         {
                             MenuItemId = i.MenuItemId,
                             Quantity = i.Quantity,
-                            UnitPrice = menuItems[i.MenuItemId].Price,
+                            // Snapshot the EFFECTIVE price, not MenuItem.Price.
+                            // Recalculating from current pricing on later reads
+                            // would create display/charge drift; this snapshot
+                            // is the single source of truth for this order.
+                            UnitPrice = effectivePrices[i.MenuItemId],
                             Notes = string.IsNullOrWhiteSpace(i.Notes) ? null : i.Notes.Trim(),
                             CustomerNote = OrderItemCustomerNoteHelper.Normalize(i.CustomerNote, out _),
                             Temperature = DrinkServingTemperature.Normalize(i.Temperature),

@@ -977,6 +977,33 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                     b.ToTable("payment_confirmations", (string)null);
                 });
 
+            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.PricingPromotionSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Enabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Percent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(10);
+
+                    b.Property<DateTimeOffset?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("pricing_promotion_settings", (string)null);
+                });
+
             modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.ShiftClose", b =>
                 {
                     b.Property<Guid>("Id")

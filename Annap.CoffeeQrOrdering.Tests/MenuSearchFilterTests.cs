@@ -623,7 +623,7 @@ public sealed class MenuSearchFilterTests
     private static IndexModel NewPageModel(AppDbContext db)
     {
         var http = new DefaultHttpContext();
-        return new IndexModel(db)
+        return new IndexModel(db, new Annap.CoffeeQrOrdering.Infrastructure.Services.PricingService(db))
         {
             PageContext = new PageContext { HttpContext = http }
         };

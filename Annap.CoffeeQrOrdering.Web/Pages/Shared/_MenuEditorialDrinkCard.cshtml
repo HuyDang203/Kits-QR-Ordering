@@ -1,16 +1,28 @@
 @using Annap.CoffeeQrOrdering.Domain.Entities
 @using Annap.CoffeeQrOrdering.Web
 @using Annap.CoffeeQrOrdering.Web.Services
-@model (MenuItem Item, string CategoryName, bool IsHero, int CardIndex, int RevealDelayMs)
+@model (MenuItem Item, string CategoryName, bool IsHero, int CardIndex, int RevealDelayMs, decimal EffectivePrice, decimal? OriginalPrice)
 @{
-    var (item, categoryName, isHero, cardIndex, revealDelayMs) = Model;
+    var (item, categoryName, isHero, cardIndex, revealDelayMs, effectivePrice, originalPrice) = Model;
     var guestCategoryLabel = GuestCategoryDisplay.For(categoryName);
     var badgeLabel = item.IsSignature ? "Đặc trưng quán" : (item.IsFeatured ? "Khách yêu thích" : null);
     var badgeI18n = item.IsSignature ? "menu.ribbonSignature" : (item.IsFeatured ? "menu.ribbonFeatured" : null);
     var cardImg = MenuMediaResolver.TryResolveCardImageUrl(item, categoryName);
-    var priceDisplay = item.Price > 0
-        ? VndMoneyFormatter.Format(item.Price)
+
+    // Effective price is the single number the guest pays. When the global
+    // promotion is OFF this equals item.Price. When ON this is the value
+    // returned by IPricingService.GetEffectivePriceAsync for this item.
+    // originalPrice is populated only when the promotion actually changed
+    // the price — null otherwise so the strike-through can be hidden
+    // without conditional checks on values.
+    var hasDiscount = originalPrice.HasValue && originalPrice.Value > effectivePrice;
+    var effectiveDisplay = effectivePrice > 0
+        ? VndMoneyFormatter.Format(effectivePrice)
         : "—";
+    var originalDisplay = hasDiscount && originalPrice!.Value > 0
+        ? VndMoneyFormatter.Format(originalPrice.Value)
+        : null;
+
     var tasteLine = item.Subtitle;
     if (!string.IsNullOrWhiteSpace(tasteLine) && tasteLine.Length > 72)
     {
@@ -56,7 +68,13 @@
             <div class="menu-editorial-card__hero-meta">
                 <h3 class="menu-editorial-card__name">@item.Name</h3>
                 <div class="menu-editorial-card__hero-row">
-                    <p class="menu-editorial-card__price tabular-nums">@priceDisplay</p>
+                    <div class="menu-editorial-card__price-block tabular-nums">
+                        @if (hasDiscount && originalDisplay is not null)
+                        {
+                            <span class="menu-editorial-card__price-strike" aria-label="Giá gốc">@originalDisplay</span>
+                        }
+                        <p class="menu-editorial-card__price">@effectiveDisplay</p>
+                    </div>
                     @if (!string.IsNullOrWhiteSpace(tasteLine))
                     {
                         <p class="menu-editorial-card__taste">@tasteLine</p>
@@ -74,7 +92,13 @@
                 <div class="menu-editorial-card__caption">
                     <h3 class="menu-editorial-card__name">@item.Name</h3>
                     <div class="menu-editorial-card__passport-foot">
-                        <p class="menu-editorial-card__price tabular-nums">@priceDisplay</p>
+                        <div class="menu-editorial-card__price-block tabular-nums">
+                            @if (hasDiscount && originalDisplay is not null)
+                            {
+                                <span class="menu-editorial-card__price-strike" aria-label="Giá gốc">@originalDisplay</span>
+                            }
+                            <p class="menu-editorial-card__price">@effectiveDisplay</p>
+                        </div>
                         <span class="menu-editorial-card__action">
                             <span data-i18n="menu.viewDetail">Xem chi tiết</span>
                             <span class="menu-editorial-card__action-glyph" aria-hidden="true">→</span>

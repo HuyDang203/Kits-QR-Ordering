@@ -51,11 +51,25 @@
     };
     var catList = Model.Categories.ToList();
     var detailImages = Model.DetailImageByItemId;
+    var effectivePrices = Model.EffectivePriceByItemId;
+    var originalPrices = Model.OriginalPriceByItemId;
+    var promotionActive = Model.PromotionActive;
+    var promotionPercent = Model.PromotionPercent;
     var catalogJson = JsonSerializer.Serialize(
         catList.SelectMany(c => c.Items.Select(i => new {
             id = i.Id,
             name = i.Name,
-            price = i.Price,
+            // Effective price is what the guest will pay. When the global
+            // promotion is OFF this equals i.Price. Cart and order submit
+            // consume this number unchanged so there is no place where the
+            // guest could see one price and be charged another.
+            price = effectivePrices.TryGetValue(i.Id, out var ep) ? ep : i.Price,
+            // originalPrice is populated only when the promotion actually
+            // changed the price. null otherwise so the cart/UI can hide the
+            // strike-through without conditional checks on values.
+            originalPrice = originalPrices.TryGetValue(i.Id, out var op) ? (decimal?)op : null,
+            promotionActive = promotionActive,
+            promotionPercent = promotionPercent,
             categoryName = c.Name,
             supportsHotIced = DrinkServingTemperature.Supports(c.Name, i.Name, i.ItemType),
             // Server-resolved detail poster URL — same call the detail API performs.
@@ -189,9 +203,11 @@
                 @if (heroItem is not null)
                 {
                     cardIndex++;
+                    var heroOriginal = originalPrices.TryGetValue(heroItem.Id, out var ho) ? ho : (decimal?)null;
+                    var heroEffective = effectivePrices.TryGetValue(heroItem.Id, out var he) ? he : heroItem.Price;
                     <div class="menu-chapter-hero">
                         <partial name="Shared/_MenuEditorialDrinkCard"
-                                 model="(heroItem, category.Name, true, cardIndex, 0)" />
+                                 model="(heroItem, category.Name, true, cardIndex, 0, heroEffective, heroOriginal)" />
                     </div>
                 }
 
@@ -203,8 +219,10 @@
                             var item = supportingItems[si];
                             cardIndex++;
                             var delayMs = Math.Min(si * 45, 180);
+                            var itemOriginal = originalPrices.TryGetValue(item.Id, out var io) ? io : (decimal?)null;
+                            var itemEffective = effectivePrices.TryGetValue(item.Id, out var ie) ? ie : item.Price;
                             <partial name="Shared/_MenuEditorialDrinkCard"
-                                     model="(item, category.Name, false, cardIndex, delayMs)" />
+                                     model="(item, category.Name, false, cardIndex, delayMs, itemEffective, itemOriginal)" />
                         }
                     </div>
                 }

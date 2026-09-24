@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Annap.CoffeeQrOrdering.Web.Pages.Menu;
 
-public sealed class IndexModel(IApplicationDbContext db) : PageModel
+public sealed class IndexModel(IApplicationDbContext db, IPricingService pricing) : PageModel
 {
     public List<MenuCategory> Categories { get; private set; } = [];
 
@@ -29,6 +29,28 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
     public IReadOnlyDictionary<Guid, string> DetailImageByItemId { get; private set; } =
         new Dictionary<Guid, string>();
 
+    /// <summary>
+    /// Per-item effective price (after the global promotion). Same number the
+    /// server will snapshot on <c>OrderItem.UnitPrice</c> at submit time, so the
+    /// guest sees the price they will be charged.
+    /// </summary>
+    public IReadOnlyDictionary<Guid, decimal> EffectivePriceByItemId { get; private set; } =
+        new Dictionary<Guid, decimal>();
+
+    /// <summary>
+    /// Base price per item (before any promotion). Used for the strike-through
+    /// "original price" rendering when the promotion is on. Null when no
+    /// promotion is in effect, or when the base price equals the effective.
+    /// </summary>
+    public IReadOnlyDictionary<Guid, decimal> OriginalPriceByItemId { get; private set; } =
+        new Dictionary<Guid, decimal>();
+
+    /// <summary>True when the global promotion is currently active.</summary>
+    public bool PromotionActive { get; private set; }
+
+    /// <summary>Current promotion percent (0 when disabled).</summary>
+    public int PromotionPercent { get; private set; }
+
     public GuestTableContextState TableContextState =>
         GuestTableContext.Resolve(HasSeatedTable, false, TableHandoffInvalid);
 
@@ -48,6 +70,12 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
                 TableHandoffInvalid = true;
             }
         }
+
+        // Promotion state is read once per page render. The same service is
+        // called at order submit time so the snapshot UnitPrice and the
+        // displayed price are guaranteed identical.
+        PromotionPercent = await pricing.GetCurrentPercentAsync(cancellationToken);
+        PromotionActive = PromotionPercent > 0;
 
         // Filter the catalogue at the presentation layer to only include canonical
         // categories that contain at least one available, non-archived menu item.
@@ -71,6 +99,8 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
         // detail API performs. No additional DB query: MenuItem.DetailPosterImagePath
         // and MenuItem.ImageUrl are already in memory from the Categories include above.
         var byItem = new Dictionary<Guid, string>(capacity: 64);
+        var effectiveByItem = new Dictionary<Guid, decimal>(capacity: 64);
+        var originalByItem = new Dictionary<Guid, decimal>(capacity: 64);
         foreach (var cat in Categories)
         {
             foreach (var item in cat.Items)
@@ -80,8 +110,14 @@ public sealed class IndexModel(IApplicationDbContext db) : PageModel
                     item.ImageUrl,
                     item.Name,
                     cat.Name) ?? "";
+                var effective = await pricing.GetEffectivePriceAsync(item.Price, cancellationToken);
+                effectiveByItem[item.Id] = effective;
+                if (PromotionActive && effective != item.Price)
+                    originalByItem[item.Id] = item.Price;
             }
         }
         DetailImageByItemId = byItem;
+        EffectivePriceByItemId = effectiveByItem;
+        OriginalPriceByItemId = originalByItem;
     }
 }
