@@ -577,148 +577,6 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                     b.ToTable("ingredients", (string)null);
                 });
 
-            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietOutboxMessage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<string>("FailureReason")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
-
-                    b.Property<string>("KiotVietOrderId")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<DateTimeOffset?>("NextRetryAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Payload")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("ProcessedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("RetryCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .HasDatabaseName("ix_kv_outbox_order_id");
-
-                    b.HasIndex("Status", "NextRetryAtUtc")
-                        .HasDatabaseName("ix_kv_outbox_status_retry")
-                        .HasFilter("\"Status\" IN (0, 3)");
-
-                    b.ToTable("kiotviet_outbox_messages", (string)null);
-                });
-
-            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietProductMapping", b =>
-                {
-                    b.Property<Guid>("MenuItemId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("KiotVietProductCode")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.Property<string>("KiotVietProductName")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<DateTimeOffset>("LastSyncedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("SyncNote")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.HasKey("MenuItemId");
-
-                    b.HasIndex("KiotVietProductCode")
-                        .IsUnique()
-                        .HasDatabaseName("ix_kv_product_code");
-
-                    b.ToTable("kiotviet_product_mappings", (string)null);
-                });
-
-            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietSyncLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Detail")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
-
-                    b.Property<long>("DurationMs")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FailureReason")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
-
-                    b.Property<int?>("HttpStatusCode")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsSuccess")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("KiotVietReference")
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
-
-                    b.Property<DateTimeOffset>("OccurredAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ReferenceId")
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
-
-                    b.Property<string>("SyncKind")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OccurredAtUtc")
-                        .IsDescending()
-                        .HasDatabaseName("ix_kv_sync_logs_time");
-
-                    b.HasIndex("SyncKind", "IsSuccess", "OccurredAtUtc")
-                        .HasDatabaseName("ix_kv_sync_logs_kind_success_time");
-
-                    b.ToTable("kiotviet_sync_logs", (string)null);
-                });
-
             modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.MenuCategory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1300,13 +1158,6 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("KiotVietBranchId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("KiotVietTableId")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
                     b.Property<string>("PublicSlug")
                         .IsRequired()
                         .HasMaxLength(80)
@@ -1386,28 +1237,6 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MenuItem");
-                });
-
-            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietOutboxMessage", b =>
-                {
-                    b.HasOne("Annap.CoffeeQrOrdering.Domain.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietProductMapping", b =>
-                {
-                    b.HasOne("Annap.CoffeeQrOrdering.Domain.Entities.MenuItem", "MenuItem")
-                        .WithOne()
-                        .HasForeignKey("Annap.CoffeeQrOrdering.Domain.Entities.KiotViet.KiotVietProductMapping", "MenuItemId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("MenuItem");

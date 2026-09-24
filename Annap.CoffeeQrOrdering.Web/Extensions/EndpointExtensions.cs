@@ -1,16 +1,12 @@
 using Annap.CoffeeQrOrdering.Application;
 using Annap.CoffeeQrOrdering.Application.Abstractions;
-using Annap.CoffeeQrOrdering.Application.Integration;
 using Annap.CoffeeQrOrdering.Domain;
 using Annap.CoffeeQrOrdering.Domain.Entities;
-using Annap.CoffeeQrOrdering.Domain.Entities.KiotViet;
-using Annap.CoffeeQrOrdering.Infrastructure.KiotViet;
 using Annap.CoffeeQrOrdering.Infrastructure.Persistence;
 using Annap.CoffeeQrOrdering.Web.Hubs;
 using Annap.CoffeeQrOrdering.Web.Internal;
 using Annap.CoffeeQrOrdering.Web.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Data;
 using System.Diagnostics;
 
@@ -357,20 +353,8 @@ public static class EndpointExtensions
 
                     if (string.Equals(paymentMethodRaw, OrderPaymentMethods.BankTransfer, StringComparison.Ordinal))
                         order.BillNumber = OrderBillHelper.EnsureBillNumber(order);
-        
-                    var snapshotAt = DateTimeOffset.UtcNow;
-                    var outboxMessage = new KiotVietOutboxMessage
-                    {
-                        OrderId = order.Id,
-                        EventType = "OrderSubmitted",
-                        Status = KiotVietOutboxStatus.Pending,
-                        Payload = KiotVietOutboxPayloadFactory.Build(order, table, menuItems, snapshotAt),
-                        CreatedAtUtc = snapshotAt,
-                        UpdatedAtUtc = snapshotAt
-                    };
-        
+
                     await db.Orders.AddAsync(order, ct);
-                    await db.KiotVietOutboxMessages.AddAsync(outboxMessage, ct);
                     await OperationalAudit.AppendAsync(db, "order.created", null, order.Id,
                         $"table={order.TableCode};items={order.Items.Count};fulfillment={fulfillmentMode}", ct);
                     await db.SaveChangesAsync(ct);
@@ -772,40 +756,7 @@ public static class EndpointExtensions
                     statusCode: StatusCodes.Status409Conflict);
             }
         }).RequireAuthorization("StaffAdmin");
-        
-        app.MapGet("/api/staff/kiotviet/status", async (
-            AppDbContext db,
-            IOptions<KiotVietOptions> kvOpts,
-            CancellationToken ct) =>
-        {
-            var opts = kvOpts.Value;
-        
-            var pendingCount = await db.KiotVietOutboxMessages
-                .CountAsync(m => m.Status == KiotVietOutboxStatus.Pending, ct);
-        
-            var failedCount = await db.KiotVietOutboxMessages
-                .CountAsync(m => m.Status == KiotVietOutboxStatus.Failed, ct);
-        
-            var deadLetteredCount = await db.KiotVietOutboxMessages
-                .CountAsync(m => m.Status == KiotVietOutboxStatus.DeadLettered, ct);
-        
-            var lastSuccessLog = await db.KiotVietSyncLogs
-                .AsNoTracking()
-                .Where(l => l.IsSuccess)
-                .OrderByDescending(l => l.OccurredAtUtc)
-                .Select(l => (DateTimeOffset?)l.OccurredAtUtc)
-                .FirstOrDefaultAsync(ct);
-        
-            return Results.Ok(new
-            {
-                isEnabled = opts.IsEnabled,
-                pendingCount,
-                failedCount,
-                deadLetteredCount,
-                lastSuccessfulPushUtc = lastSuccessLog
-            });
-        }).RequireAuthorization("StaffAdmin");
-        
+
         app.MapOrderWorkflowEndpoints();
         app.MapBankTransferWebhookEndpoints();
         

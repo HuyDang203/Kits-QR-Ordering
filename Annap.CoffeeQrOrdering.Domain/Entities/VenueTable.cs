@@ -20,10 +20,4 @@ public sealed class VenueTable : EntityBase
     public string? DisplayLabel { get; set; }
 
     public bool IsActive { get; set; } = true;
-
-    /// <summary>KiotViet table id as returned by POS (string form); optional — unmapped tables still sync with note-only routing.</summary>
-    public string? KiotVietTableId { get; set; }
-
-    /// <summary>Optional branch override; when null, worker uses global <c>KiotViet:BranchId</c>.</summary>
-    public int? KiotVietBranchId { get; set; }
 }

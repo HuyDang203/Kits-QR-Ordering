@@ -65,7 +65,6 @@ If you prefer an explicit string, set `ConnectionStrings__DefaultConnection` ins
 | Variable | Purpose |
 |----------|---------|
 | `Sommelier__ApiKey` | Legacy RAG sommelier only; **not required** for specialty demo |
-| `KiotViet__IsEnabled` | Default `false` — leave off for demo |
 | `GoLive__HealthUrl` | Full URL for `verify-go-live` health probe against live service |
 | `BankTransfer__Enabled` | `true` when VietQR bank transfer is configured |
 | `BankTransfer__Provider` | `VietQR` |

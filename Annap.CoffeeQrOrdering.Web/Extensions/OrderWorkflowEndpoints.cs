@@ -14,10 +14,56 @@ internal static class OrderWorkflowEndpoints
 {
     internal sealed record MarkOrderPaidRequest(string? PaymentMethod);
 
+    internal sealed record ChangeOrderPaymentMethodRequest(string? PaymentMethod, string? Token);
+
     internal sealed record MarkItemPreparedRequest(int? PreparedQuantity, bool? IsPrepared);
 
     public static void MapOrderWorkflowEndpoints(this WebApplication app)
     {
+        app.MapPost("/api/orders/{orderId:guid}/payment-method", async (
+            HttpRequest http,
+            Guid orderId,
+            ChangeOrderPaymentMethodRequest? body,
+            IOrderPaymentWorkflowService paymentWorkflow,
+            CancellationToken ct) =>
+        {
+            var queryToken = http.Query["token"].FirstOrDefault();
+            var bodyToken = body?.Token;
+            var token =
+                !string.IsNullOrWhiteSpace(bodyToken)
+                    ? bodyToken
+                    : queryToken;
+            if (string.IsNullOrWhiteSpace(token))
+                return Results.Json(
+                    new { error = "Guest session token is required." },
+                    statusCode: StatusCodes.Status400BadRequest);
+
+            var result = await paymentWorkflow.ChangePaymentMethodAsync(
+                orderId,
+                token!,
+                body?.PaymentMethod ?? string.Empty,
+                ct);
+
+            return result.Outcome switch
+            {
+                ChangePaymentOutcome.NotFound => Results.NotFound(),
+                ChangePaymentOutcome.Forbidden => Results.NotFound(),
+                ChangePaymentOutcome.InvalidPaymentMethod => Results.BadRequest(
+                    new { error = "Invalid paymentMethod. Use Cash, Card, BankTransfer, or CashOrCardAtCounter." }),
+                ChangePaymentOutcome.Locked => Results.BadRequest(new { error = "payment_method_locked" }),
+                ChangePaymentOutcome.SerializationConflict => Results.Json(
+                    new { error = "Another hand moved this ticket first—refresh the board." },
+                    statusCode: StatusCodes.Status409Conflict),
+                ChangePaymentOutcome.Success => Results.Ok(new
+                {
+                    orderId = result.Order!.Id,
+                    paymentMethod = result.PaymentMethod ?? result.Order.PaymentMethod,
+                    replay = result.Replay
+                }),
+                _ => Results.StatusCode(StatusCodes.Status500InternalServerError)
+            };
+        }).AllowAnonymous();
+
         app.MapPost("/api/staff/orders/{orderId:guid}/mark-paid", async (
             HttpContext http,
             Guid orderId,

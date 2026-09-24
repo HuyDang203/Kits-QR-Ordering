@@ -215,6 +215,37 @@
   box-shadow: 0 0 0 1px #d6c4a8;
 }
 
+.order-tray-submitted-card__change-payment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.15rem;
+  margin-top: 0.45rem;
+  margin-right: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5b3a1e;
+  background: transparent;
+  border: 1px solid rgba(140, 100, 60, 0.45);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.order-tray-submitted-card__change-payment:hover {
+  background: rgba(140, 100, 60, 0.08);
+  border-color: rgba(140, 100, 60, 0.7);
+}
+
+.order-tray-submitted-card__change-payment:disabled,
+.order-tray-submitted-card__change-payment[aria-busy="true"] {
+  opacity: 0.55;
+  cursor: progress;
+}
+
 .order-tray-root--submitted .order-tray-sheet-footer--hidden,
 .order-tray-root--submitted-paid .order-tray-sheet-footer--hidden,
 .order-tray-root--submitted-complete .order-tray-sheet-footer--hidden {

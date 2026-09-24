@@ -664,6 +664,12 @@
     "soundToggle": "Sound feedback",
     "hapticToggle": "Haptic feedback"
   },
+  "submitted": {
+    "changePaymentCta": "Change payment method",
+    "changePaymentTitle": "Change payment method",
+    "changePaymentNote": "Choose a different way to pay. Your order is preserved.",
+    "changePaymentConfirm": "Confirm"
+  },
   "checkout": {
     "reviewOrder": "Review order",
     "checkBillTitle": "Review your order",

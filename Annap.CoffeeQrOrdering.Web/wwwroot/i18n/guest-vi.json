@@ -664,6 +664,12 @@
     "soundToggle": "Phản hồi âm thanh",
     "hapticToggle": "Phản hồi rung"
   },
+  "submitted": {
+    "changePaymentCta": "Đổi phương thức thanh toán",
+    "changePaymentTitle": "Đổi phương thức thanh toán",
+    "changePaymentNote": "Chọn lại cách thanh toán. Đơn vẫn được giữ nguyên.",
+    "changePaymentConfirm": "Xác nhận"
+  },
   "checkout": {
     "reviewOrder": "Kiểm tra đơn",
     "checkBillTitle": "Kiểm tra đơn",

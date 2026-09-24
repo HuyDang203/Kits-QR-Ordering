@@ -1,5 +1,4 @@
 using Annap.CoffeeQrOrdering.Domain.Entities;
-using Annap.CoffeeQrOrdering.Domain.Entities.KiotViet;
 using Microsoft.EntityFrameworkCore;
 
 namespace Annap.CoffeeQrOrdering.Application.Abstractions;
@@ -27,9 +26,6 @@ public interface IApplicationDbContext
     DbSet<ExperienceGroupSettings> ExperienceGroupSettings { get; }
     DbSet<HomepageExperienceSettings> HomepageExperienceSettings { get; }
     DbSet<AppNetworkSettings> AppNetworkSettings { get; }
-    DbSet<KiotVietOutboxMessage> KiotVietOutboxMessages { get; }
-    DbSet<KiotVietSyncLog> KiotVietSyncLogs { get; }
-    DbSet<KiotVietProductMapping> KiotVietProductMappings { get; }
     DbSet<PaymentConfirmation> PaymentConfirmations { get; }
     DbSet<StaffAccount> StaffAccounts { get; }
     DbSet<ShiftClose> ShiftCloses { get; }

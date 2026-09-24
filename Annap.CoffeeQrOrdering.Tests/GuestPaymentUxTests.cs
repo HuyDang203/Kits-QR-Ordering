@@ -348,4 +348,90 @@ public sealed class GuestPaymentUxTests
         Assert.Contains("celebratedPaidOrderIds.has(orderKey)", block, StringComparison.Ordinal);
         Assert.Contains("celebratedPaidOrderIds.add(orderKey)", block, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Change_payment_cta_is_bound_and_renders_only_while_pending()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        // New state variables exist.
+        Assert.Contains("pendingPaymentMethodChange", js, StringComparison.Ordinal);
+        Assert.Contains("paymentMethodChangeInflight", js, StringComparison.Ordinal);
+        Assert.Contains("submitPaymentMethodChange", js, StringComparison.Ordinal);
+        // New endpoint is referenced.
+        Assert.Contains("/api/orders/${encodeURIComponent(sess.orderId)}/payment-method", js, StringComparison.Ordinal);
+        Assert.Contains("/payment-method", js, StringComparison.Ordinal);
+        // The CTA click handler is bound in annapBindCheckoutControls and pre-selects current method.
+        Assert.Contains("order-tray-submitted-change-payment", js, StringComparison.Ordinal);
+        Assert.Contains("paymentMethodChangePreselect = pm", js, StringComparison.Ordinal);
+        Assert.Contains("pendingPaymentMethodChange = true", js, StringComparison.Ordinal);
+        // submitOrder routes to the dedicated branch when pendingPaymentMethodChange is set.
+        var submitStart = js.IndexOf("async function submitOrder", StringComparison.Ordinal);
+        Assert.True(submitStart >= 0);
+        var submitEnd = js.IndexOf("\n        async function ", submitStart + 1, StringComparison.Ordinal);
+        var submitBlock = submitEnd > submitStart ? js[submitStart..submitEnd] : js[submitStart..];
+        Assert.Contains("pendingPaymentMethodChange", submitBlock, StringComparison.Ordinal);
+        Assert.Contains("submitPaymentMethodChange()", submitBlock, StringComparison.Ordinal);
+        // Reconciliation on 409 / payment_method_locked is wired up.
+        Assert.Contains("payment_method_locked", js, StringComparison.Ordinal);
+        Assert.Contains("refreshSubmittedTrayStatus()", js, StringComparison.Ordinal);
+        // In-flight guard exists.
+        Assert.Contains("paymentMethodChangeInflight = true", js, StringComparison.Ordinal);
+        Assert.Contains("paymentMethodChangeInflight = false", js, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Change_payment_back_button_returns_to_submitted_not_review()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        // The back button handler must short-circuit when the user is in change-payment mode.
+        var backStart = js.IndexOf("backBtn.addEventListener", StringComparison.Ordinal);
+        Assert.True(backStart >= 0);
+        var backEnd = js.IndexOf("\n        }\n", backStart, StringComparison.Ordinal);
+        var backBlock = backEnd > backStart ? js[backStart..backEnd] : js[backStart..];
+        Assert.Contains("pendingPaymentMethodChange", backBlock, StringComparison.Ordinal);
+        Assert.Contains("CHECKOUT_UI.SUBMITTED", backBlock, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Change_payment_submit_does_not_call_post_orders_or_clearCart()
+    {
+        var js = File.ReadAllText(Path.Combine(WebRoot, "js", "order-tray-dock.js"));
+        var start = js.IndexOf("async function submitPaymentMethodChange", StringComparison.Ordinal);
+        Assert.True(start >= 0);
+        var end = js.IndexOf("\n        function ", start + 1, StringComparison.Ordinal);
+        var block = end > start ? js[start..end] : js[start..];
+        // Branch B must not call POST /api/orders, must not clearCart, must not create new order.
+        Assert.DoesNotContain("\"/api/orders\"", block, StringComparison.Ordinal);
+        Assert.DoesNotContain("GuestInteractionContract.clearCart()", block, StringComparison.Ordinal);
+        Assert.DoesNotContain("menuOrderIdempotencyKey", block, StringComparison.Ordinal);
+        // Must POST to the dedicated endpoint and preserve the orderId + token.
+        Assert.Contains("/payment-method", block, StringComparison.Ordinal);
+        Assert.Contains("token: sess.token", block, StringComparison.Ordinal);
+        // Session write preserves orderId/token/venueTableId/submittedAt/status, only updates paymentMethod.
+        Assert.Contains("writeGuestOrderSession", block, StringComparison.Ordinal);
+        Assert.Contains("orderId: sess.orderId", block, StringComparison.Ordinal);
+        Assert.Contains("token: sess.token", block, StringComparison.Ordinal);
+        Assert.Contains("venueTableId: sess.venueTableId", block, StringComparison.Ordinal);
+        Assert.Contains("submittedAt: sess.submittedAt", block, StringComparison.Ordinal);
+        Assert.Contains("status: sess.status", block, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Change_payment_markup_and_i18n_keys_exist()
+    {
+        var markup = File.ReadAllText(
+            Path.Combine(
+                Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Annap.CoffeeQrOrdering.Web", "Pages")),
+                "Shared",
+                "_OrderTrayDock.cshtml"));
+        Assert.Contains("id=\"order-tray-submitted-change-payment\"", markup, StringComparison.Ordinal);
+        Assert.Contains("data-i18n=\"submitted.changePaymentCta\"", markup, StringComparison.Ordinal);
+
+        var vi = File.ReadAllText(Path.Combine(WebRoot, "i18n", "guest-vi.json"));
+        Assert.Contains("\"submitted\"", vi, StringComparison.Ordinal);
+        Assert.Contains("\"changePaymentCta\": \"Đổi phương thức thanh toán\"", vi, StringComparison.Ordinal);
+
+        var en = File.ReadAllText(Path.Combine(WebRoot, "i18n", "guest-en.json"));
+        Assert.Contains("\"changePaymentCta\": \"Change payment method\"", en, StringComparison.Ordinal);
+    }
 }

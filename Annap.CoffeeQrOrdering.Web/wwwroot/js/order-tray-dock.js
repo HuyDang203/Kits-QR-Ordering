@@ -62,6 +62,13 @@ let traySubmittedStatus = null;
 let trayStatusPollTimer = null;
 let trayKnownPendingPayment = null;
 const celebratedPaidOrderIds = new Set();
+/* True when the user is updating the PaymentMethod on an already-submitted
+   order (SUBMITTED → change → PAYMENT_SELECTION). Cleared after submit. */
+let pendingPaymentMethodChange = false;
+/* Pre-select target when entering PAYMENT_SELECTION via the change-payment CTA. */
+let paymentMethodChangePreselect = null;
+/* In-flight guard for the dedicated change-payment POST. */
+let paymentMethodChangeInflight = false;
 /* Latest successful GET /api/track/orders/{id}?token=... payload, retained only for
    presentation (e.g. tableCode label in submitted/payment panel). Cleared when
    payment flow returns the tray to EDITING. Refresh is idempotent. */
@@ -1483,12 +1490,16 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const noteEl = document.getElementById("order-tray-submitted-note");
             const trackEl = document.getElementById("order-tray-submitted-track");
             const tableEl = document.getElementById("order-tray-submitted-table");
+            const changePaymentBtn = document.getElementById("order-tray-submitted-change-payment");
             if (!panel || !card || !sess) return;
 
             let title;
             let body;
             let statusLabel = "";
             const bankUi = isBankCheckoutUi(checkoutUi);
+            const awaitingPayment = isSubmittedPendingTrayState(
+                traySubmittedStatus || sess.status || TRAY_STATE.SUBMITTED_PENDING
+            );
             if (checkoutUi === CHECKOUT_UI.COMPLETED) {
                 title = trayCopy("menuTray.chipCompleteTitle");
                 body = trayCopy("menuTray.chipCompleteBody");
@@ -1540,6 +1551,22 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 trackEl.href = buildTrackHref(sess);
                 trackEl.textContent = trayCopy("menuTray.chipTrackCta");
             }
+            if (changePaymentBtn) {
+                const canChange =
+                    awaitingPayment
+                    && checkoutUi !== CHECKOUT_UI.PAID
+                    && checkoutUi !== CHECKOUT_UI.COMPLETED
+                    && !paymentMethodChangeInflight
+                    && !pendingPaymentMethodChange;
+                changePaymentBtn.classList.toggle("hidden", !canChange);
+                changePaymentBtn.hidden = !canChange;
+                changePaymentBtn.setAttribute("aria-busy", paymentMethodChangeInflight ? "true" : "false");
+                if (paymentMethodChangeInflight) {
+                    changePaymentBtn.setAttribute("disabled", "disabled");
+                } else {
+                    changePaymentBtn.removeAttribute("disabled");
+                }
+            }
             card.className = bankUi
                 ? "order-tray-submitted-card order-tray-submitted-card--bank"
                 : "order-tray-submitted-card order-tray-submitted-card--compact";
@@ -1579,6 +1606,14 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 const orderResult = document.getElementById("orderResult");
                 if (orderResult)
                     orderResult.textContent = tOrder("order.needTableScan") || tOrder("order.needTable");
+                return;
+            }
+            // ── Change-payment shortcut: skip all cart/fulfillment checks.
+            // pendingPaymentMethodChange + PAYMENT_SELECTION means the user is
+            // updating the PaymentMethod on an already-submitted order (same
+            // OrderId, same items, no new order creation). Dispatch directly.
+            if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION && pendingPaymentMethodChange) {
+                void submitOrder();
                 return;
             }
             if (cartItems.size === 0) {
@@ -2761,12 +2796,23 @@ function __annapMenuRuntimeJsonSelfCheck() {
                         tOrder("order.needTableScan") || tOrder("order.needTable");
                 return;
             }
-            if (cartItems.size === 0) {
-                if (orderResult) orderResult.textContent = tOrder("order.minOne");
-                return;
-            }
             if (checkoutUi !== CHECKOUT_UI.PAYMENT_SELECTION) {
                 handlePrimaryTrayAction();
+                return;
+            }
+
+            // ── Branch B: change payment method on an already-submitted order ──
+            // Do not call /api/orders. Do not clear the cart. Do not create a new
+            // idempotency key. Do not create a new order. Do not touch fulfillment.
+            if (pendingPaymentMethodChange) {
+                if (paymentMethodChangeInflight) return;
+                await submitPaymentMethodChange();
+                return;
+            }
+
+            // ── Branch A: new order submit ──
+            if (cartItems.size === 0) {
+                if (orderResult) orderResult.textContent = tOrder("order.minOne");
                 return;
             }
             if (!selectedPaymentMethod) {
@@ -2917,6 +2963,142 @@ function __annapMenuRuntimeJsonSelfCheck() {
             }
         }
 
+        /* ── Branch B submit: change PaymentMethod on the SAME submitted order ── */
+        async function submitPaymentMethodChange() {
+            const sess = readSubmittedSession();
+            if (!sess || !sess.orderId || !sess.token) {
+                pendingPaymentMethodChange = false;
+                paymentMethodChangePreselect = null;
+                if (isPostOrderCheckoutUi(checkoutUi)) setCheckoutUi(CHECKOUT_UI.SUBMITTED);
+                return;
+            }
+            if (!selectedPaymentMethod) {
+                const orderResult = document.getElementById("orderResult");
+                if (orderResult) orderResult.textContent = tOrder("checkout.choosePayment");
+                return;
+            }
+            const btn = document.getElementById("menuSubmitBtn");
+            const orderResult = document.getElementById("orderResult");
+            if (orderResult) orderResult.textContent = "";
+            const prepLabel = getPaymentSubmitLabel(selectedPaymentMethod);
+            paymentMethodChangeInflight = true;
+            renderCheckoutTray();
+            __annapTrayPaymentDevLog("change payment method start", {
+                orderId: sess.orderId,
+                paymentMethod: selectedPaymentMethod
+            });
+            try {
+                if (btn) {
+                    btn.setAttribute("disabled", "disabled");
+                    btn.textContent = tOrder("order.submitting");
+                    btn.classList.add("order-tray-submit--preparing");
+                }
+                const url =
+                    typeof window.__annapApiUrl === "function"
+                        ? window.__annapApiUrl(`/api/orders/${encodeURIComponent(sess.orderId)}/payment-method`)
+                        : `/api/orders/${encodeURIComponent(sess.orderId)}/payment-method`;
+                let res;
+                try {
+                    res = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json"
+                        },
+                        body: JSON.stringify({
+                            paymentMethod: selectedPaymentMethod,
+                            token: sess.token
+                        })
+                    });
+                } catch (_net) {
+                    if (orderResult) orderResult.textContent = tOrder("order.submitFailedRetry") || trayCopy("order.submitFailedRetry");
+                    restoreSubmitButtonState(btn, prepLabel);
+                    return;
+                }
+                const payload = await res.json().catch(function () { return null; });
+                if (!res.ok) {
+                    const er = String((payload && payload.error) || "").toLowerCase();
+                    __annapTrayPaymentDevLog("change payment method failed", { status: res.status, error: er });
+                    // 409 (serialization conflict) or 400 payment_method_locked:
+                    // server is authoritative — refresh status, reconcile, do NOT show fatal.
+                    if (res.status === 409 || er === "payment_method_locked") {
+                        const reconciled = await refreshSubmittedTrayStatus().catch(function () { return null; });
+                        renderCheckoutTray();
+                        if (reconciled && reconciled.celebrated) {
+                            // Order was already marked paid — celebration handler takes over.
+                        } else {
+                            // Show server's current payment method on the submitted card.
+                            const nextSess = readSubmittedSession();
+                            if (nextSess) {
+                                const serverPm = String(nextSess.paymentMethod || "").trim();
+                                if (serverPm && selectedPaymentMethod !== serverPm) {
+                                    selectedPaymentMethod = serverPm;
+                                }
+                            }
+                        }
+                        if (orderResult) orderResult.textContent = "";
+                        restoreSubmitButtonState(btn, prepLabel);
+                        return;
+                    }
+                    if (er === "database_migration_required") {
+                        if (orderResult) orderResult.textContent = tOrder("order.serverMaintenance");
+                    } else if (res.status === 404 || er.includes("not found")) {
+                        if (orderResult) orderResult.textContent = tOrder("order.submitFailedStaff");
+                    } else if (res.status >= 500) {
+                        if (orderResult) orderResult.textContent = tOrder("order.submitFailedStaff");
+                    } else {
+                        if (orderResult) orderResult.textContent = tOrder("order.submitFailedRetry") || trayCopy("order.submitFailedRetry");
+                    }
+                    restoreSubmitButtonState(btn, prepLabel);
+                    return;
+                }
+                const serverMethod = (payload && payload.paymentMethod) ? String(payload.paymentMethod) : selectedPaymentMethod;
+                // Update only paymentMethod in session; preserve orderId, token, venueTableId, status.
+                GuestInteractionContract.writeGuestOrderSession({
+                    orderId: sess.orderId,
+                    token: sess.token,
+                    venueTableId: sess.venueTableId || VENUE_TABLE_ID,
+                    submittedAt: sess.submittedAt,
+                    status: sess.status,
+                    paymentMethod: serverMethod
+                });
+                pendingPaymentMethodChange = false;
+                paymentMethodChangePreselect = null;
+                // Reset QR cache so a new fetch uses the latest payment method/order state.
+                if (String(serverMethod).trim() !== PAYMENT_METHOD.BANK) {
+                    bankTransferQrCache = null;
+                    bankTransferQrCacheKey = "";
+                    bankTransferQrInflightKey = "";
+                }
+                traySubmittedStatus = resolveSubmittedCounterState(serverMethod);
+                trayKnownPendingPayment = true;
+                trayStatusFingerprint = statusFingerprint(readSubmittedSession(), traySubmittedStatus, true);
+                // Choose next UI based on new payment method.
+                const nextUi =
+                    String(serverMethod).trim() === PAYMENT_METHOD.BANK
+                        ? CHECKOUT_UI.PAYMENT_BANK_LOADING
+                        : CHECKOUT_UI.SUBMITTED;
+                setCheckoutUi(nextUi);
+                if (nextUi === CHECKOUT_UI.PAYMENT_BANK_LOADING) {
+                    void ensureBankTransferQrMounted(readSubmittedSession());
+                }
+                if (window.InteractionFeedback) {
+                    window.InteractionFeedback.trigger("submit", { element: btn || null, silentVisual: true });
+                }
+                __annapTrayPaymentDevLog("change payment method success", {
+                    orderId: sess.orderId,
+                    paymentMethod: serverMethod,
+                    replay: !!(payload && payload.replay),
+                    nextUi: nextUi
+                });
+                return;
+            } finally {
+                paymentMethodChangeInflight = false;
+                restoreSubmitButtonState(btn, prepLabel);
+                renderCheckoutTray();
+            }
+        }
+
         function annapBindCheckoutControls() {
             if (window._annapCheckoutControlsBound) return;
             window._annapCheckoutControlsBound = true;
@@ -2947,9 +3129,36 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const backBtn = document.getElementById("order-tray-checkout-back");
             if (backBtn) {
                 backBtn.addEventListener("click", function () {
+                    // Change-payment branch: returning from PAYMENT_SELECTION must NOT
+                    // walk into FULFILLMENT_MODE / REVIEW / EDITING. Go back to SUBMITTED.
+                    if (pendingPaymentMethodChange && checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) {
+                        pendingPaymentMethodChange = false;
+                        paymentMethodChangePreselect = null;
+                        paymentMethodChangeInflight = false;
+                        if (readSubmittedSession()) {
+                            setCheckoutUi(CHECKOUT_UI.SUBMITTED);
+                        } else {
+                            setCheckoutUi(CHECKOUT_UI.EDITING);
+                        }
+                        return;
+                    }
                     if (checkoutUi === CHECKOUT_UI.PAYMENT_SELECTION) setCheckoutUi(CHECKOUT_UI.FULFILLMENT_MODE);
                     else if (checkoutUi === CHECKOUT_UI.FULFILLMENT_MODE) setCheckoutUi(CHECKOUT_UI.REVIEW);
                     else setCheckoutUi(CHECKOUT_UI.EDITING);
+                });
+            }
+            const changePaymentBtn = document.getElementById("order-tray-submitted-change-payment");
+            if (changePaymentBtn && !changePaymentBtn.dataset.annapBound) {
+                changePaymentBtn.dataset.annapBound = "1";
+                changePaymentBtn.addEventListener("click", function () {
+                    if (paymentMethodChangeInflight) return;
+                    const sess = readSubmittedSession();
+                    if (!sess || !sess.orderId || !sess.token) return;
+                    const pm = String(sess.paymentMethod || "").trim() || PAYMENT_METHOD.CASH;
+                    selectedPaymentMethod = pm;
+                    paymentMethodChangePreselect = pm;
+                    pendingPaymentMethodChange = true;
+                    setCheckoutUi(CHECKOUT_UI.PAYMENT_SELECTION);
                 });
             }
         }

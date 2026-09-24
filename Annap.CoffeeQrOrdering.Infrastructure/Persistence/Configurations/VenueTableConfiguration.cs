@@ -15,8 +15,6 @@ public sealed class VenueTableConfiguration : IEntityTypeConfiguration<VenueTabl
         builder.Property(x => x.DisplayCode).HasMaxLength(40).IsRequired();
         builder.Property(x => x.PublicSlug).HasMaxLength(80).IsRequired();
         builder.Property(x => x.DisplayLabel).HasMaxLength(120);
-        builder.Property(x => x.KiotVietTableId).HasMaxLength(64);
-        builder.Property(x => x.KiotVietBranchId);
 
         builder.HasIndex(x => x.PublicSlug).IsUnique();
         builder.HasIndex(x => new { x.VenueCode, x.DisplayCode }).IsUnique();

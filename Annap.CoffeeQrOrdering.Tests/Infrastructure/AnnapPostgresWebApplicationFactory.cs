@@ -55,7 +55,6 @@ public class AnnapPostgresWebApplicationFactory : WebApplicationFactory<WebAppEn
                 ["StaffAuth:Password"] = "test-staff-secret-16",
                 ["StaffAuth:CheckoutPassword"] = "test-checkout-secret-16",
                 ["StaffAuth:BaristaPassword"] = "test-barista-secret-16",
-                ["KiotViet:IsEnabled"] = "false",
                 ["BankTransfer:Enabled"] = "true",
                 ["BankTransfer:Provider"] = "VietQR",
                 ["BankTransfer:BankBin"] = "970000",
