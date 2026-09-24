@@ -273,7 +273,7 @@ public sealed class PricingPromotionStaticTests
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // 12) Guest card partial: shows effective price + strike-through original.
+    // 12b) Guest card partial: shows effective price + strike-through original.
     // ─────────────────────────────────────────────────────────────────────────
     [Fact]
     public void Drink_card_partial_uses_effective_price_and_optional_original()
@@ -287,6 +287,71 @@ public sealed class PricingPromotionStaticTests
         Assert.Contains("menu-editorial-card__price-strike", src, StringComparison.Ordinal);
         // Effective price is the price the guest pays.
         Assert.Contains("var effectiveDisplay = effectivePrice > 0", src, StringComparison.Ordinal);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 12c) CSS: the strike-through classes must have visual styling so the
+    //        original price isn't rendered as a duplicate of the effective price.
+    //        This catches regressions where the markup is added but the CSS is
+    //        forgotten — the exact bug observed when the promotion was first
+    //        enabled in production.
+    // ─────────────────────────────────────────────────────────────────────────
+    [Fact]
+    public void Price_strike_css_classes_are_defined_in_wwwroot()
+    {
+        var menuBrowseCssPath = Path.Combine(WebSrcRoot, "wwwroot", "css", "menu-browse.css");
+        var drinkDetailCssPath = Path.Combine(WebSrcRoot, "wwwroot", "css", "drink-detail.css");
+
+        var menuCss = File.ReadAllText(menuBrowseCssPath);
+        var detailCss = File.ReadAllText(drinkDetailCssPath);
+
+        // Menu editorial card strike-through.
+        Assert.Contains("menu-editorial-card__price-strike", menuCss, StringComparison.Ordinal);
+        Assert.Contains("text-decoration: line-through", menuCss, StringComparison.Ordinal);
+        // Menu editorial card price block wrapper.
+        Assert.Contains("menu-editorial-card__price-block", menuCss, StringComparison.Ordinal);
+
+        // Detail card strike-through.
+        Assert.Contains("dd-card__price-strike", detailCss, StringComparison.Ordinal);
+        Assert.Contains("text-decoration: line-through", detailCss, StringComparison.Ordinal);
+        // Detail card price block wrapper.
+        Assert.Contains("dd-card__price-block", detailCss, StringComparison.Ordinal);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 12d) Pricing invariant: every detail renderer emits the effective price
+    //        via `data-item-price` so the cart and the receipt see the same
+    //        number, not the MenuItem.Price base.
+    // ─────────────────────────────────────────────────────────────────────────
+    [Fact]
+    public void Detail_renderer_writes_effective_price_into_data_item_price()
+    {
+        var js = File.ReadAllText(Path.Combine(WebSrcRoot, "wwwroot", "js", "drink-detail-renderer.js"));
+        // The in-card CTA must carry the effective price (raw.price normalized).
+        Assert.Contains("data-item-price=\"' + escAttr(data.price", js, StringComparison.Ordinal);
+        // The pairing cards must also carry the effective price.
+        Assert.Contains("data-item-price=\"' + escAttr(p.price", js, StringComparison.Ordinal);
+        // The original price is read separately for the strike-through.
+        Assert.Contains("data.originalPrice", js, StringComparison.Ordinal);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 12e) Detail modal `syncTopCta` feeds the effective price into the top
+    //         "Pha cho bàn tôi" CTA dataset so `annapAddToCart` reads the same
+    //         number as the visible price.
+    // ─────────────────────────────────────────────────────────────────────────
+    [Fact]
+    public void Detail_modal_syncTopCta_writes_effective_price_into_top_cta_dataset()
+    {
+        var js = File.ReadAllText(Path.Combine(WebSrcRoot, "wwwroot", "js", "drink-detail-modal.js"));
+        // Locate the syncTopCta function body.
+        var start = js.IndexOf("function syncTopCta", StringComparison.Ordinal);
+        Assert.True(start > 0, "syncTopCta missing");
+        var end = js.IndexOf("\n        function ", start + 1, StringComparison.Ordinal);
+        var block = end > start ? js[start..end] : js[start..];
+        // Must read from the normalized `d.price` (effective).
+        Assert.Contains("d.price", block, StringComparison.Ordinal);
+        Assert.Contains("data-item-price", block, StringComparison.Ordinal);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

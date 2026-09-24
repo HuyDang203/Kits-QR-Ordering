@@ -455,6 +455,33 @@
     flex-shrink: 0;
 }
 
+/* ── Promotion strike-through ──────────────────────────────────────────────── */
+
+/* Price block: flex column so strike-through sits above the effective price. */
+.dd-card__price-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex-shrink: 0;
+}
+
+/* Original price — struck through and muted when the promotion is ON.
+   aria-label keeps the content accessible when CSS text-decoration is
+   suppressed (e.g. reader mode, high-contrast). */
+.dd-card__price-strike {
+    margin: 0;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: rgba(200, 180, 155, 0.65);
+    text-decoration: line-through;
+    text-decoration-color: rgba(200, 180, 155, 0.55);
+    line-height: 1.2;
+    order: -1; /* puts original above effective in flex column */
+}
+
 .dd-card__cta {
     flex: 1 1 auto;
     display: inline-flex;

@@ -6,8 +6,19 @@ public sealed class DrinkDetailRendererDto
     public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required string Image { get; init; }
+
+    /// <summary>
+    /// Effective/displayed unit price — the same number the cart will store and
+    /// the server will snapshot on <c>OrderItem.UnitPrice</c>. When the global
+    /// promotion is OFF this equals <see cref="OriginalPrice"/>.
+    /// </summary>
     public required decimal Price { get; init; }
+
+    /// <summary>Base price (MenuItem.Price). Strikes through when promotion is ON.</summary>
+    public required decimal OriginalPrice { get; init; }
+
     public required string PriceDisplay { get; init; }
+    public string? OriginalPriceDisplay { get; init; }
     public string? Subtitle { get; init; }
     public string? Description { get; init; }
     public bool IsSignature { get; init; }

@@ -292,6 +292,42 @@ html.annap-correspond-ui .menu-card-reveal:not(.is-visible) {
     outline-offset: 5px;
 }
 
+/* ── Promotion strike-through ─────────────────────────────────────────────────── */
+
+/* Price block: vertical stack so original price sits above the effective price. */
+.menu-editorial-card__price-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
+}
+
+/* Original price — struck through and muted when the promotion is ON. */
+.menu-editorial-card__price-strike {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: rgba(160, 140, 120, 0.55);
+    text-decoration: line-through;
+    text-decoration-color: rgba(160, 140, 120, 0.4);
+    order: -1; /* original above effective in the flex column */
+}
+
+/* Hero card uses a slightly-larger price that adapts with the name. */
+.menu-chapter-hero .menu-editorial-card__price-strike {
+    font-size: 0.75rem;
+}
+
+/* Supporting cards use the compact muted price. */
+.menu-chapter-support .menu-editorial-card__price-strike {
+    font-size: 0.65rem;
+    color: rgba(130, 115, 100, 0.5);
+    text-decoration-color: rgba(130, 115, 100, 0.35);
+}
+
 /* â”€â”€ Image frame â€” photograph lying on warm paper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .menu-editorial-card__frame {
     position: relative;

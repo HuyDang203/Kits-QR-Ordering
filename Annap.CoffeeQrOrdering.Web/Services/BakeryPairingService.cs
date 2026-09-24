@@ -60,6 +60,7 @@ public static class BakeryPairingService
     public static async Task<IReadOnlyList<PairingSuggestionDto>> GetSuggestionsForDrinkAsync(
         IApplicationDbContext db,
         IMenuInventoryGate inventoryGate,
+        IPricingService pricing,
         Guid drinkId,
         string? drinkCategoryName,
         CancellationToken cancellationToken = default)
@@ -91,18 +92,31 @@ public static class BakeryPairingService
         var offset = Math.Abs(drinkId.GetHashCode()) % bakeryItems.Count;
         var rotated = bakeryItems.Skip(offset).Concat(bakeryItems.Take(offset)).Take(3).ToList();
 
-        return rotated.Select(i =>
+        var dtos = new List<PairingSuggestionDto>(rotated.Count);
+        foreach (var i in rotated)
         {
             var card = MenuMediaResolver.TryResolveCardImageUrl(
                 null, null, i.ImageUrl, null, i.Name, i.CategoryName, i.DetailPosterImagePath) ?? "";
-            return new PairingSuggestionDto
+
+            // Route effective price through the same IPricingService used by
+            // /api/menu and POST /api/orders so the cart never sees a different
+            // number than the receipt the server will issue.
+            var effective = await pricing
+                .GetEffectivePriceAsync(i.Price, cancellationToken)
+                .ConfigureAwait(false);
+            var hasDiscount = effective != i.Price && i.Price > 0;
+
+            dtos.Add(new PairingSuggestionDto
             {
                 Id = i.Id,
                 Name = i.Name,
                 Image = card,
-                Price = i.Price,
-                PriceDisplay = VndMoneyFormatter.Format(i.Price)
-            };
-        }).ToList();
+                Price = effective,
+                OriginalPrice = i.Price,
+                PriceDisplay = VndMoneyFormatter.Format(effective),
+                OriginalPriceDisplay = hasDiscount ? VndMoneyFormatter.Format(i.Price) : null
+            });
+        }
+        return dtos;
     }
 }

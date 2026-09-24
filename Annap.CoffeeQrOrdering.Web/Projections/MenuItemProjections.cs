@@ -25,23 +25,32 @@ public static class MenuItemProjections
 
     /// <summary>
     /// Builds the full editorial detail overlay ViewModel.
-    /// Includes all editorial, sensory, provenance, and image data.
+    ///
+    /// <paramref name="effectivePrice"/> must already be the
+    /// IPricingService-adjusted price for <paramref name="item"/>. The caller
+    /// (e.g. <c>DrinkModel.OnGetDataAsync</c>) is responsible for resolving it
+    /// — keeping the projection layer free of any "price * 0.9" math.
     /// </summary>
     public static MenuDrinkDetailVm ToEditorialDetail(
         MenuItem item,
         IReadOnlyList<RelatedDrinkVm> related,
+        decimal effectivePrice,
         string? serviceNote)
     {
         var images = ToImageSet(item);
+        var relatedPriced = related
+            .Select(r => r with { OriginalPrice = r.Price })
+            .ToList();
         return new MenuDrinkDetailVm
         {
             Id                   = item.Id,
             Name                 = item.Name,
             Price                = item.Price,
+            EffectivePrice       = effectivePrice,
             CategoryName         = item.Category?.Name ?? "",
             CardImageUrl         = images.CardUrl,
             DetailPosterImageUrl = images.DetailUrl,
-            Related              = related,
+            Related              = relatedPriced,
             ServiceNote          = serviceNote,
             Subtitle             = item.Subtitle,
             Description          = item.Description,
@@ -123,13 +132,23 @@ public static class MenuItemProjections
 
         var isBakery = BakeryPairingService.IsBakeryCategory(vm.CategoryName);
 
+        // Single arithmetic path lives in IPricingService. The caller resolves
+        // effectivePrice; this projection just formats & forwards. When the
+        // promotion is OFF, effectivePrice equals the base vm.Price so the
+        // renderer will render a single price (no strike-through).
+        var effectiveDisplay = VndMoneyFormatter.Format(vm.EffectivePrice);
+        var hasDiscount = vm.EffectivePrice != vm.Price && vm.Price > 0;
+        var originalDisplay = hasDiscount ? VndMoneyFormatter.Format(vm.Price) : null;
+
         return new DrinkDetailRendererDto
         {
             Id                  = vm.Id,
             Name                = vm.Name,
             Image               = image,
-            Price               = vm.Price,
-            PriceDisplay        = VndMoneyFormatter.Format(vm.Price),
+            Price               = vm.EffectivePrice,
+            OriginalPrice       = vm.Price,
+            PriceDisplay        = effectiveDisplay,
+            OriginalPriceDisplay = originalDisplay,
             Subtitle            = vm.Subtitle,
             Description         = vm.Description,
             IsSignature         = vm.IsSignature,

@@ -49,12 +49,25 @@
 
     function normalizeInput(raw) {
         if (!raw || typeof raw !== "object") return {};
+        // Promotion awareness: the server sends both `price` (= effective,
+        // post-discount) and `originalPrice` (= MenuItem.Price). When the
+        // server has not yet been updated (older payloads) we fall back so
+        // the existing single-price rendering path stays valid.
+        var priceNum = Number(raw.price);
+        var origNum = Number(raw.originalPrice);
+        var effective = Number.isFinite(priceNum) ? priceNum : NaN;
+        var original = Number.isFinite(origNum) ? origNum : effective;
+        if (!Number.isFinite(original)) original = effective;
+        var hasDiscount = Number.isFinite(original) && Number.isFinite(effective) && original !== effective;
         return {
             id: raw.id,
             image: raw.image || raw.cardImageUrl || "",
             name: raw.name || "",
-            price: raw.price,
+            price: effective,
             priceDisplay: raw.priceDisplay || "",
+            originalPrice: original,
+            originalPriceDisplay: raw.originalPriceDisplay || "",
+            hasDiscount: hasDiscount,
             subtitle: raw.subtitle || null,
             description: raw.description || null,
             isSignature: !!raw.isSignature,
@@ -182,10 +195,22 @@
 
     /**
      * Price block.
+     * When the promotion is ON the server-supplied `originalPrice` differs
+     * from `price`; we render the original struck through next to the
+     * effective price. When OFF (or for legacy payloads) the effective
+     * price alone is rendered, matching the menu card behaviour.
      */
-    function renderPrice(priceDisplay) {
-        if (!priceDisplay) return "";
-        return '<p class="dd-card__price" aria-label="Price">' + esc(priceDisplay) + '</p>';
+    function renderPrice(data) {
+        var html = "";
+        if (data.hasDiscount && data.originalPriceDisplay) {
+            html += '<span class="dd-card__price-strike" aria-label="Giá gốc">' +
+                esc(data.originalPriceDisplay) +
+                '</span>';
+        }
+        if (data.priceDisplay) {
+            html += '<p class="dd-card__price" aria-label="Price">' + esc(data.priceDisplay) + '</p>';
+        }
+        return html ? '<div class="dd-card__price-block">' + html + '</div>' : "";
     }
 
     /**
@@ -313,7 +338,7 @@
             serviceNoteHtml +
 
             '<div class="dd-card__footer">' +
-            renderPrice(data.priceDisplay) +
+            renderPrice(data) +
             renderAddToOrder(data) +
             '</div>' +
 

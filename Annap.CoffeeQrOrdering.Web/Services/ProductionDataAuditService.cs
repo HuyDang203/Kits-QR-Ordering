@@ -11,7 +11,8 @@ public sealed class ProductionDataAuditService(
     IApplicationDbContext db,
     IConfiguration configuration,
     IWebHostEnvironment environment,
-    IMenuInventoryGate inventoryGate)
+    IMenuInventoryGate inventoryGate,
+    IPricingService pricing)
 {
     /// <summary>
     /// Canonical Kits bakery category name. After the
@@ -325,6 +326,7 @@ public sealed class ProductionDataAuditService(
         var pairings = await BakeryPairingService.GetSuggestionsForDrinkAsync(
             db,
             inventoryGate,
+            pricing,
             sampleDrink.Id,
             sampleDrink.CategoryName,
             cancellationToken).ConfigureAwait(false);
