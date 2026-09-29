@@ -33,6 +33,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PaymentConfirmation> PaymentConfirmations => Set<PaymentConfirmation>();
     public DbSet<StaffAccount> StaffAccounts => Set<StaffAccount>();
     public DbSet<ShiftClose> ShiftCloses => Set<ShiftClose>();
+    public DbSet<StaffOrderGroup> StaffOrderGroups => Set<StaffOrderGroup>();
+    public DbSet<StaffOrderGroupMember> StaffOrderGroupMembers => Set<StaffOrderGroupMember>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

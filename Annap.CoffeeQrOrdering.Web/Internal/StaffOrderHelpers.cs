@@ -16,6 +16,24 @@ internal static class StaffOrderBoardNotes
     }
 }
 
+/// <summary>
+/// True if the order is currently shown on the staff board — either an open
+/// status (Submitted / Paid / InProgress / FinishingTouches / Ready) or a
+/// recently Completed order within the staff "Xong" window. Cancelled orders
+/// are never eligible. Used to gate staff-side grouping operations.
+/// </summary>
+internal static class StaffOrderBoardEligibilityHelper
+{
+    public static bool IsEligible(OrderStatus status, DateTimeOffset? completedAtUtc, DateTimeOffset? updatedAtUtc, DateTimeOffset? createdAtUtc, DateTimeOffset asOf, TimeSpan recentCompletedWindow)
+    {
+        if (status == OrderStatus.Cancelled) return false;
+        if (status != OrderStatus.Completed) return true;
+        var since = completedAtUtc ?? updatedAtUtc ?? createdAtUtc;
+        if (since is null) return false;
+        return (asOf - since.Value) <= recentCompletedWindow;
+    }
+}
+
 internal static class StaffOrderPacingHelper
 {
     public static string Resolve(Order o)

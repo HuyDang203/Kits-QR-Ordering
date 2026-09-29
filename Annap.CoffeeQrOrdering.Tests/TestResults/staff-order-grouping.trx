@@ -1,0 +1,527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="b6470e21-b110-40fc-b83a-e07485e3bc74" name="Lenovo@LAPTOP-REB2D5RI 2026-09-27 11:30:50" runUser="LAPTOP-REB2D5RI\Lenovo" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-27T11:30:50.0482614+07:00" queuing="2026-09-27T11:30:50.0482619+07:00" start="2026-09-27T11:30:37.4284927+07:00" finish="2026-09-27T11:30:50.9698577+07:00" />
+  <TestSettings name="default" id="3a0e980d-763c-4845-b48d-fffa9eba5542">
+    <Deployment runDeploymentRoot="Lenovo_LAPTOP-REB2D5RI_2026-09-27_11_30_50" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="6ca431ae-3445-4f50-a26e-374fb3579651" testId="c74d6d1d-dc20-7789-db37-382fa5cc079c" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseE_duplicate_orderIds_are_idempotent" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0657651" startTime="2026-09-27T11:30:50.0533513+07:00" endTime="2026-09-27T11:30:50.0533515+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ca431ae-3445-4f50-a26e-374fb3579651" />
+    <UnitTestResult executionId="aaad2f7c-1296-4c0e-94bc-1f45ec2275a1" testId="a61627d1-387e-1865-0aaa-05ab810eb30e" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseF_pricing_uses_OrderItem_snapshot_not_MenuItem_Price" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0482282" startTime="2026-09-27T11:30:50.4215493+07:00" endTime="2026-09-27T11:30:50.4215495+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aaad2f7c-1296-4c0e-94bc-1f45ec2275a1" />
+    <UnitTestResult executionId="4b38ebff-6d32-42b8-a6ec-824b73811cb0" testId="f20ed499-8733-c0d6-d046-4cf3c220b7fc" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.Unknown_order_id_is_rejected" computerName="LAPTOP-REB2D5RI" duration="00:00:00.5029012" startTime="2026-09-27T11:30:49.3310980+07:00" endTime="2026-09-27T11:30:49.3311129+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b38ebff-6d32-42b8-a6ec-824b73811cb0" />
+    <UnitTestResult executionId="89614750-8805-4f79-aa3a-324c70b4c8ed" testId="8fd2b6a2-1638-d97d-cc0b-c7e1f4acfb1d" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseB_different_tables_group_to_76k_with_joined_tablecodes" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0454492" startTime="2026-09-27T11:30:50.3435570+07:00" endTime="2026-09-27T11:30:50.3435572+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89614750-8805-4f79-aa3a-324c70b4c8ed" />
+    <UnitTestResult executionId="fdd8c0db-ad1a-4273-8b4d-fcdc73205d30" testId="e94793b0-d97f-c590-d2d1-444fd50b12bf" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseC_multiple_same_table_orders_all_in_one_group" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0534450" startTime="2026-09-27T11:30:49.7095722+07:00" endTime="2026-09-27T11:30:49.7095724+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fdd8c0db-ad1a-4273-8b4d-fcdc73205d30" />
+    <UnitTestResult executionId="b0b9616a-632b-41f7-a163-56776cbfab4a" testId="b5c0d712-1d23-853e-8625-15c98c9a80bf" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseH_groups_persist_across_board_refresh" computerName="LAPTOP-REB2D5RI" duration="00:00:00.1355921" startTime="2026-09-27T11:30:49.9570125+07:00" endTime="2026-09-27T11:30:49.9570129+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b0b9616a-632b-41f7-a163-56776cbfab4a" />
+    <UnitTestResult executionId="83984f45-4a3f-4f0e-9061-d9fdf82303d6" testId="e5482462-fc23-e2fb-bfdc-565b062ab352" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseG_non_eligible_order_is_rejected" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0500875" startTime="2026-09-27T11:30:49.7899582+07:00" endTime="2026-09-27T11:30:49.7899586+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83984f45-4a3f-4f0e-9061-d9fdf82303d6" />
+    <UnitTestResult executionId="43394bf2-4600-4750-a084-39bfbf2e7dbc" testId="08d78ab2-8f26-4c05-0074-77c3c3ad8290" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseA_same_table_two_orders_group_to_60k" computerName="LAPTOP-REB2D5RI" duration="00:00:00.0429177" startTime="2026-09-27T11:30:50.2682270+07:00" endTime="2026-09-27T11:30:50.2682272+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="43394bf2-4600-4750-a084-39bfbf2e7dbc" />
+    <UnitTestResult executionId="051d213f-77c6-42af-a59a-cdc66bc99f96" testId="64500937-956b-636d-6c2d-b51e4f6f2e8e" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseD_extending_existing_group_adds_new_order" computerName="LAPTOP-REB2D5RI" duration="00:00:00.2294301" startTime="2026-09-27T11:30:49.6218930+07:00" endTime="2026-09-27T11:30:49.6218935+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="051d213f-77c6-42af-a59a-cdc66bc99f96" />
+    <UnitTestResult executionId="ade83983-9dab-45a5-a856-55efd03c7893" testId="79ef1db6-3081-6cc3-ff79-f2fdcad94473" testName="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseI_ungroup_dissolves_group_and_preserves_orders" computerName="LAPTOP-REB2D5RI" duration="00:00:00.1048602" startTime="2026-09-27T11:30:50.1955215+07:00" endTime="2026-09-27T11:30:50.1955216+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ade83983-9dab-45a5-a856-55efd03c7893" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseF_pricing_uses_OrderItem_snapshot_not_MenuItem_Price" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="a61627d1-387e-1865-0aaa-05ab810eb30e">
+      <Execution id="aaad2f7c-1296-4c0e-94bc-1f45ec2275a1" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseF_pricing_uses_OrderItem_snapshot_not_MenuItem_Price" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseH_groups_persist_across_board_refresh" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="b5c0d712-1d23-853e-8625-15c98c9a80bf">
+      <Execution id="b0b9616a-632b-41f7-a163-56776cbfab4a" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseH_groups_persist_across_board_refresh" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseA_same_table_two_orders_group_to_60k" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="08d78ab2-8f26-4c05-0074-77c3c3ad8290">
+      <Execution id="43394bf2-4600-4750-a084-39bfbf2e7dbc" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseA_same_table_two_orders_group_to_60k" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseB_different_tables_group_to_76k_with_joined_tablecodes" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="8fd2b6a2-1638-d97d-cc0b-c7e1f4acfb1d">
+      <Execution id="89614750-8805-4f79-aa3a-324c70b4c8ed" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseB_different_tables_group_to_76k_with_joined_tablecodes" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseC_multiple_same_table_orders_all_in_one_group" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="e94793b0-d97f-c590-d2d1-444fd50b12bf">
+      <Execution id="fdd8c0db-ad1a-4273-8b4d-fcdc73205d30" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseC_multiple_same_table_orders_all_in_one_group" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseD_extending_existing_group_adds_new_order" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="64500937-956b-636d-6c2d-b51e4f6f2e8e">
+      <Execution id="051d213f-77c6-42af-a59a-cdc66bc99f96" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseD_extending_existing_group_adds_new_order" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseE_duplicate_orderIds_are_idempotent" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="c74d6d1d-dc20-7789-db37-382fa5cc079c">
+      <Execution id="6ca431ae-3445-4f50-a26e-374fb3579651" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseE_duplicate_orderIds_are_idempotent" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseG_non_eligible_order_is_rejected" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="e5482462-fc23-e2fb-bfdc-565b062ab352">
+      <Execution id="83984f45-4a3f-4f0e-9061-d9fdf82303d6" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseG_non_eligible_order_is_rejected" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.Unknown_order_id_is_rejected" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="f20ed499-8733-c0d6-d046-4cf3c220b7fc">
+      <Execution id="4b38ebff-6d32-42b8-a6ec-824b73811cb0" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="Unknown_order_id_is_rejected" />
+    </UnitTest>
+    <UnitTest name="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests.CaseI_ungroup_dissolves_group_and_preserves_orders" storage="d:\kitsqr\annap.coffeeqrordering.tests\bin\debug\net8.0\annap.coffeeqrordering.tests.dll" id="79ef1db6-3081-6cc3-ff79-f2fdcad94473">
+      <Execution id="ade83983-9dab-45a5-a856-55efd03c7893" />
+      <TestMethod codeBase="D:\KitsQR\Annap.CoffeeQrOrdering.Tests\bin\Debug\net8.0\Annap.CoffeeQrOrdering.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Annap.CoffeeQrOrdering.Tests.StaffOrderGroupingTests" name="CaseI_ungroup_dissolves_group_and_preserves_orders" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="c74d6d1d-dc20-7789-db37-382fa5cc079c" executionId="6ca431ae-3445-4f50-a26e-374fb3579651" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a61627d1-387e-1865-0aaa-05ab810eb30e" executionId="aaad2f7c-1296-4c0e-94bc-1f45ec2275a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f20ed499-8733-c0d6-d046-4cf3c220b7fc" executionId="4b38ebff-6d32-42b8-a6ec-824b73811cb0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8fd2b6a2-1638-d97d-cc0b-c7e1f4acfb1d" executionId="89614750-8805-4f79-aa3a-324c70b4c8ed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e94793b0-d97f-c590-d2d1-444fd50b12bf" executionId="fdd8c0db-ad1a-4273-8b4d-fcdc73205d30" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b5c0d712-1d23-853e-8625-15c98c9a80bf" executionId="b0b9616a-632b-41f7-a163-56776cbfab4a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5482462-fc23-e2fb-bfdc-565b062ab352" executionId="83984f45-4a3f-4f0e-9061-d9fdf82303d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="08d78ab2-8f26-4c05-0074-77c3c3ad8290" executionId="43394bf2-4600-4750-a084-39bfbf2e7dbc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="64500937-956b-636d-6c2d-b51e4f6f2e8e" executionId="051d213f-77c6-42af-a59a-cdc66bc99f96" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="79ef1db6-3081-6cc3-ff79-f2fdcad94473" executionId="ade83983-9dab-45a5-a856-55efd03c7893" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="10" executed="10" passed="10" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.21)&#xD;
+[xUnit.net 00:00:00.11]   Discovering: Annap.CoffeeQrOrdering.Tests&#xD;
+[xUnit.net 00:00:00.22]   Discovered:  Annap.CoffeeQrOrdering.Tests&#xD;
+[xUnit.net 00:00:00.22]   Starting:    Annap.CoffeeQrOrdering.Tests&#xD;
+[testcontainers.org 00:00:00.11] Connected to Docker:&#xD;
+  Host: npipe://./pipe/docker_engine&#xD;
+  Server Version: 29.4.2&#xD;
+  Kernel Version: 6.6.114.1-microsoft-standard-WSL2&#xD;
+  API Version: 1.54&#xD;
+  Operating System: Docker Desktop&#xD;
+  Total Memory: 7.44 GB&#xD;
+  Labels: &#xD;
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli&#xD;
+[testcontainers.org 00:00:00.36] Docker container a7251824feca created&#xD;
+[testcontainers.org 00:00:00.42] Start Docker container a7251824feca&#xD;
+[testcontainers.org 00:00:00.77] Wait for Docker container a7251824feca to complete readiness checks&#xD;
+[testcontainers.org 00:00:00.78] Docker container a7251824feca ready&#xD;
+[testcontainers.org 00:00:02.98] Docker container 1a0fadb27901 created&#xD;
+[testcontainers.org 00:00:03.00] Start Docker container 1a0fadb27901&#xD;
+[testcontainers.org 00:00:03.31] Wait for Docker container 1a0fadb27901 to complete readiness checks&#xD;
+[testcontainers.org 00:00:03.33] Execute "pg_isready --host localhost --dbname annap_order_tests --username postgres" at Docker container 1a0fadb27901&#xD;
+[testcontainers.org 00:00:04.48] Execute "pg_isready --host localhost --dbname annap_order_tests --username postgres" at Docker container 1a0fadb27901&#xD;
+[testcontainers.org 00:00:05.60] Execute "pg_isready --host localhost --dbname annap_order_tests --username postgres" at Docker container 1a0fadb27901&#xD;
+[testcontainers.org 00:00:05.72] Docker container 1a0fadb27901 ready&#xD;
+info: Startup.Media[0]&#xD;
+      Menu media directories: managed=D:\KitsQR\Annap.CoffeeQrOrdering.Web\wwwroot\media\menu-items exists=True files=59; originals=D:\KitsQR\Annap.CoffeeQrOrdering.Web\wwwroot\media\menu-items\_originals exists=True&#xD;
+ANNAP DEVELOPMENT RUNTIME&#xD;
+-------------------------&#xD;
+  PID:              300&#xD;
+  Environment:      Development&#xD;
+  Kestrel URLs:     (none configured)&#xD;
+  ASPNETCORE_URLS:  (not set)&#xD;
+  Other ANNAP PIDs: none detected&#xD;
+  Stop cleanly: Ctrl+C in this terminal (do not close the terminal window).&#xD;
+  Stop from another terminal: .\scripts\dev-stop.ps1&#xD;
+  Rebuild + run: .\scripts\dev-restart.ps1&#xD;
+info: Microsoft.Hosting.Lifetime[14]&#xD;
+      Now listening on: http://0.0.0.0:8080&#xD;
+[dev] Host started. PID=300&#xD;
+info: Startup.DbBootstrap[0]&#xD;
+      Development DB bootstrap starting (deferred after ApplicationStarted).&#xD;
+info: Startup.DbBootstrap[0]&#xD;
+      Development DB bootstrap skipped: Database:ApplyMigrationsOnStartup is false.&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+==================================================&#xD;
+ANNAP DEVELOPMENT SERVER&#xD;
+========================&#xD;
+Local:&#xD;
+http://localhost:8080&#xD;
+LAN (phones / QR):&#xD;
+http://192.168.2.36:8080&#xD;
+QR (admin print cards):&#xD;
+http://192.168.2.36:8080/admin/demo/qr&#xD;
+Guest scan sample (table T01):&#xD;
+http://192.168.2.36:8080/table/T01&#xD;
+Admin:&#xD;
+http://192.168.2.36:8080/admin&#xD;
+=============================&#xD;
+Kestrel: http://0.0.0.0:8080 � Database: yes � All interfaces: yes&#xD;
+Detected adapter: http://192.168.2.36:8080 (compare with public base above)&#xD;
+Diag: http://192.168.2.36:8080/diag/mobile � Ping: http://192.168.2.36:8080/api/diag/ping&#xD;
+info: AppUrl[0]&#xD;
+      AppUrl: listening=http://0.0.0.0:8080; dbReachable=True; detectedWifi=http://192.168.2.36:8080; configured=http://192.168.2.36:8080; mismatch=False; ping=http://192.168.2.36:8080/api/diag/ping&#xD;
+fail: Microsoft.EntityFrameworkCore.Database.Command[20102]&#xD;
+      Failed executing DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='45']&#xD;
+      SELECT m."Id", m."CreatedAtUtc", m."Name", m."SortOrder", m."UpdatedAtUtc"&#xD;
+      FROM menu_categories AS m&#xD;
+fail: Microsoft.EntityFrameworkCore.Query[10100]&#xD;
+      An exception occurred while iterating over the results of a query for context type 'Annap.CoffeeQrOrdering.Infrastructure.Persistence.AppDbContext'.&#xD;
+      Npgsql.PostgresException (0x80004005): 42P01: relation "menu_categories" does not exist&#xD;
+      POSITION: 82&#xD;
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)&#xD;
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()&#xD;
+        Exception data:&#xD;
+          Severity: ERROR&#xD;
+          SqlState: 42P01&#xD;
+          MessageText: relation "menu_categories" does not exist&#xD;
+          Position: 82&#xD;
+          File: parse_relation.c&#xD;
+          Line: 1449&#xD;
+          Routine: parserOpenTable&#xD;
+      Npgsql.PostgresException (0x80004005): 42P01: relation "menu_categories" does not exist&#xD;
+      POSITION: 82&#xD;
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)&#xD;
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()&#xD;
+        Exception data:&#xD;
+          Severity: ERROR&#xD;
+          SqlState: 42P01&#xD;
+          MessageText: relation "menu_categories" does not exist&#xD;
+          Position: 82&#xD;
+          File: parse_relation.c&#xD;
+          Line: 1449&#xD;
+          Routine: parserOpenTable&#xD;
+warn: Startup.MenuCatalog[0]&#xD;
+      Kits menu bootstrap failed. Catalog may be incomplete.&#xD;
+      Npgsql.PostgresException (0x80004005): 42P01: relation "menu_categories" does not exist&#xD;
+      POSITION: 82&#xD;
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)&#xD;
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()&#xD;
+         at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)&#xD;
+         at Annap.CoffeeQrOrdering.Web.Services.KitsMenuBootstrap.EnsureCategoriesAsync(IApplicationDbContext db, ILogger logger, CancellationToken cancellationToken) in D:\KitsQR\Annap.CoffeeQrOrdering.Web\Services\KitsMenuBootstrap.cs:line 99&#xD;
+         at Annap.CoffeeQrOrdering.Web.Services.KitsMenuBootstrap.EnsureKitsMenuAsync(IApplicationDbContext db, ILogger logger, CancellationToken cancellationToken) in D:\KitsQR\Annap.CoffeeQrOrdering.Web\Services\KitsMenuBootstrap.cs:line 61&#xD;
+         at Annap.CoffeeQrOrdering.Web.Extensions.AnnapBootstrapExtensions.TryEnsureHospitalityCatalogBootstrapAsync(WebApplication app, CancellationToken cancellationToken) in D:\KitsQR\Annap.CoffeeQrOrdering.Web\Extensions\AnnapBootstrapExtensions.cs:line 109&#xD;
+        Exception data:&#xD;
+          Severity: ERROR&#xD;
+          SqlState: 42P01&#xD;
+          MessageText: relation "menu_categories" does not exist&#xD;
+          Position: 82&#xD;
+          File: parse_relation.c&#xD;
+          Line: 1449&#xD;
+          Routine: parserOpenTable&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260509152018_InitialCreate'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510050332_AddMenuItemEditorialFields'.&#xD;
+fail: Microsoft.EntityFrameworkCore.Database.Command[20102]&#xD;
+      Failed executing DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='45']&#xD;
+      SELECT EXISTS (&#xD;
+          SELECT 1&#xD;
+          FROM venue_tables AS v)&#xD;
+fail: Microsoft.EntityFrameworkCore.Query[10100]&#xD;
+      An exception occurred while iterating over the results of a query for context type 'Annap.CoffeeQrOrdering.Infrastructure.Persistence.AppDbContext'.&#xD;
+      Npgsql.PostgresException (0x80004005): 42P01: relation "venue_tables" does not exist&#xD;
+      POSITION: 41&#xD;
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)&#xD;
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()&#xD;
+        Exception data:&#xD;
+          Severity: ERROR&#xD;
+          SqlState: 42P01&#xD;
+          MessageText: relation "venue_tables" does not exist&#xD;
+          Position: 41&#xD;
+          File: parse_relation.c&#xD;
+          Line: 1449&#xD;
+          Routine: parserOpenTable&#xD;
+      Npgsql.PostgresException (0x80004005): 42P01: relation "venue_tables" does not exist&#xD;
+      POSITION: 41&#xD;
+         at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)&#xD;
+         at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Npgsql.NpgsqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)&#xD;
+         at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)&#xD;
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()&#xD;
+        Exception data:&#xD;
+          Severity: ERROR&#xD;
+          SqlState: 42P01&#xD;
+          MessageText: relation "venue_tables" does not exist&#xD;
+          Position: 41&#xD;
+          File: parse_relation.c&#xD;
+          Line: 1449&#xD;
+          Routine: parserOpenTable&#xD;
+info: Startup.DbBootstrap[0]&#xD;
+      Development DB bootstrap completed.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510051444_AddMenuItemSensoryAndIngredients'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510053743_AddOrderStatusFinishingTouchesEnum'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510065458_AddMenuItemSensoryProfileJson'.&#xD;
+fail: Startup.PaymentWorkflowSchema[0]&#xD;
+      Order workflow migrations are not applied. Required order or order-item columns are missing. Run database migrations before starting the application. Missing columns: BillNumber, PaidAtUtc, PaymentConfirmedBy, PaymentMethod, CompletedAtUtc, CustomerNote, Temperature, MenuItemName, PreparedQuantity, PreparedAtUtc, PreparedBy, PreparedByAccountId. Command: dotnet ef database update --project Annap.CoffeeQrOrdering.Infrastructure --startup-project Annap.CoffeeQrOrdering.Web&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510081542_VenueTablesAndGuestOrderTokens'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510210000_AddMenuItemIsArchived'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260510233000_HospitalityReliabilityOps'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260511184452_AddMenuCurationFields'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260511194808_Phase10OrderSafetyAudit'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260512000000_ExperienceCurationCms'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260512184637_AddGuestExperienceAdminConfiguration'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260512190554_GuestExperienceCmsEngine'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260513031649_ExperienceWorkbenchSnapshots'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260513034800_MenuCatalogAndGroupExperience'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260513042537_AddMenuItemDisplaySortOrder'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260513071229_AddAppNetworkSettings'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260514120000_AddLetterRoomContentJson'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260516050910_AddKiotVietIntegrationPhase1A'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260517150641_AddSommelierSetKey'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260520085807_AddDetailPosterImagePath'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260520191504_AddDrinkProvenanceFields'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260526082411_AddHomepageExperienceSettings'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260605142000_Phase2_OrderItemSnapshotAndSafety'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260605160000_Phase3_StaffBoardStatusIndex'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260625120000_AddOrderPaymentWorkflow'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260626120000_AddOrderItemPreparation'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260702120000_AddPaymentConfirmations'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260704120000_AddStaffAccounts'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260705120000_AddShiftCloses'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260705140000_AddBaristaAttribution'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260706140000_AddOrderCustomerNote'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260707120000_AddOrderItemCustomerNote'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260717150000_ShiftCloseWindowUniqueIndex'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260722093000_AddGuidedSommelierNativeEnglishCopy'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260805120000_AddOrderItemTemperature'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260825120000_MergeBakeryCategoryVariants'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260920065112_AddFulfillmentMode'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260924021301_RemoveKiotVietIntegration'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260924165814_AddPricingPromotionSettings'.&#xD;
+info: Microsoft.EntityFrameworkCore.Migrations[20402]&#xD;
+      Applying migration '20260927035653_AddStaffOrderGroups'.&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 162ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 18ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 38ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 400 in 156ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 39ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 2ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 16ms&#xD;
+warn: Microsoft.EntityFrameworkCore.Query[20504]&#xD;
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w =&gt; w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 118ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=3 groups_dissolved=1&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 50ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 15ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 14ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=3 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 14ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 400 in 6ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 14ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 1ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 14ms&#xD;
+warn: Microsoft.EntityFrameworkCore.Query[20504]&#xD;
+      Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w =&gt; w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /api/staff/orders -&gt; 200 in 84ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 14ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 19ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 21ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 14ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      DELETE /api/staff/order-groups/0986fa63-61f2-4a5c-97b1-37e2b7e0bb3e -&gt; 200 in 26ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /api/staff/orders -&gt; 200 in 18ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 13ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 15ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/login -&gt; 200 in 14ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /staff/login -&gt; 302 in 0ms&#xD;
+info: Annap.CoffeeQrOrdering.Web.AppUrlDevelopmentPostConfigure[0]&#xD;
+      AppUrl: PublicBaseUrl was empty; set to detected WiFi/LAN \u001a http://192.168.2.36:8080&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      GET /staff/orders -&gt; 200 in 13ms&#xD;
+warn: Annap.StaffPerf[0]&#xD;
+      [STAFF PERF] action=group.create members=2 groups_dissolved=0&#xD;
+info: Annap.CoffeeQrOrdering.Web.DevRequestLoggingMiddleware[0]&#xD;
+      POST /api/staff/order-groups -&gt; 200 in 14ms&#xD;
+[testcontainers.org 00:00:12.21] Delete Docker container 1a0fadb27901&#xD;
+ANNAP shutting down gracefully... PID=300&#xD;
+Stopping hosted services and releasing Kestrel...&#xD;
+info: Startup.Lifetime[0]&#xD;
+      ANNAP shutting down gracefully. PID=300; pendingTasks=(none)&#xD;
+[dev] ApplicationStopping received. PID=300&#xD;
+Hosted services stopped. Kestrel released.&#xD;
+ANNAP shutdown complete. PID=300&#xD;
+info: Startup.Lifetime[0]&#xD;
+      ANNAP shutdown complete. PID=300&#xD;
+[dev] ApplicationStopped. PID=300; shutdown took 1ms&#xD;
+[xUnit.net 00:00:13.00]   Finished:    Annap.CoffeeQrOrdering.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

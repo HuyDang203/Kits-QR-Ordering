@@ -305,12 +305,20 @@ public sealed class GuestPaymentUxTests
         var end = js.IndexOf("\n        function ", start + 1, StringComparison.Ordinal);
         var block = end > start ? js[start..end] : js[start..];
 
-        // Required cleanup primitives must run on celebration dismiss.
-        Assert.Contains("removeGuestOrderSession()", block, StringComparison.Ordinal);
-        Assert.Contains("stopTrayStatusPolling()", block, StringComparison.Ordinal);
-        Assert.Contains("traySubmittedStatus = null", block, StringComparison.Ordinal);
-        Assert.Contains("trayKnownPendingPayment = null", block, StringComparison.Ordinal);
-        Assert.Contains("trayStatusFingerprint = \"\"", block, StringComparison.Ordinal);
+        // Required cleanup primitives must run on celebration dismiss, either
+        // directly OR via the canonical resetGuestOrderSessionUi helper (which
+        // itself drops every transient variable and removes the local session).
+        bool callsReset = block.Contains("resetGuestOrderSessionUi(", StringComparison.Ordinal);
+        Assert.True(callsReset || block.Contains("removeGuestOrderSession()", StringComparison.Ordinal),
+            "celebration dismiss must remove the local Guest Order Session (directly or via resetGuestOrderSessionUi)");
+        Assert.True(callsReset || block.Contains("stopTrayStatusPolling()", StringComparison.Ordinal),
+            "celebration dismiss must stop status polling");
+        Assert.True(callsReset || block.Contains("traySubmittedStatus = null", StringComparison.Ordinal),
+            "celebration dismiss must reset traySubmittedStatus");
+        Assert.True(callsReset || block.Contains("trayKnownPendingPayment = null", StringComparison.Ordinal),
+            "celebration dismiss must reset trayKnownPendingPayment");
+        Assert.True(callsReset || block.Contains("trayStatusFingerprint = \"\"", StringComparison.Ordinal),
+            "celebration dismiss must reset trayStatusFingerprint");
         Assert.Contains("setCheckoutUi(CHECKOUT_UI.EDITING)", block, StringComparison.Ordinal);
         Assert.Contains("cleanupFired", block, StringComparison.Ordinal);
 

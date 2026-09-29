@@ -62,10 +62,14 @@
     let previousColumns = new Map();
     let elapsedTimer = null;
     let lastBoardPulseAt = null;
-    let boardPermissions = { canMarkPaid: false, canComplete: false, canPrepareItems: false, canManageBills: false };
+    let boardPermissions = { canMarkPaid: false, canComplete: false, canPrepareItems: false, canManageBills: false, canGroup: false };
     let activeMobileTab = null;
     let mobileTabInitialized = false;
     let lastBoardData = null;
+    let lastBoardGroups = [];
+    let primaryForGroup = new Map(); // groupId -> primaryOrderId
+    let orderIdToGroupId = new Map(); // orderId -> groupId
+    let draggingOrderId = null;
     const expandedItemOrders = new Set();
 
     const MOBILE_MAX = 767.98;
@@ -515,6 +519,141 @@
             </article>`;
     }
 
+    // ===== Staff Column 3 grouping helpers =====
+    // OrderId is the identity. TableCode is display metadata only. The grouped
+    // card is a presentation layer; underlying Orders and OrderItems remain
+    // unchanged. See /api/staff/order-groups.
+    function groupOf(orderId) {
+        return orderIdToGroupId.get(orderId) || null;
+    }
+
+    function findGroupById(groupId) {
+        return lastBoardGroups.find((g) => g.id === groupId) || null;
+    }
+
+    function findOrderById(orderId) {
+        for (const col of BOARD_COLUMNS) {
+            const arr = lastBoardData?.[col] || [];
+            const hit = arr.find((o) => o.id === orderId);
+            if (hit) return hit;
+        }
+        return null;
+    }
+
+    function collectGroupMemberOrders(group) {
+        if (!group) return [];
+        return (group.orderIds || []).map((id) => findOrderById(id)).filter(Boolean);
+    }
+
+    function buildGroupedCardHtml(primary, memberOrders, group, column) {
+        const meta = columnMeta(column);
+        const isTakeaway = primary.isTakeaway === true || primary.isTakeaway === "true";
+        const tableCodes = group.tableCodes || [];
+        const tableCodeDisplay = isTakeaway
+            ? `<span class="staff-order-card__table-code staff-order-card__table-code--takeaway">—</span>`
+            : escapeHtml(tableCodes.join(", ") || "—");
+        const waitBadge =
+            column === "submitted"
+                ? `<span class="staff-order-card__wait-badge" data-field="elapsed-wait">${fmtWaitVi(primary.createdAtUtc)}</span>`
+                : "";
+        const aggregate = group.aggregateTotal != null
+            ? group.aggregateTotal
+            : memberOrders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+        const memberCount = group.memberCount || memberOrders.length;
+        const groupBadge = `<span class="staff-order-badge staff-order-badge--group staff-order-badge--desktop">Gộp ${memberCount} đơn</span>`;
+        const columnBadge = `<span class="staff-order-badge staff-order-badge--${column} staff-order-badge--desktop">${escapeHtml(meta.badge)}</span>`;
+        const pendingBadge =
+            column === "submitted" && primary.paymentMethod
+                ? escapeHtml(
+                      primary.pendingPaymentBadgeVi ||
+                          (primary.paymentMethod === "BankTransfer"
+                              ? "Chuyển khoản · chờ xác nhận"
+                              : primary.paymentMethod === "Card"
+                                ? "Thẻ · chờ thanh toán"
+                                : primary.paymentMethod === "Cash"
+                                  ? "Tiền mặt · chờ thanh toán"
+                                  : primary.paymentMethod === "CashOrCardAtCounter"
+                                    ? "Tại quầy · tiền mặt/thẻ"
+                                    : "Chờ thanh toán")
+                  )
+                : "";
+        const paymentLine =
+            column === "submitted" && pendingBadge
+                ? `<p class="staff-order-card__payment-line">${pendingBadge}</p>`
+                : "";
+        const paymentBadge =
+            column === "submitted" && pendingBadge
+                ? `<span class="staff-order-card__payment-badge staff-order-card__payment-badge--desktop">${pendingBadge}</span>`
+                : "";
+        const transferMemoLine =
+            column === "submitted" && primary.paymentMethod === "BankTransfer" && primary.transferMemo
+                ? `<p class="staff-order-card__transfer-memo">CK: ${escapeHtml(primary.transferMemo)}</p>`
+                : "";
+        const paidTimeLine =
+            column === "paid" && primary.paidAtUtc
+                ? `<p class="staff-order-card__meta-line staff-order-card__meta-line--mobile">TT <span>${fmtClock(primary.paidAtUtc)}</span></p>`
+                : column === "completed" && primary.paidAtUtc
+                  ? `<p class="staff-order-card__meta-line staff-order-card__meta-line--desktop">Thanh toán <span>${fmtClock(primary.paidAtUtc)}</span></p>`
+                  : "";
+        const stepIso = primary.statusChangedAtUtc || primary.updatedAtUtc || primary.createdAtUtc;
+
+        // Build member header chip showing how many orders are combined.
+        const memberHeaders = memberOrders
+            .map((o, idx) => `<span class="staff-order-group__chip" title="${escapeHtml(o.tableCode || "—")}">${escapeHtml(o.tableCode || "—")}</span>`)
+            .join('<span class="staff-order-group__chip-sep" aria-hidden="true">·</span>');
+        const totalLine =
+            aggregate != null
+                ? `<div class="staff-order-card__total staff-order-card__total--grouped"><span class="staff-order-card__total-label">Tổng ${memberCount} đơn</span><span class="staff-order-card__total-amount">${moneyFmt(aggregate)}</span></div>`
+                : "";
+
+        // Per-member item lists, separated visually. Underlying OrderItems are
+        // never modified — these lists are a pure presentation pass.
+        const memberSections = memberOrders.map((o, idx) => {
+            const heading = memberOrders.length > 1
+                ? `<p class="staff-order-group__member-head">Đơn ${escapeHtml(o.tableCode || "—")} · <span>${moneyFmt(Number(o.totalAmount) || 0)}</span></p>`
+                : "";
+            const lines = (o.items || []).map((it) => buildItemLine(it, o.id, column)).join("");
+            return `<section class="staff-order-group__member" data-member-id="${o.id}" data-member-index="${idx}">
+                ${heading}
+                <ul class="staff-order-card__items">${lines || '<li class="staff-order-card__item staff-order-card__item--empty">Không có món</li>'}</ul>
+            </section>`;
+        }).join("");
+
+        // "Mark paid" / "Complete" / "View bill" actions remain bound to the
+        // primary order only. Secondary orders keep their state untouched.
+        const primaryActions = buildCardActions(primary, column);
+
+        return `<article class="staff-order-card staff-order-card--${column} staff-order-card--grouped surface-glass"
+                data-order-id="${primary.id}" data-group-id="${group.id}" data-staff-status="${primary.staffStatus || ""}" data-board-column="${column}"
+                data-created-at="${primary.createdAtUtc || ""}" data-updated-at="${primary.updatedAtUtc || ""}" data-status-changed-at="${stepIso || ""}">
+                <div class="staff-order-card__top">
+                    <div class="staff-order-card__table-row">
+                        <span class="staff-order-card__table-prefix">Đơn</span>
+                        <span class="staff-order-card__table-code staff-order-card__table-code--grouped">${tableCodeDisplay}</span>
+                        <span class="staff-order-card__group-count" aria-label="Số đơn trong nhóm">${memberCount} đơn</span>
+                        ${waitBadge}
+                    </div>
+                    <div class="staff-order-card__badges-row">
+                        ${groupBadge}
+                        ${paymentBadge}
+                        ${columnBadge}
+                    </div>
+                    ${paymentLine}
+                    ${transferMemoLine}
+                </div>
+                <div class="staff-order-card__meta-block">
+                    ${paidTimeLine}
+                </div>
+                <div class="staff-order-group__members">${memberHeaders}</div>
+                ${memberSections}
+                ${totalLine}
+                ${primaryActions}
+                <div class="staff-order-group__ops">
+                    <button type="button" class="staff-order-group__ungroup guest-hit" data-staff-act="ungroup" data-group-id="${group.id}">Tách gộp</button>
+                </div>
+            </article>`;
+    }
+
     function renderEmptyNode(text) {
         const p = document.createElement("p");
         p.className = "staff-col-empty staff-col-empty--note";
@@ -560,6 +699,24 @@
             window.setTimeout(() => card.classList.remove("staff-order-card--shift"), 450);
         }
 
+        attachDragAndDrop(card);
+        return card;
+    }
+
+    function mountGroupedCard(board, body, group, column) {
+        const primaryId = group.primaryOrderId;
+        if (!primaryId) return null;
+        const memberOrders = collectGroupMemberOrders(group);
+        if (memberOrders.length === 0) return null;
+        const primary = memberOrders[0];
+        const existing = board.querySelector(`article.staff-order-card[data-order-id="${primary.id}"][data-group-id="${group.id}"]`);
+        if (existing) existing.remove();
+        const wrap = document.createElement("div");
+        wrap.innerHTML = buildGroupedCardHtml(primary, memberOrders, group, column).trim();
+        const card = wrap.firstElementChild;
+        if (!card) return null;
+        body.appendChild(card);
+        attachDragAndDrop(card);
         return card;
     }
 
@@ -567,21 +724,71 @@
         const body = colBody(status);
         if (!body) return;
         clearEmptyPlaceholders(body);
-        const sorted = [...orders].sort((a, b) => String(a.createdAtUtc).localeCompare(String(b.createdAtUtc)));
-        const desiredIds = sorted.map((o) => o.id);
 
+        // ── Compute desired state for this column ──
+        // Every OrderId that appears in any group anchored in this column must
+        // be rendered EXACTLY ONCE via its grouped card, never as a standalone
+        // card. Identity is OrderId only; TableCode is presentation metadata.
+        const groupedOrderIds = new Set();
+        const desiredGroupIds = new Set();
+        for (const g of lastBoardGroups) {
+            if (g.primaryBoardColumn !== status) continue;
+            desiredGroupIds.add(g.id);
+            for (const oid of g.orderIds || []) {
+                if (oid) groupedOrderIds.add(oid);
+            }
+        }
+
+        const sorted = [...orders].sort((a, b) => String(a.createdAtUtc).localeCompare(String(b.createdAtUtc)));
+
+        // ── Reconciliation: remove stale cards BEFORE mounting the desired set ──
+        // This is the critical fix. Without this, transitioning an Order
+        // standalone→grouped leaves the OLD standalone card in the DOM
+        // alongside the NEW grouped card (the old standalone is skipped by
+        // mountCard because its OrderId is in groupedOrderIds; removeOrphanCards
+        // does not touch it because its OrderId is still in the order list).
+        // The same applies in reverse when a group is dissolved.
+        const desiredStandaloneIds = new Set();
         for (const o of sorted) {
+            if (!groupedOrderIds.has(o.id)) desiredStandaloneIds.add(o.id);
+        }
+
+        const existingCards = Array.from(body.querySelectorAll("article.staff-order-card"));
+        for (const c of existingCards) {
+            const groupId = c.getAttribute("data-group-id");
+            const orderId = c.getAttribute("data-order-id");
+            if (groupId != null) {
+                // Grouped card — keep only if its group is still desired in this column.
+                if (!desiredGroupIds.has(groupId)) c.remove();
+            } else {
+                // Standalone card — keep only if its OrderId is still a desired standalone.
+                if (!desiredStandaloneIds.has(orderId)) c.remove();
+            }
+        }
+
+        // ── Render grouped cards (one per group anchored in this column) ──
+        for (const g of lastBoardGroups) {
+            if (g.primaryBoardColumn !== status) continue;
+            const primaryId = g.primaryOrderId;
+            if (!primaryId) continue;
+            const primary = sorted.find((o) => o.id === primaryId);
+            if (!primary) continue;
+            mountGroupedCard(board, body, g, status);
+        }
+
+        // ── Render ungrouped orders ──
+        // Skip any Order whose OrderId is already covered by a grouped card.
+        // Reconciliation above has already cleared the old standalone card for
+        // every grouped OrderId, so we only need to add cards that should
+        // exist after this render.
+        for (const o of sorted) {
+            if (groupedOrderIds.has(o.id)) continue;
             o.boardColumn = status;
             mountCard(board, body, o, status, isServed);
         }
 
-        for (const id of desiredIds) {
-            const card = board.querySelector(`article.staff-order-card[data-order-id="${id}"]`);
-            if (card && card.parentNode === body) body.appendChild(card);
-        }
-
         if (!body.querySelector("article.staff-order-card")) ensureEmpty(body, emptyText);
-        updateColumnBodyState(body, sorted.length);
+        updateColumnBodyState(body, body.querySelectorAll("article.staff-order-card").length);
     }
 
     function updateColumnCounts(data) {
@@ -653,8 +860,18 @@
                 canMarkPaid: !!data.permissions.canMarkPaid,
                 canComplete: !!data.permissions.canComplete,
                 canPrepareItems: !!data.permissions.canPrepareItems,
-                canManageBills: !!data.permissions.canManageBills
+                canManageBills: !!data.permissions.canManageBills,
+                canGroup: !!data.permissions.canGroup || !!data.permissions.canMarkPaid || !!data.permissions.canComplete
             };
+        }
+
+        // Track groups state. OrderId is the only identity; TableCode is display.
+        lastBoardGroups = Array.isArray(data.groups) ? data.groups : [];
+        primaryForGroup = new Map();
+        orderIdToGroupId = new Map();
+        for (const g of lastBoardGroups) {
+            if (g.primaryOrderId) primaryForGroup.set(g.id, g.primaryOrderId);
+            for (const oid of g.orderIds || []) orderIdToGroupId.set(oid, g.id);
         }
 
         syncColumn(board, "submitted", data.submitted || [], COLUMN_META.submitted.empty, false);
@@ -1032,6 +1249,117 @@
         }
     }
 
+    // ===== Staff Column 3 drag/drop wiring =====
+    // Native HTML5 drag/drop — keeps the implementation small and reuses the
+    // existing card markup. Mobile/tablet staff can use the "Tách gộp" button
+    // to dissolve a group if drag is not available.
+    function attachDragAndDrop(card) {
+        if (!card || !boardPermissions.canGroup) return;
+        const orderId = card.getAttribute("data-order-id");
+        if (!orderId) return;
+
+        card.setAttribute("draggable", "true");
+
+        card.addEventListener("dragstart", (ev) => {
+            draggingOrderId = orderId;
+            try {
+                ev.dataTransfer.setData("text/plain", orderId);
+                ev.dataTransfer.effectAllowed = "move";
+            } catch (_) {
+                /* IE/edge cases */
+            }
+            card.classList.add("staff-order-card--dragging");
+        });
+
+        card.addEventListener("dragend", () => {
+            draggingOrderId = null;
+            card.classList.remove("staff-order-card--dragging");
+            document
+                .querySelectorAll(".staff-order-card--drop-target")
+                .forEach((el2) => el2.classList.remove("staff-order-card--drop-target"));
+        });
+
+        card.addEventListener("dragover", (ev) => {
+            if (!draggingOrderId || draggingOrderId === orderId) return;
+            ev.preventDefault();
+            try {
+                ev.dataTransfer.dropEffect = "move";
+            } catch (_) {
+                /* noop */
+            }
+            card.classList.add("staff-order-card--drop-target");
+        });
+
+        card.addEventListener("dragleave", () => {
+            card.classList.remove("staff-order-card--drop-target");
+        });
+
+        card.addEventListener("drop", async (ev) => {
+            ev.preventDefault();
+            card.classList.remove("staff-order-card--drop-target");
+            const droppedId = draggingOrderId || (ev.dataTransfer && ev.dataTransfer.getData("text/plain")) || null;
+            draggingOrderId = null;
+            if (!droppedId || droppedId === orderId) return;
+            // Collect the full set to merge: existing group members + the
+            // dropped order. Falls back to just the two if no group exists.
+            const targetGroupId = orderIdToGroupId.get(orderId) || null;
+            const droppedGroupId = orderIdToGroupId.get(droppedId) || null;
+            const ids = new Set();
+            if (targetGroupId) {
+                const g = findGroupById(targetGroupId);
+                (g?.orderIds || []).forEach((id) => ids.add(id));
+            }
+            if (droppedGroupId && droppedGroupId !== targetGroupId) {
+                const g = findGroupById(droppedGroupId);
+                (g?.orderIds || []).forEach((id) => ids.add(id));
+            }
+            if (!ids.has(droppedId)) ids.add(droppedId);
+            if (!ids.has(orderId)) ids.add(orderId);
+            await requestGroup(Array.from(ids));
+        });
+    }
+
+    async function requestGroup(orderIds) {
+        if (!Array.isArray(orderIds) || orderIds.length < 2) return;
+        try {
+            const res = await fetch(apiUrl("/api/staff/order-groups"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                credentials: "same-origin",
+                body: JSON.stringify({ orderIds })
+            });
+            const j = await res.json().catch(() => null);
+            if (!res.ok) {
+                showError(j?.error || j?.message || "Không thể gộp đơn.");
+                return;
+            }
+            showError("");
+            await loadBoard({});
+        } catch (e) {
+            showError(e?.message || "Không gộp được đơn.");
+        }
+    }
+
+    async function ungroup(groupId) {
+        if (!groupId) return;
+        try {
+            const res = await fetch(apiUrl(`/api/staff/order-groups/${groupId}`), {
+                method: "DELETE",
+                headers: { Accept: "application/json" },
+                credentials: "same-origin"
+            });
+            const j = await res.json().catch(() => null);
+            if (!res.ok) {
+                showError(j?.error || "Không thể tách đơn.");
+                return;
+            }
+            showError("");
+            await loadBoard({});
+        } catch (e) {
+            showError(e?.message || "Không tách được đơn.");
+        }
+    }
+
     function wireUi() {
         el("#staff-refresh-btn")?.addEventListener("click", () => loadBoard({ user: true }));
         el("#staff-mobile-refresh-btn")?.addEventListener("click", () => loadBoard({ user: true }));
@@ -1065,6 +1393,10 @@
             else if (act === "prep-done" && oid && itemId) void setItemPrepared(oid, itemId, { isPrepared: true }, card);
             else if (act === "prep-undo" && oid && itemId) void setItemPrepared(oid, itemId, { isPrepared: false }, card);
             else if (act === "expand-items" && oid) expandOrderItems(oid);
+            else if (act === "ungroup") {
+                const gid = actEl.getAttribute("data-group-id");
+                if (gid) void ungroup(gid);
+            }
         });
     }
 

@@ -1167,6 +1167,67 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                     b.ToTable("staff_accounts", (string)null);
                 });
 
+            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.StaffOrderGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedByStaffAccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedByStaffName")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.ToTable("staff_order_groups", (string)null);
+                });
+
+            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.StaffOrderGroupMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("AddedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("AddedByStaffAccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AddedByStaffName")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("GroupId", "OrderId")
+                        .IsUnique();
+
+                    b.ToTable("staff_order_group_members", (string)null);
+                });
+
             modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.VenueTable", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1328,6 +1389,25 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.StaffOrderGroupMember", b =>
+                {
+                    b.HasOne("Annap.CoffeeQrOrdering.Domain.Entities.StaffOrderGroup", "Group")
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Annap.CoffeeQrOrdering.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.ChatSession", b =>
                 {
                     b.Navigation("Messages");
@@ -1361,6 +1441,11 @@ namespace Annap.CoffeeQrOrdering.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Annap.CoffeeQrOrdering.Domain.Entities.StaffOrderGroup", b =>
+                {
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

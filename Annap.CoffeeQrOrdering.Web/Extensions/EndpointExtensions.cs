@@ -599,6 +599,11 @@ public static class EndpointExtensions
                     .Select(o => OrderWorkflowEndpoints.ProjectStaffBoardOrder(o, bankTransferQr))
                     .ToList();
 
+                // Staff Column 3 grouping — read-only view of the membership table.
+                // The aggregate total is derived from the underlying OrderItems so
+                // the displayed number is always exactly the sum of snapshots.
+                var groups = await StaffOrderGroupProjectionHelper.BuildBoardGroupsAsync(db, ct);
+
                 return Results.Ok(new
                 {
                     youAre = http.User.Identity?.Name?.Trim(),
@@ -608,11 +613,13 @@ public static class EndpointExtensions
                         canMarkPaid = StaffAuthorizationHelper.CanMarkPaid(http.User),
                         canComplete = StaffAuthorizationHelper.CanComplete(http.User),
                         canPrepareItems = StaffAuthorizationHelper.CanPrepareItems(http.User),
-                        canManageBills = StaffAuthorizationHelper.CanManageBills(http.User)
+                        canManageBills = StaffAuthorizationHelper.CanManageBills(http.User),
+                        canGroup = StaffAuthorizationHelper.CanViewStaffBoard(http.User)
                     },
                     submitted,
                     paid,
                     completed,
+                    groups,
                     active = open.OrderBy(o => o.TableCode).Select(o => OrderWorkflowEndpoints.ProjectStaffBoardOrder(o, bankTransferQr)).ToList(),
                     recentServed = completed
                 });
@@ -621,6 +628,272 @@ public static class EndpointExtensions
             {
                 log.LogError(ex, "{Message}", PaymentWorkflowSchemaGuard.StartupFailureMessage);
                 return PaymentWorkflowSchemaGuard.MigrationRequiredResult();
+            }
+        }).RequireAuthorization("StaffBoardAccess");
+
+        app.MapPost("/api/staff/order-groups", async (
+            HttpContext http,
+            StaffOrderGroupRequest? body,
+            AppDbContext db,
+            IOrderStatusNotifier notifier,
+            ILoggerFactory loggerFactory,
+            CancellationToken ct) =>
+        {
+            if (!StaffAuthorizationHelper.CanViewStaffBoard(http.User))
+                return Results.Forbid();
+
+            var perfLog = loggerFactory.CreateLogger("Annap.StaffPerf");
+            var requested = body?.OrderIds ?? new List<Guid>();
+            var deduped = requested.Where(g => g != Guid.Empty).Distinct().ToList();
+            if (deduped.Count == 0)
+                return Results.BadRequest(new { error = "orderIds is required and must contain at least one guid." });
+            if (deduped.Count == 1)
+                return Results.BadRequest(new { error = "Grouping requires at least two distinct OrderIds." });
+
+            var (actorName, actorAccountId) = StaffBaristaActorHelper.ResolveActor(http.User);
+
+            await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
+            try
+            {
+                var now = DateTimeOffset.UtcNow;
+                var completedSince = now.AddHours(-3);
+
+                var orders = await db.Orders
+                    .Include(o => o.Items)
+                    .Where(o => deduped.Contains(o.Id))
+                    .ToListAsync(ct);
+
+                if (orders.Count != deduped.Count)
+                {
+                    var missing = deduped.Except(orders.Select(o => o.Id)).ToList();
+                    await tx.RollbackAsync(ct);
+                    return Results.BadRequest(new
+                    {
+                        error = "unknown_order",
+                        message = "One or more OrderIds do not exist.",
+                        missing
+                    });
+                }
+
+                var ineligible = orders
+                    .Where(o => !StaffOrderBoardEligibilityHelper.IsEligible(
+                        o.Status,
+                        o.CompletedAtUtc,
+                        o.UpdatedAtUtc,
+                        o.CreatedAtUtc,
+                        now,
+                        TimeSpan.FromHours(3)))
+                    .Select(o => new { o.Id, status = o.Status.ToString() })
+                    .ToList();
+                if (ineligible.Count > 0)
+                {
+                    await tx.RollbackAsync(ct);
+                    return Results.BadRequest(new
+                    {
+                        error = "order_not_eligible",
+                        message = "All grouped orders must currently be visible on the staff board.",
+                        ineligible
+                    });
+                }
+
+                // Find any existing groups that contain any of these orders.
+                var existingMemberships = await db.StaffOrderGroupMembers
+                    .Where(m => deduped.Contains(m.OrderId))
+                    .ToListAsync(ct);
+
+                // Group them by GroupId; every group we touch dissolves into the new one.
+                var touchedGroupIds = existingMemberships
+                    .Select(m => m.GroupId)
+                    .Distinct()
+                    .ToList();
+
+                // If the resulting membership set is identical to a single existing
+                // group, this is a no-op. The endpoint is idempotent.
+                if (touchedGroupIds.Count == 1)
+                {
+                    var onlyGroupId = touchedGroupIds[0];
+                    var onlyGroupMembers = await db.StaffOrderGroupMembers
+                        .Where(m => m.GroupId == onlyGroupId)
+                        .Select(m => m.OrderId)
+                        .ToListAsync(ct);
+                    if (onlyGroupMembers.OrderBy(g => g).SequenceEqual(deduped.OrderBy(g => g)))
+                    {
+                        await tx.RollbackAsync(ct);
+                        var existing = await StaffOrderGroupProjectionHelper.LoadGroupAsync(db, onlyGroupId, ct);
+                        return Results.Ok(existing);
+                    }
+                }
+
+                // Dissolve any touched groups first. The OrderId unique index on
+                // StaffOrderGroupMembers prevents a single Order from belonging to
+                // more than one group at a time, so we have to remove the old
+                // membership rows before we can create the new ones.
+                if (touchedGroupIds.Count > 0)
+                {
+                    var oldMembers = await db.StaffOrderGroupMembers
+                        .Where(m => touchedGroupIds.Contains(m.GroupId))
+                        .ToListAsync(ct);
+                    db.StaffOrderGroupMembers.RemoveRange(oldMembers);
+
+                    var oldGroups = await db.StaffOrderGroups
+                        .Where(g => touchedGroupIds.Contains(g.Id))
+                        .ToListAsync(ct);
+                    db.StaffOrderGroups.RemoveRange(oldGroups);
+                }
+
+                var group = new StaffOrderGroup
+                {
+                    CreatedByStaffName = string.IsNullOrWhiteSpace(actorName) ? "staff" : actorName.Trim(),
+                    CreatedByStaffAccountId = actorAccountId,
+                    CreatedAtUtc = now
+                };
+                db.StaffOrderGroups.Add(group);
+
+                foreach (var order in orders)
+                {
+                    db.StaffOrderGroupMembers.Add(new StaffOrderGroupMember
+                    {
+                        GroupId = group.Id,
+                        OrderId = order.Id,
+                        AddedAtUtc = now,
+                        AddedByStaffName = string.IsNullOrWhiteSpace(actorName) ? "staff" : actorName.Trim(),
+                        AddedByStaffAccountId = actorAccountId
+                    });
+                }
+
+                var actorForAudit = string.IsNullOrWhiteSpace(actorName) ? "staff" : actorName.Trim();
+                var detail = "orders=" + string.Join(",", orders.Select(o => o.Id.ToString()));
+                await OperationalAudit.AppendAsync(db, "order.group.create", actorForAudit, null, detail, ct);
+                await db.SaveChangesAsync(ct);
+                await tx.CommitAsync(ct);
+
+                var payload = await StaffOrderGroupProjectionHelper.LoadGroupAsync(db, group.Id, ct);
+                await notifier.NotifyStaffBoardAsync(ct);
+
+                perfLog.LogWarning(
+                    "[STAFF PERF] action=group.create members={Count} groups_dissolved={Count}",
+                    deduped.Count, touchedGroupIds.Count);
+                return Results.Ok(payload);
+            }
+            catch (DbUpdateException ex) when (OrderSubmitHelper.IsSerializationConflict(ex))
+            {
+                await tx.RollbackAsync(ct);
+                return Results.Json(
+                    new { error = "Another hand moved this ticket first—refresh the board." },
+                    statusCode: StatusCodes.Status409Conflict);
+            }
+        }).RequireAuthorization("StaffBoardAccess");
+
+        app.MapPost("/api/staff/order-groups/{groupId:guid}/remove", async (
+            HttpContext http,
+            Guid groupId,
+            StaffOrderGroupMemberRequest body,
+            AppDbContext db,
+            IOrderStatusNotifier notifier,
+            CancellationToken ct) =>
+        {
+            if (!StaffAuthorizationHelper.CanViewStaffBoard(http.User))
+                return Results.Forbid();
+
+            if (body.OrderId == Guid.Empty)
+                return Results.BadRequest(new { error = "orderId is required." });
+
+            var (actorName, actorAccountId) = StaffBaristaActorHelper.ResolveActor(http.User);
+
+            await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
+            try
+            {
+                var group = await db.StaffOrderGroups
+                    .Include(g => g.Members)
+                    .FirstOrDefaultAsync(g => g.Id == groupId, ct);
+                if (group is null)
+                {
+                    await tx.RollbackAsync(ct);
+                    return Results.NotFound();
+                }
+
+                var member = group.Members.FirstOrDefault(m => m.OrderId == body.OrderId);
+                if (member is null)
+                {
+                    await tx.RollbackAsync(ct);
+                    return Results.BadRequest(new { error = "order_not_in_group" });
+                }
+
+                db.StaffOrderGroupMembers.Remove(member);
+
+                // Dissolve the group entirely if only one member remains after removal.
+                if (group.Members.Count <= 1)
+                {
+                    db.StaffOrderGroups.Remove(group);
+                }
+
+                await OperationalAudit.AppendAsync(
+                    db,
+                    "order.group.remove",
+                    string.IsNullOrWhiteSpace(actorName) ? "staff" : actorName.Trim(),
+                    null,
+                    $"group={groupId};order={body.OrderId}",
+                    ct);
+                await db.SaveChangesAsync(ct);
+                await tx.CommitAsync(ct);
+
+                await notifier.NotifyStaffBoardAsync(ct);
+                return Results.Ok(new { removed = true, groupId, orderId = body.OrderId });
+            }
+            catch (DbUpdateException ex) when (OrderSubmitHelper.IsSerializationConflict(ex))
+            {
+                await tx.RollbackAsync(ct);
+                return Results.Json(
+                    new { error = "Another hand moved this ticket first—refresh the board." },
+                    statusCode: StatusCodes.Status409Conflict);
+            }
+        }).RequireAuthorization("StaffBoardAccess");
+
+        app.MapDelete("/api/staff/order-groups/{groupId:guid}", async (
+            HttpContext http,
+            Guid groupId,
+            AppDbContext db,
+            IOrderStatusNotifier notifier,
+            CancellationToken ct) =>
+        {
+            if (!StaffAuthorizationHelper.CanViewStaffBoard(http.User))
+                return Results.Forbid();
+
+            var (actorName, actorAccountId) = StaffBaristaActorHelper.ResolveActor(http.User);
+
+            await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
+            try
+            {
+                var group = await db.StaffOrderGroups
+                    .Include(g => g.Members)
+                    .FirstOrDefaultAsync(g => g.Id == groupId, ct);
+                if (group is null)
+                {
+                    await tx.RollbackAsync(ct);
+                    return Results.NotFound();
+                }
+
+                var orderIds = group.Members.Select(m => m.OrderId).ToList();
+                db.StaffOrderGroups.Remove(group);
+                await OperationalAudit.AppendAsync(
+                    db,
+                    "order.group.delete",
+                    string.IsNullOrWhiteSpace(actorName) ? "staff" : actorName.Trim(),
+                    null,
+                    $"group={groupId};orders={string.Join(",", orderIds)}",
+                    ct);
+                await db.SaveChangesAsync(ct);
+                await tx.CommitAsync(ct);
+
+                await notifier.NotifyStaffBoardAsync(ct);
+                return Results.Ok(new { dissolved = true, groupId, orderIds });
+            }
+            catch (DbUpdateException ex) when (OrderSubmitHelper.IsSerializationConflict(ex))
+            {
+                await tx.RollbackAsync(ct);
+                return Results.Json(
+                    new { error = "Another hand moved this ticket first—refresh the board." },
+                    statusCode: StatusCodes.Status409Conflict);
             }
         }).RequireAuthorization("StaffBoardAccess");
         

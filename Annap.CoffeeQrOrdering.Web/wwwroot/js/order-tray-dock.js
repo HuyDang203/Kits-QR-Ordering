@@ -1810,23 +1810,10 @@ function __annapMenuRuntimeJsonSelfCheck() {
             const cleanupAfterPaidCelebration = function () {
                 if (cleanupFired) return;
                 cleanupFired = true;
-                try {
-                    stopTrayStatusPolling();
-                } catch (_p1) {
-                    /* ignore */
-                }
-                try {
-                    GuestInteractionContract.removeGuestOrderSession();
-                } catch (_p2) {
-                    /* ignore */
-                }
-                traySubmittedStatus = null;
-                trayKnownPendingPayment = null;
-                trayStatusFingerprint = "";
-                bankTransferQrInflightKey = "";
-                bankTransferQrCache = null;
-                bankTransferQrCacheKey = "";
-                lastGuestTrackData = null;
+                /* Use the canonical reset so every transient state variable
+                   bound to the submitted order is cleared in one place. The
+                   'user_dismissed_paid' reason signals the celebration path. */
+                resetGuestOrderSessionUi("user_dismissed_paid");
                 try {
                     if (
                         isPostOrderCheckoutUi(checkoutUi) ||
@@ -1849,6 +1836,45 @@ function __annapMenuRuntimeJsonSelfCheck() {
             __annapTrayPaymentDevLog("payment confirmed celebration", { orderId: sess && sess.orderId });
         }
 
+        /* TERMINAL ORDER ≠ ACTIVE GUEST ORDER SESSION.
+           Server is authoritative. When server confirms a terminal state
+           (404, isCancelled, isComplete), remove the local Guest Order Session
+           and reset every transient UI variable bound to that order so the
+           Guest can immediately start a new order. */
+        function resetGuestOrderSessionUi(reason) {
+            try {
+                stopTrayStatusPolling();
+            } catch (_p1) {
+                /* ignore */
+            }
+            try {
+                GuestInteractionContract.removeGuestOrderSession();
+            } catch (_p2) {
+                /* ignore */
+            }
+            traySubmittedStatus = null;
+            trayKnownPendingPayment = null;
+            trayStatusFingerprint = "";
+            bankTransferQrInflightKey = "";
+            bankTransferQrCache = null;
+            bankTransferQrCacheKey = "";
+            lastGuestTrackData = null;
+            pendingPaymentMethodChange = false;
+            paymentMethodChangePreselect = null;
+            paymentMethodChangeInflight = false;
+            /* Drop any in-memory cart lines that survived a hard reload. The
+               local cart key is per-table; only wipe when this is the active
+               table. cartItems may legitimately contain the Guest's new draft
+               after a terminal cleanup if they had started a new order — never
+               touch cartItems automatically here. */
+            try {
+                linesToCartMap(GuestInteractionContract.getCartLines());
+            } catch (_cartReload) {
+                cartItems.clear();
+            }
+            __annapTrayPaymentDevLog("guest session reset", { reason: reason || "terminal" });
+        }
+
         async function refreshSubmittedTrayStatus() {
             const sess = readSubmittedSession();
             if (!sess) {
@@ -1860,11 +1886,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
             try {
                 const res = await fetchGuestOrderStatus(sess);
                 if (res.status === 404) {
-                    GuestInteractionContract.removeGuestOrderSession();
-                    traySubmittedStatus = null;
-                    trayKnownPendingPayment = null;
-                    stopTrayStatusPolling();
-                    trayStatusFingerprint = "";
+                    resetGuestOrderSessionUi("server_404");
                     if (isPostOrderCheckoutUi(checkoutUi)) setCheckoutUi(CHECKOUT_UI.EDITING);
                     return { fingerprintChanged: true };
                 }
@@ -1881,11 +1903,7 @@ function __annapMenuRuntimeJsonSelfCheck() {
                    to EDITING after payment confirmation. */
                 if (data && typeof data === "object") lastGuestTrackData = data;
                 if (data.isCancelled) {
-                    GuestInteractionContract.removeGuestOrderSession();
-                    traySubmittedStatus = null;
-                    trayKnownPendingPayment = null;
-                    stopTrayStatusPolling();
-                    trayStatusFingerprint = "";
+                    resetGuestOrderSessionUi("server_cancelled");
                     if (isPostOrderCheckoutUi(checkoutUi)) setCheckoutUi(CHECKOUT_UI.EDITING);
                     return { fingerprintChanged: true };
                 }
@@ -1896,14 +1914,40 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 const isPending = isPendingTrackPayload(data);
                 const isPaid = isPaidTrackPayload(data);
                 if (data.isComplete) {
-                    traySubmittedStatus = TRAY_STATE.COMPLETED;
-                    GuestInteractionContract.updateGuestOrderSessionStatus(TRAY_STATE.COMPLETED);
-                    if (!window.__annapIfCompletePlayed && window.InteractionFeedback) {
-                        window.__annapIfCompletePlayed = true;
-                        window.InteractionFeedback.trigger("complete", { silentVisual: true });
+                    /* Server says the order is finished. The Guest Order Session
+                       must NOT keep blocking the tray. Remove it and return the
+                       tray to EDITING regardless of any local status. */
+                    const orderKey = sess.orderId ? String(sess.orderId) : "";
+                    const wasCelebrated = orderKey && celebratedPaidOrderIds.has(orderKey);
+                    /* Preserve an in-flight celebration modal: if PAID→COMPLETED
+                       transitions happen while the paid celebration is still
+                       visible, leave the modal/PAID chrome intact and let the
+                       user dismiss it to fire cleanup. Otherwise the Guest would
+                       never see the paid confirmation. */
+                    if (wasCelebrated && checkoutUi === CHECKOUT_UI.PAID) {
+                        traySubmittedStatus = TRAY_STATE.COMPLETED;
+                        GuestInteractionContract.updateGuestOrderSessionStatus(TRAY_STATE.COMPLETED);
+                        if (!window.__annapIfCompletePlayed && window.InteractionFeedback) {
+                            window.__annapIfCompletePlayed = true;
+                            window.InteractionFeedback.trigger("complete", { silentVisual: true });
+                        }
+                        trayKnownPendingPayment = false;
+                        stopTrayStatusPolling();
+                    } else {
+                        resetGuestOrderSessionUi("server_completed");
+                        celebratedPaidOrderIds.delete(orderKey);
+                        window.__annapIfCompletePlayed = false;
+                        if (!window.__annapIfCompletePlayed && window.InteractionFeedback) {
+                            window.__annapIfCompletePlayed = true;
+                            window.InteractionFeedback.trigger("complete", { silentVisual: true });
+                        }
+                        if (isPostOrderCheckoutUi(checkoutUi) || checkoutUi === CHECKOUT_UI.PAID || checkoutUi === CHECKOUT_UI.COMPLETED) {
+                            setCheckoutUi(CHECKOUT_UI.EDITING);
+                        } else {
+                            renderCheckoutTray();
+                        }
                     }
-                    trayKnownPendingPayment = false;
-                    stopTrayStatusPolling();
+                    return { fingerprintChanged: true, terminalCleared: true };
                 } else if (isPaid) {
                     traySubmittedStatus = TRAY_STATE.PAID;
                     GuestInteractionContract.updateGuestOrderSessionStatus(TRAY_STATE.PAID);
@@ -3218,23 +3262,85 @@ function __annapMenuRuntimeJsonSelfCheck() {
                 refreshTableIdentityUi();
                 loadCart();
                 renderCart();
-                checkoutUi = checkoutUiFromSession();
-                if (!readSubmittedSession()) checkoutUi = CHECKOUT_UI.EDITING;
-                else if (!isPostOrderCheckoutUi(checkoutUi)) checkoutUi = CHECKOUT_UI.EDITING;
-                trayStatusFingerprint = statusFingerprint(
-                    readSubmittedSession(),
-                    traySubmittedStatus,
-                    trayKnownPendingPayment
-                );
+
+                /* Server-reconciliation-first boot:
+                   ──────────────────────────────
+                   The Guest Order Session in localStorage may be stale
+                   (e.g. a previous test order, a previous visit, or a
+                   server-side completion that the Guest never dismissed).
+                   The local `status` field is NOT authoritative.
+
+                   Until we validate against GET /api/track/orders/{id}?token=...
+                   we MUST NOT let the tray UI render SUBMITTED / PAID /
+                   COMPLETED, because those states can lock the tray.
+
+                   Initial render: EDITING (safe default).
+                   Then await server reconciliation.
+                   Then update checkoutUi from the authoritative server response
+                   and re-render. */
+                const sessAtBoot = readSubmittedSession();
+                const hasActiveSess =
+                    !!(sessAtBoot && sessAtBoot.orderId && sessAtBoot.token);
+
+                checkoutUi = CHECKOUT_UI.EDITING;
+                trayStatusFingerprint = "";
                 renderCheckoutTray();
-                refreshSubmittedTrayStatus()
-                    .then(function () {
-                        renderCheckoutTray();
-                        if (shouldPollSubmittedTrayStatus()) startTrayStatusPolling();
-                    })
-                    .catch(function () {
-                        /* ignore */
-                    });
+                if (trace) try { window.console.log("step: initial EDITING render (awaiting reconcile)"); } catch (_sBoot1) {}
+
+                function finalizeBootAfterReconcile() {
+                    const afterSess = readSubmittedSession();
+                    if (!afterSess) {
+                        checkoutUi = CHECKOUT_UI.EDITING;
+                    } else if (!isPostOrderCheckoutUi(checkoutUi) && checkoutUi !== CHECKOUT_UI.PAID && checkoutUi !== CHECKOUT_UI.COMPLETED) {
+                        checkoutUi = CHECKOUT_UI.EDITING;
+                    } else {
+                        /* Server kept the session. checkoutUi is already PAID /
+                           SUBMITTED / etc. set by refreshSubmittedTrayStatus. */
+                    }
+                    trayStatusFingerprint = statusFingerprint(
+                        readSubmittedSession(),
+                        traySubmittedStatus,
+                        trayKnownPendingPayment
+                    );
+                    renderCheckoutTray();
+                    if (shouldPollSubmittedTrayStatus()) startTrayStatusPolling();
+                }
+
+                if (hasActiveSess) {
+                    /* Awaitable boot reconciliation so the stale session can
+                       never paint SUBMITTED / COMPLETED before the server
+                       responds. If the network fails we fall back to the
+                       EDITING default (never trust a local COMPLETED status). */
+                    var bootReconcile = Promise.resolve(
+                        refreshSubmittedTrayStatus()
+                    );
+                    bootReconcile
+                        .then(finalizeBootAfterReconcile)
+                        .catch(function () {
+                            __annapTrayPaymentDevLog("boot reconcile failed; staying EDITING");
+                            /* Network error: do not trust local COMPLETED.
+                               Keep EDITING. If server is genuinely up but slow,
+                               the user can retry by adding an item / reloading. */
+                            const afterSess = readSubmittedSession();
+                            if (afterSess && (afterSess.status === TRAY_STATE.COMPLETED || afterSess.status === "completed")) {
+                                /* Stale COMPLETED in localStorage with no server
+                                   confirmation: treat as stale. */
+                                resetGuestOrderSessionUi("network_fallback_stale_completed");
+                                renderCheckoutTray();
+                            } else if (afterSess) {
+                                /* Active session but server unreachable: render
+                                   SUBMITTED so the Guest can still see they
+                                   have an order. Polling will reconcile later. */
+                                checkoutUi = checkoutUiFromSession();
+                                renderCheckoutTray();
+                                startTrayStatusPolling();
+                            }
+                        });
+                } else {
+                    /* No session — no reconciliation needed. Already EDITING. */
+                    if (shouldPollSubmittedTrayStatus()) startTrayStatusPolling();
+                }
+
                 document.body.classList.add("annap-has-order-tray-dock");
                 if (trace) try { window.console.log("step: cart render + tray summary ok"); } catch (_s4) {}
                 __annapTrayLog("[annap] menu: cart/tray ok");
