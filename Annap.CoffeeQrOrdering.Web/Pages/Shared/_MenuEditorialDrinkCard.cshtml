@@ -1,5 +1,6 @@
 @using Annap.CoffeeQrOrdering.Domain.Entities
 @using Annap.CoffeeQrOrdering.Web
+@using Annap.CoffeeQrOrdering.Web.Internal
 @using Annap.CoffeeQrOrdering.Web.Services
 @model (MenuItem Item, string CategoryName, bool IsHero, int CardIndex, int RevealDelayMs, decimal EffectivePrice, decimal? OriginalPrice)
 @{
@@ -28,13 +29,22 @@
     {
         tasteLine = tasteLine[..69] + "…";
     }
+
+    // Bilingual name: server-renders the name in the request's resolved
+    // culture so the initial paint is correct. data-name-vi / data-name-en
+    // attributes carry the alternate form so the menu page's language-change
+    // handler can swap the visible name without a server round-trip.
+    var currentLang = MenuItemNameLocalizer.CurrentLanguageCode();
+    var displayedName = MenuItemNameLocalizer.For(item, currentLang);
 }
 <article style="--reveal-delay: @(revealDelayMs)ms"
          data-drink-card="@item.Id"
+         data-name-vi="@item.Name"
+         data-name-en="@(item.NameEn ?? "")"
          class="menu-card-reveal menu-editorial-card@(isHero ? " menu-editorial-card--hero" : " menu-editorial-card--support")"
          tabindex="0"
          role="button"
-         aria-label="@item.Name">
+         aria-label="@displayedName">
     <div class="menu-editorial-card__frame @(string.IsNullOrEmpty(cardImg) ? "menu-editorial-card__frame--no-poster" : "")"
          data-frame="@item.Id"
          style="--card-accent: @DrinkSlugGenerator.AccentColorForCategory(categoryName)">
@@ -51,7 +61,7 @@
         else
         {
             <div class="menu-editorial-card__no-poster" aria-hidden="true">
-                <span class="menu-editorial-card__no-poster-glyph">@(string.IsNullOrEmpty(item.Name) ? "·" : char.ToUpper(item.Name[0]))</span>
+                <span class="menu-editorial-card__no-poster-glyph">@(string.IsNullOrEmpty(displayedName) ? "·" : char.ToUpper(displayedName[0]))</span>
                 <span class="menu-editorial-card__no-poster-lbl">@guestCategoryLabel</span>
             </div>
         }
@@ -66,7 +76,7 @@
         @if (isHero)
         {
             <div class="menu-editorial-card__hero-meta">
-                <h3 class="menu-editorial-card__name">@item.Name</h3>
+                <h3 class="menu-editorial-card__name">@displayedName</h3>
                 <div class="menu-editorial-card__hero-row">
                     <div class="menu-editorial-card__price-block tabular-nums">
                         @if (hasDiscount && originalDisplay is not null)
@@ -90,7 +100,7 @@
         {
             <div class="menu-editorial-card__passport-row">
                 <div class="menu-editorial-card__caption">
-                    <h3 class="menu-editorial-card__name">@item.Name</h3>
+                    <h3 class="menu-editorial-card__name">@displayedName</h3>
                     <div class="menu-editorial-card__passport-foot">
                         <div class="menu-editorial-card__price-block tabular-nums">
                             @if (hasDiscount && originalDisplay is not null)

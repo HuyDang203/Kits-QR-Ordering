@@ -45,6 +45,7 @@ public static class MenuItemProjections
         {
             Id                   = item.Id,
             Name                 = item.Name,
+            NameEn               = item.NameEn,
             Price                = item.Price,
             EffectivePrice       = effectivePrice,
             CategoryName         = item.Category?.Name ?? "",
@@ -81,6 +82,7 @@ public static class MenuItemProjections
     public static MenuCurationFormModel ToAdminForm(MenuItem item) => new()
     {
         Name                = item.Name,
+        NameEn              = item.NameEn,
         Subtitle            = item.Subtitle,
         Description         = item.Description,
         CategoryId          = item.CategoryId,
@@ -99,6 +101,7 @@ public static class MenuItemProjections
     public static void ApplyFormToEntity(MenuCurationFormModel form, MenuItem entity)
     {
         entity.Name                = form.Name.Trim();
+        entity.NameEn              = NullIfWhite(form.NameEn);
         entity.Subtitle            = NullIfWhite(form.Subtitle);
         entity.Description         = NullIfWhite(form.Description);
         entity.CategoryId          = form.CategoryId;
@@ -144,6 +147,7 @@ public static class MenuItemProjections
         {
             Id                  = vm.Id,
             Name                = vm.Name,
+            NameEn              = vm.NameEn,
             Image               = image,
             Price               = vm.EffectivePrice,
             OriginalPrice       = vm.Price,

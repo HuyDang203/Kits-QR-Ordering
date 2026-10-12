@@ -12,6 +12,7 @@ public sealed class MenuItemConfiguration : IEntityTypeConfiguration<MenuItem>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
+        builder.Property(x => x.NameEn).HasMaxLength(200);
         builder.Property(x => x.CatalogKey).HasMaxLength(160);
         builder.Property(x => x.ItemType).HasMaxLength(80);
         builder.Property(x => x.Subtitle).HasMaxLength(240);

@@ -57,6 +57,94 @@ public sealed class OrderIntegritySnapshotTests(AnnapPostgresWebApplicationFacto
     }
 
     [Fact]
+    public async Task Order_submission_in_en_snapshots_english_name_when_present()
+    {
+        // Seed a fresh fixture with both Vietnamese and English names.
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var seeded = await OrderTestSeedHelper.SeedMinimalOrderSubmitDataAsync(db);
+
+        await using (var inner = factory.Services.CreateAsyncScope())
+        {
+            var innerDb = inner.ServiceProvider.GetRequiredService<AppDbContext>();
+            var mi = innerDb.MenuItems.First(m => m.Id == seeded.MenuItemId);
+            mi.NameEn = "English Test Latte";
+            await innerDb.SaveChangesAsync();
+        }
+
+        // Build a request that overrides the request culture to English via
+        // the standard .AspNetCore.Culture cookie the guest UI sets.
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/orders")
+        {
+            Content = JsonContent.Create(new
+            {
+                venueTableId = seeded.VenueTableId,
+                idempotencyKey = "snap-en-name-1",
+                fulfillmentMode = "DineIn",
+                items = new[] { new { menuItemId = seeded.MenuItemId, quantity = 1 } }
+            })
+        };
+        request.Headers.TryAddWithoutValidation("Idempotency-Key", "snap-en-name-1");
+        request.Headers.TryAddWithoutValidation(
+            "Cookie",
+            ".AspNetCore.Culture=c%3Den-US%7Cuic%3Den-US");
+
+        var post = await _client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.Created, post.StatusCode);
+
+        var postBody = await post.Content.ReadFromJsonAsync<JsonElement>();
+        var orderId = postBody.GetProperty("id").GetGuid();
+
+        await using var verifyScope = factory.Services.CreateAsyncScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var snapshot = await verifyDb.OrderItems
+            .Where(i => i.OrderId == orderId)
+            .Select(i => i.MenuItemName)
+            .SingleAsync();
+        Assert.Equal("English Test Latte", snapshot);
+    }
+
+    [Fact]
+    public async Task Order_submission_in_en_falls_back_to_vietnamese_when_nameen_blank()
+    {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var seeded = await OrderTestSeedHelper.SeedMinimalOrderSubmitDataAsync(db);
+        // NameEn intentionally left null — English orders must still snapshot
+        // the Vietnamese name (the fallback rule) so the receipt / staff
+        // ticket still renders meaningful text.
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/orders")
+        {
+            Content = JsonContent.Create(new
+            {
+                venueTableId = seeded.VenueTableId,
+                idempotencyKey = "snap-en-fallback-1",
+                fulfillmentMode = "DineIn",
+                items = new[] { new { menuItemId = seeded.MenuItemId, quantity = 1 } }
+            })
+        };
+        request.Headers.TryAddWithoutValidation("Idempotency-Key", "snap-en-fallback-1");
+        request.Headers.TryAddWithoutValidation(
+            "Cookie",
+            ".AspNetCore.Culture=c%3Den-US%7Cuic%3Den-US");
+
+        var post = await _client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.Created, post.StatusCode);
+
+        var postBody = await post.Content.ReadFromJsonAsync<JsonElement>();
+        var orderId = postBody.GetProperty("id").GetGuid();
+
+        await using var verifyScope = factory.Services.CreateAsyncScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var snapshot = await verifyDb.OrderItems
+            .Where(i => i.OrderId == orderId)
+            .Select(i => i.MenuItemName)
+            .SingleAsync();
+        Assert.Equal(seeded.MenuItemName, snapshot);
+    }
+
+    [Fact]
     public async Task Menu_item_delete_is_blocked_when_order_items_exist()
     {
         var fixture = await SeedFreshFixtureAsync();

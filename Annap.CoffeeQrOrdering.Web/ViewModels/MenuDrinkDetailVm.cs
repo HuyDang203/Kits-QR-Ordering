@@ -15,6 +15,13 @@ public sealed class MenuDrinkDetailVm
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
+    /// <summary>
+    /// Optional English name. The client renderer picks <see cref="Name"/> vs
+    /// <see cref="NameEn"/> via <c>MenuItemNameLocalizer</c> using
+    /// <c>LuxuryI18n.getLang()</c>; when blank, the Vietnamese <see cref="Name"/>
+    /// is the fallback.
+    /// </summary>
+    public string? NameEn { get; init; }
     public required decimal Price { get; init; }
     public required decimal EffectivePrice { get; init; }
     public required string CategoryName { get; init; }

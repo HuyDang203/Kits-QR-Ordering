@@ -385,7 +385,19 @@ public static class EndpointExtensions
                             Notes = string.IsNullOrWhiteSpace(i.Notes) ? null : i.Notes.Trim(),
                             CustomerNote = OrderItemCustomerNoteHelper.Normalize(i.CustomerNote, out _),
                             Temperature = DrinkServingTemperature.Normalize(i.Temperature),
-                            MenuItemName = menuItems[i.MenuItemId].Name
+                            // Snapshot the LOCALIZED name (Vietnamese by
+                            // default; English when the guest is browsing
+                            // English). The OrderItem.MenuItemName is the
+                            // historical record — it must match what the
+                            // guest saw on the menu when they placed the
+                            // order, otherwise the tray receipt and the
+                            // staff ticket will read in a different language
+                            // than the order itself. The fallback rule
+                            // (EN -> NameEn || Name) lives in
+                            // MenuItemNameLocalizer.
+                            MenuItemName = MenuItemNameLocalizer.For(
+                                menuItems[i.MenuItemId],
+                                MenuItemNameLocalizer.CurrentLanguageCode())
                         }).ToList()
                     };
         

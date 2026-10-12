@@ -9,6 +9,16 @@ public sealed class MenuItem : AuditableEntity
 
     public string Name { get; set; } = null!;
 
+    /// <summary>
+    /// Optional English name for the drink. When the guest UI is in English and
+    /// this value contains non-whitespace text, it is rendered instead of
+    /// <see cref="Name"/>. When null/blank, the Vietnamese <see cref="Name"/>
+    /// is the fallback. Snapshotting is the caller's responsibility.
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Display(Name = "English drink name")]
+    [System.ComponentModel.DataAnnotations.StringLength(200)]
+    public string? NameEn { get; set; }
+
     /// <summary>Optional stable key from the owner catalog export (slug); used for idempotent imports.</summary>
     public string? CatalogKey { get; set; }
 

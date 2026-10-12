@@ -5,6 +5,12 @@ public sealed class DrinkDetailRendererDto
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
+    /// <summary>
+    /// Optional English name. The renderer selects <see cref="Name"/> vs
+    /// <see cref="NameEn"/> based on <c>LuxuryI18n.getLang()</c>. When the
+    /// English name is blank, the renderer falls back to <see cref="Name"/>.
+    /// </summary>
+    public string? NameEn { get; init; }
     public required string Image { get; init; }
 
     /// <summary>

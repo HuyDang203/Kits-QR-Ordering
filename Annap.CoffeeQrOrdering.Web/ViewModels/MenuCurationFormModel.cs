@@ -12,6 +12,14 @@ public sealed class MenuCurationFormModel
     [StringLength(200)]
     public string Name { get; set; } = "";
 
+    /// <summary>
+    /// Optional English name. When blank, the Vietnamese <see cref="Name"/> is
+    /// shown to English-language guests. Max 200 chars to match <see cref="Name"/>.
+    /// </summary>
+    [Display(Name = "English drink name")]
+    [StringLength(200)]
+    public string? NameEn { get; set; }
+
     [StringLength(240)]
     public string? Subtitle { get; set; }
 
@@ -59,6 +67,7 @@ public sealed class MenuCurationFormModel
     public void Normalize()
     {
         Name        = Name.Trim();
+        NameEn      = NullIfWhite(NameEn);
         Subtitle    = NullIfWhite(Subtitle);
         Description = NullIfWhite(Description);
         ItemType    = NullIfWhite(ItemType);

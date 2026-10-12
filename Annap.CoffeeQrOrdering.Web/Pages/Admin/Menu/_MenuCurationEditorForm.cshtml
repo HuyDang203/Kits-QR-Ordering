@@ -98,6 +98,17 @@
             </div>
 
             <div>
+                <label class="admin-field-label" asp-for="Input.NameEn">Tên món (Tiếng Anh)</label>
+                <input asp-for="Input.NameEn"
+                       class="admin-input"
+                       autocomplete="off"
+                       data-preview="nameEn"
+                       placeholder="English drink name (optional)" />
+                <p class="mt-2 text-xs text-[rgb(var(--muted))]">Để trống nếu muốn dùng tên tiếng Việt cho cả hai ngôn ngữ.</p>
+                <span asp-validation-for="Input.NameEn" class="mt-2 block text-xs text-red-200/90"></span>
+            </div>
+
+            <div>
                 <label class="admin-field-label" asp-for="Input.Subtitle">Mô tả ngắn</label>
                 <input asp-for="Input.Subtitle"
                        class="admin-input"

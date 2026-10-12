@@ -5,8 +5,14 @@
 @using Annap.CoffeeQrOrdering.Domain
 @using Annap.CoffeeQrOrdering.Domain.Entities
 @using Annap.CoffeeQrOrdering.Web
+@using Annap.CoffeeQrOrdering.Web.Internal
 @using Annap.CoffeeQrOrdering.Web.Services
 @{
+    // Resolve the active UI culture for the request. The guest may have set
+    // it via the language switch (cookie + localStorage), so RequestLocalization
+    // has already picked the right one. This is the same value the
+    // drink-detail renderer uses on the client (via LuxuryI18n.getLang()).
+    var currentLang = MenuItemNameLocalizer.CurrentLanguageCode();
     ViewData["Title"] = "Menu";
     ViewData["IsSeatedPage"] = true;
     string ChapterEditorialKey(string categoryName) => categoryName.Trim() switch
@@ -58,7 +64,14 @@
     var catalogJson = JsonSerializer.Serialize(
         catList.SelectMany(c => c.Items.Select(i => new {
             id = i.Id,
-            name = i.Name,
+            // The locally-rendered `name` for the initial server-rendered page.
+            // Uses the request's resolved culture (VI default, EN when the
+            // guest picked English). The renderer / JS also receives
+            // `nameVi` and `nameEn` so a client-side language switch
+            // can re-render without an extra fetch.
+            name = MenuItemNameLocalizer.For(i, currentLang),
+            nameVi = i.Name,
+            nameEn = i.NameEn,
             // Effective price is what the guest will pay. When the global
             // promotion is OFF this equals i.Price. Cart and order submit
             // consume this number unchanged so there is no place where the
@@ -252,6 +265,42 @@
     <script src="~/js/order-tray-dock.js" asp-append-version="true"></script>
     <script>
         if (typeof window.annapStartOrderTrayDock === "function") window.annapStartOrderTrayDock();
+        /* Bilingual menu names — listen for the existing language switch event
+           and swap the visible name + aria-label on every menu card. The
+           server already rendered the page in the active culture; this
+           handler keeps the visible state in sync after a client-side switch
+           without a server round-trip. The fallback rule matches
+           MenuItemNameLocalizer: VI -> nameVi; EN -> nameEn || nameVi. */
+        (function () {
+            function pick(vi, en) {
+                var e = (en && String(en).trim()) || "";
+                return e ? e : vi;
+            }
+            function applyCards(lang) {
+                var cards = document.querySelectorAll("[data-drink-card][data-name-vi]");
+                if (!cards.length) return;
+                cards.forEach(function (card) {
+                    var vi = card.getAttribute("data-name-vi") || "";
+                    var en = card.getAttribute("data-name-en") || "";
+                    var text = (lang === "vi") ? vi : pick(vi, en);
+                    if (!text) return;
+                    card.setAttribute("aria-label", text);
+                    var nameEls = card.querySelectorAll(".menu-editorial-card__name");
+                    nameEls.forEach(function (el) { el.textContent = text; });
+                });
+            }
+            if (window.LuxuryI18n && typeof window.LuxuryI18n.ready === "object" && typeof window.LuxuryI18n.ready.then === "function") {
+                window.LuxuryI18n.ready.then(function () {
+                    applyCards(window.LuxuryI18n.getLang ? window.LuxuryI18n.getLang() : "vi");
+                });
+            } else {
+                applyCards("vi");
+            }
+            window.addEventListener("luxury:i18n-changed", function (ev) {
+                var lang = ev && ev.detail && ev.detail.lang ? ev.detail.lang : "vi";
+                applyCards(lang);
+            });
+        })();
         /* Auto-open overlay when redirected from a direct drink URL */
         (function () {
             try {

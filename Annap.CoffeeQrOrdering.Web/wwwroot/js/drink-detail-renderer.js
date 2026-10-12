@@ -59,10 +59,25 @@
         var original = Number.isFinite(origNum) ? origNum : effective;
         if (!Number.isFinite(original)) original = effective;
         var hasDiscount = Number.isFinite(original) && Number.isFinite(effective) && original !== effective;
+        // Bilingual name selection: VI = Name (always); EN = NameEn when it has
+        // non-whitespace text, else fall back to Name. The renderer's public
+        // `data.name` carries the active locale so existing render templates
+        // and any data-item-name consumers (e.g. add-to-cart) receive the
+        // correct value without further branching.
+        var viName = raw.name || "";
+        var enName = typeof raw.nameEn === "string" ? raw.nameEn.trim() : "";
+        var lang = (typeof global.LuxuryI18n !== "undefined" && typeof global.LuxuryI18n.getLang === "function")
+            ? global.LuxuryI18n.getLang()
+            : "en";
+        var displayName = (lang === "vi")
+            ? viName
+            : (enName ? enName : viName);
         return {
             id: raw.id,
             image: raw.image || raw.cardImageUrl || "",
-            name: raw.name || "",
+            name: displayName,
+            nameVi: viName,
+            nameEn: enName,
             price: effective,
             priceDisplay: raw.priceDisplay || "",
             originalPrice: original,

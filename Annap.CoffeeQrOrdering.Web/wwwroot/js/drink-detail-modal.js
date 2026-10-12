@@ -28,6 +28,13 @@
     var DETAIL_TIMEOUT_MS = 12000;
     var DETAIL_FETCH = null;
     var CURRENT_TEMPERATURE = "Hot"; // default; updated from server DTO
+    /**
+     * Last raw payload rendered into the detail mount. Cached so the modal can
+     * re-render only the bilingual name fields when the guest switches language
+     * (no re-fetch). Cleared on close. Object shape: full server DTO with
+     * `name` (VI) and `nameEn` (optional EN). Owned by this module.
+     */
+    var LAST_RAW_PAYLOAD = null;
 
     function $(id) {
         return document.getElementById(id);
@@ -235,6 +242,7 @@
         // Empty (not "Hot") — so an immediately-following open of an
         // unsupported drink does not silently inherit a stale value.
         CURRENT_TEMPERATURE = "";
+        LAST_RAW_PAYLOAD = null;
         if (DETAIL_FETCH) {
             try {
                 DETAIL_FETCH.abort();
@@ -313,6 +321,11 @@
         }
         var data = await res.json();
         if (gen !== FETCH_GEN || !OPEN) return true;
+        // Cache raw payload so language-change events can re-render the
+        // bilingual name without a refetch. The renderer reads both
+        // `name` (VI) and `nameEn` (optional EN) and selects based on
+        // the current LuxuryI18n.getLang().
+        LAST_RAW_PAYLOAD = data;
         // Temperature lifecycle reset:
         // For SupportsHotIced === false, do NOT carry CURRENT_TEMPERATURE forward.
         // The renderer will not paint a toggle, and the top CTA dataset is cleared.
@@ -403,6 +416,13 @@
         wireClose(null);
         wireTopAdd();
 
+        // Re-render the cached payload when the guest switches language.
+        // The custom event is dispatched by /wwwroot/js/guest-i18n.js after
+        // localStorage + cookie sync. We only act when the modal is open.
+        if (typeof global.addEventListener === "function") {
+            global.addEventListener("luxury:i18n-changed", rerenderForLanguage);
+        }
+
         if (backdrop) {
             backdrop.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -449,6 +469,41 @@
             }
             if (global.AnnapScrollLock) global.AnnapScrollLock.reset();
         });
+    }
+
+    /**
+     * Re-render the cached payload when the guest switches language. We do a
+     * targeted DOM swap (only the localized name + aria-label) rather than a
+     * full mount() because the modal is already open and the rest of the
+     * layout is language-neutral. The cart's data-item-name attribute is also
+     * refreshed so the next "Add to Order" call captures the new locale.
+     */
+    function rerenderForLanguage() {
+        if (!OPEN) return;
+        var mount = $("drink-detail-mount");
+        var payload = LAST_RAW_PAYLOAD;
+        var r = renderer();
+        if (!mount || !payload || !r) return;
+        var normalized = r.normalize ? r.normalize(payload) : payload;
+        var article = mount.querySelector(".dd-product-card");
+        if (article) {
+            var nameEl = article.querySelector(".dd-card__name");
+            if (nameEl && normalized && normalized.name) {
+                nameEl.textContent = normalized.name;
+            }
+        }
+        // Refresh data-item-name on every CTA so the next add-to-cart captures
+        // the active locale. data-item-price is locale-independent.
+        var displayName = normalized && normalized.name ? normalized.name : "";
+        if (displayName) {
+            mount.querySelectorAll("[data-detail-add]").forEach(function (btn) {
+                btn.setAttribute("data-item-name", displayName);
+            });
+        }
+        var topBtn = $("drink-detail-add-top");
+        if (topBtn && displayName) {
+            topBtn.setAttribute("data-item-name", displayName);
+        }
     }
 
     function init() {
